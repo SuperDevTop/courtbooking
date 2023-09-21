@@ -35,7 +35,6 @@ const App = () => {
       }
     } else {
       if (window.location.pathname !== '/login') {
-        // window.location.href = '/login'
         <Navigate to={'/login'} />
       }
     }

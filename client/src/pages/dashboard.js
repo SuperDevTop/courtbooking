@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Topbar from '../components/Topbar';
 import { Box, Grid } from '@mui/material';
 import TimePanel from '../components/TimePanel';
 import Court from '../components/Court';
-
+import { getPlayersData } from '../actions/playerActions';
+import { connect } from 'react-redux';
 
 const Stadium_Booking = [
     {
@@ -471,7 +472,13 @@ const BB_Booking = [
     },
 ];
 
-const Dashboard = () => {
+const Dashboard = ({getPlayersData, players}) => {
+
+    useEffect(() => {
+        getPlayersData();
+    }, [getPlayersData])
+
+    console.log(players);
 
     return (
         <Box>
@@ -486,6 +493,7 @@ const Dashboard = () => {
                             title='Stadium' 
                             headerColor='green'
                             booking = {Stadium_Booking} 
+                            players={players}
                         /> 
                     </Grid>
                     <Grid item xs={12} sm={3} md={2} lg={2}>
@@ -493,12 +501,15 @@ const Dashboard = () => {
                             title='Grandstand' 
                             headerColor='red'
                             booking = {Grandstand_Booking} 
+                            players={players}
+
                         /> 
                     </Grid>
                     <Grid item xs={12} sm={3} md={2} lg={2}>
                         <Court 
                             title='BB' 
                             headerColor='yellow'
+                            players={players}
                             booking = {BB_Booking} 
                         /> 
                     </Grid>
@@ -506,6 +517,7 @@ const Dashboard = () => {
                         <Court 
                             title='Court1' 
                             headerColor='green'
+                            players={players}
                             booking = {Stadium_Booking} 
                         /> 
                     </Grid>
@@ -513,6 +525,7 @@ const Dashboard = () => {
                         <Court 
                             title='Court2' 
                             headerColor='red'
+                            players={players}
                             booking = {Grandstand_Booking} 
                         /> 
                     </Grid>
@@ -672,9 +685,17 @@ const Dashboard = () => {
                     </Grid> */}
                 </Grid>
             </Box>
-            
         </Box>
     )
 };
 
-export default Dashboard;
+const mapDispatchToProps = (dispatch) => ({
+    getPlayersData: () => dispatch(getPlayersData())
+ })
+ 
+
+const mapStateToProps = (state) => ({
+    players: state.players.players,
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)( Dashboard );

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { LOGIN_SUCCESS, REGISTER_SUCCESS, LOGIN_FAILURE, USER_LOAD, LOG_OUT } from './types';
-// const url = "http://localhost:5000";
-const url = "https://courtbooking.vercel.app";
+const url = "http://localhost:5000";
+// const url = "https://courtbooking.vercel.app";
 
 export const registerUser = (user, history) => async(dispatch) => {
     try {

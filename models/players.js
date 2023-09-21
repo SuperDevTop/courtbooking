@@ -11,18 +11,15 @@ const playerSchema = new mongoose.Schema({
         required: true
     },
 
-    country: {
+    nat: {
         type: String,
         required: true
     },
 
-    rank: {
-        type: String,
+    tournament_seed: {
+        type: Number,
         required: true
-    },
 
-    tournament_seeding: {
-        type: String
     },
 
     handiness: {
@@ -35,7 +32,8 @@ const playerSchema = new mongoose.Schema({
     },
 
     kind: {
-        type: String  //ATP or WTA
+        type: String,  //ATP or WTA
+        required: true
     },
 
     bookings: [

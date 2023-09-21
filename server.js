@@ -20,6 +20,7 @@ app.use(cors());
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/player', require('./routes/players'));
 
 // Your code
 if (process.env.NODE_ENV === "production") {

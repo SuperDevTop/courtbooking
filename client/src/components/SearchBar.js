@@ -6,8 +6,9 @@ export default function SearchBar() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+    const { value } = event.target;
+    setSearchTerm(value);
+  }
 
   return (
     <Box>
@@ -18,6 +19,7 @@ export default function SearchBar() {
         value={searchTerm}
         sx={{
           marginTop: 1,
+          width: '70%'
         }}
         onChange={handleChange}
         InputProps={{
@@ -28,6 +30,7 @@ export default function SearchBar() {
           ),
         }}
       />
+        
     </Box>
   );
 }
