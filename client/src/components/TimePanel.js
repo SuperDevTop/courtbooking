@@ -16,7 +16,7 @@ const TimePanel = () => {
                     backgroundColor: 'yellow',
                     position: 'sticky',
                     top: 0,
-                    zIndex: 9999
+                    zIndex: 1
                 }}
                 padding={2}
                 

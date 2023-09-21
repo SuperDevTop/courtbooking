@@ -15,8 +15,9 @@ import Stack from '@mui/material/Stack';
 import { IconButton } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import { InputAdornment, TextField } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { TextField } from "@mui/material";
+// import SearchIcon from "@mui/icons-material/Search";
+import Autocomplete from '@mui/material/Autocomplete';
 
 import ImageCard from '../components/ImageCard';
 
@@ -39,71 +40,107 @@ const theme = createTheme({
     }
 });
 
-function SearchBar() {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [matchedPlayers, setMatchedPlayers] = useState([]);
-  
-    const handleChange = (event) => {
-      const { value } = event.target;
-      setSearchTerm(value);
-  
-      const matched = playerNames.filter((player) =>
-        player.toLowerCase().includes(value.toLowerCase())
-      );
-  
-      setMatchedPlayers(matched);
-  
-      if (value === "") {
-        setMatchedPlayers([])
-      }
-    };
+
+function Playground() {
+
+    const flatProps = {
+        options: playerNames.map((option) => option.name),
+      };
+
+    const [player, setValue] = useState(null);
   
     return (
-      <Box>
-        <TextField
-          id="search"
-          type="search"
-          label="Search"
-          value={searchTerm}
-          sx={{
-            marginTop: 1,
-            width: '70%'
+      <Stack spacing={1} sx={{ width: 300 }}>
+        
+        <Autocomplete
+          {...flatProps}
+          id="controlled-demo"
+          value={player}
+          onChange={(event, newValue) => {
+            setValue(newValue);
           }}
-          onChange={handleChange}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
+          renderInput={(params) => (
+            <TextField {...params} label="Players" variant="standard" />
+          )}
         />
-          <Box width={'70%'}>
-        {
-          matchedPlayers.map((player, index) => (
-            <Box
-              key={index}
-              sx={{
-                backgroundColor: "#f5f5f5",
-                padding: "8px",
-                borderRadius: "4px",
-                marginBottom: "4px",
-              }}
-            >
-              { player }
-            </Box>
-          ))
-        }
-        </Box>
-      </Box>
+       
+      </Stack>
     );
   }
+  
+
+// function SearchBar() {
+//     const [searchTerm, setSearchTerm] = useState("");
+//     const [matchedPlayers, setMatchedPlayers] = useState([]);
+  
+//     const handleChange = (event) => {
+//       const { value } = event.target;
+//       setSearchTerm(value);
+  
+//       const matched = playerNames.filter((player) =>
+//         player.toLowerCase().includes(value.toLowerCase())
+//       );
+  
+//       setMatchedPlayers(matched);
+  
+//       if (value === "") {
+//         setMatchedPlayers([])
+//       }
+//     };
+
+//     const onSelectedPlayer = (event) => {
+//         alert(event.target.value)
+//     }
+  
+//     return (
+//       <Box>
+//         <TextField
+//           id="search"
+//           type="search"
+//           label="Search"
+//           value={searchTerm}
+//           sx={{
+//             marginTop: 1,
+//             width: '70%'
+//           }}
+//           onChange={handleChange}
+//           InputProps={{
+//             endAdornment: (
+//               <InputAdornment position="end">
+//                 <SearchIcon />
+//               </InputAdornment>
+//             ),
+//           }}
+//         />
+//         <Box width={'62.5%'} sx={{ 
+//             position: 'absolute',
+//          }}>
+//         {
+//           matchedPlayers.map((player, index) => (
+//             <Box
+//               key={index}
+//               sx={{
+//                 backgroundColor: "#f5f5f5",
+//                 padding: "8px",
+//               }}
+
+//               onClick={onSelectedPlayer}
+//             >
+//               { player }
+//             </Box>
+//           ))
+//         }
+//         </Box>
+//       </Box>
+//     );
+//   }
 
 const Court = (props) => {
 
     const [openDialog, setOpenDialog] = useState(false);
 
-    playerNames = props.players.map((player) => player.name);
+    // playerNames = props.players.map((player) => player.name);
+    playerNames = props.players
     console.log(playerNames);
 
     const closeDialog = () => {
@@ -129,14 +166,13 @@ const Court = (props) => {
     return(
         <ThemeProvider theme={theme}>
         <Box>
-            
             <Box
                 backgroundColor={headerColor}
                 padding={2}
                 sx={{
                    position: 'sticky',
                    top: 0,
-                   zIndex: 9999
+                   zIndex: 1
                 }}
             >
                 <StadiumIcon sx={{
@@ -205,6 +241,7 @@ const Court = (props) => {
                 ))
             }
 
+
         </Box>
         <Dialog open={openDialog} maxWidth='sm' fullWidth
                 PaperProps={{
@@ -212,14 +249,11 @@ const Court = (props) => {
                         backgroundColor:"#e0e0e0",
                     }
                 }}
-
-                sx={{
-                    zIndex: 10000
-                }}
             >
                 <DialogTitle fontWeight={700} marginTop={2}>ADD SCHEDULING</DialogTitle>
                 <DialogContent>
-                    <SearchBar />
+                    {/* <SearchBar /> */}
+                    <Playground />
                     <Typography marginTop={3} variant='h5'>
                         Roger Federer
                     </Typography>
