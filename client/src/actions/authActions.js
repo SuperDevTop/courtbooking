@@ -1,11 +1,10 @@
 import axios from 'axios'
 import { LOGIN_SUCCESS, REGISTER_SUCCESS, LOGIN_FAILURE, USER_LOAD, LOG_OUT } from './types';
-const url = "http://localhost:5000";
-// const url = "https://courtbooking.vercel.app";
+import { backendUrl } from '../config/url';
 
 export const registerUser = (user, history) => async(dispatch) => {
     try {
-        await axios.post(url + '/api/auth/register', user);
+        await axios.post(backendUrl + '/api/auth/register', user);
         
         dispatch(
             {
@@ -22,7 +21,7 @@ export const registerUser = (user, history) => async(dispatch) => {
 
 export const loginUser = (user, history) => (dispatch) => {
     
-        axios.post(url + '/api/auth/login', user)
+        axios.post(backendUrl + '/api/auth/login', user)
         .then((res) =>
             {
                 const { token } = res.data;

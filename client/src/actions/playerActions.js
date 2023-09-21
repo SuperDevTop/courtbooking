@@ -1,12 +1,11 @@
 import axios from "axios";
 import { GETPLAYERS_SUCCESS } from "./types";
+import { backendUrl } from "../config/url";
 
-// const url = "https://courtbooking.vercel.app";
-const url = "http://localhost:5000";
 
 export const getPlayersData = () => (dispatch) => {
     try {
-        axios.get(url + '/api/player/getPlayersData')
+        axios.get(backendUrl + '/api/player/getPlayersData')
             .then((res) => {
 
                 const { players } = res.data
