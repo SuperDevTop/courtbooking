@@ -16,6 +16,18 @@ import { useDispatch } from 'react-redux';
 import { loadUser } from './actions/authActions';
 import jwtDecode from 'jwt-decode'
 import PrivateRoute from './components/routes/PrivateRoute';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#0d0475',
+    },
+    secondary: {
+      main: '#00fff0',
+    },
+  },
+});
 
 const App = () => {
 
@@ -41,6 +53,7 @@ const App = () => {
     
   return(
     <Router>
+      <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
 
         {/* {(!hideNavbarRoutes.includes(window.location.pathname)) && !(window.location.pathname === '/') && <DrawerAppBar />} */}
@@ -56,6 +69,7 @@ const App = () => {
         </Container>
         <Footer />
       </LocalizationProvider>
+      </ThemeProvider>
     </Router>
   )
 }

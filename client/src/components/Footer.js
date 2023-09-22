@@ -1,22 +1,33 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import {useTheme} from '@mui/material';
+import { connect } from 'react-redux';
 
-const Footer = () => {
+const Footer = ({ isAuthenticated }) => {
+    const theme = useTheme()
+    const { primary } = theme.palette;
 
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
 
     return(
         <Box
-            bgcolor={'#1976d2'}
+            bgcolor= {primary.main}
             mt={2}
             py={2}
             color={'white'}
             textAlign={'center'}
+            display={
+                isAuthenticated ? "block" : 'none'
+            }
         >
             Copyright @ {currentYear} BookingCourt
         </Box>
     )
 }
 
-export default Footer;
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps)(Footer);

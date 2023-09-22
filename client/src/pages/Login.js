@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+// import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { loginUser } from '../actions/authActions';
@@ -50,16 +50,16 @@ const Login = (props) => {
         props.LoginUser(user, history)
     }
 
-    const defaultTheme = createTheme();
+    // const defaultTheme = createTheme();
 
     return(
-        <ThemeProvider theme={defaultTheme}>
+        // <ThemeProvider theme={defaultTheme}>
           <Grid component="main">
             <CssBaseline />
             <Grid item xs={12} sm={8} md={3} margin={'auto'} maxWidth={'500px'} elevation={6} square component={Paper}>
               <Box
                 sx={{
-                  my: 13,
+                  mt: 18,
                   mx: 4,
                   display: 'flex',
                   flexDirection: 'column',
@@ -108,7 +108,7 @@ const Login = (props) => {
               </Box>
             </Grid>
           </Grid>
-        </ThemeProvider>
+        // </ThemeProvider>
     )
 }
 

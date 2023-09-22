@@ -21,11 +21,14 @@ import { logOut } from '../actions/authActions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import setAuthToken from '../utils/setAuthToken';
+// import { useTheme } from '@emotion/react';
 
 const drawerWidth = 240;
 let navItems = [];
 
 function DrawerAppBar(props) {
+  // const theme = useTheme()
+  // const { primary, secondary } = theme.palette;
 
   if (props.isAuthenticated) {
     navItems = ['Booking', 'Court', 'About', 'Logout'];
@@ -51,7 +54,11 @@ function DrawerAppBar(props) {
   }
 
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+    <Box onClick={handleDrawerToggle} 
+      sx={{ 
+        textAlign: 'center'
+      }} 
+     >
       <Typography variant="h6" sx={{ my: 2 }}>
         CourtBooking
       </Typography>
@@ -71,9 +78,11 @@ function DrawerAppBar(props) {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box display={
+      props.isAuthenticated ? 'flex' : 'none'
+    }>
       <CssBaseline />
-      <AppBar component="nav" position='static' sx={{ backgroundColor: 'primary' }}>
+      <AppBar component="nav" position='static' sx={{ backgroundColor: 'primary.dark' }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -85,7 +94,7 @@ function DrawerAppBar(props) {
             <MenuIcon />
           </IconButton>
           <Link to={'/dashboard'}>
-            <img src={'logo512.png'} alt='logo' style={{width:'2vw', marginRight: '1vw', display: { xs: 'none' }}}/>
+            <img src={'logo.png'} alt='logo' style={{width:'2vw', marginRight: '1vw', display: { xs: 'none' }}}/>
           </Link>
           <Typography
             variant="h6"

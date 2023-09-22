@@ -26,7 +26,7 @@ const TimePanel = () => {
             </Box>
             <Box
                 sx={{
-                    backgroundColor: '#1976d2',
+                    backgroundColor: 'primary.light',
                     color: 'black',
                     border: '2px solid #a0a0a0',
                 }}

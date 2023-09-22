@@ -22,7 +22,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import ImageCard from '../components/ImageCard';
 
 const image = {
-    'imageUrl': '/images/1.jpeg',
+    'imageUrl': '/images/1.jpg',
     'title': 'Player'
 }
 
@@ -207,8 +207,8 @@ const Court = (props) => {
                     <Box my={3.5} textAlign={'center'}>
                         <Button fullWidth variant='contained' onClick={open_Dialog}
                             sx={{
-                                color: 'black',
-                                backgroundColor: '#1976d2',
+                                color: 'white',
+                                backgroundColor: 'primary.dark',
                                 paddingTop: 2, 
                                 paddingBottom: 2,
                                 width: '95%',
