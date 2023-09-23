@@ -489,12 +489,12 @@ const Dashboard = ({getPlayersData, players}) => {
                         <TimePanel />
                     </Grid>
                     <Grid item xs={12} sm={3} md={2} lg={2}>
-                        <Court 
+                       <Court 
                             title='Stadium' 
                             headerColor='green'
                             booking = {Stadium_Booking} 
                             players={players}
-                        /> 
+                        />
                     </Grid>
                     <Grid item xs={12} sm={3} md={2} lg={2}>
                         <Court 

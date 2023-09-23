@@ -1,5 +1,5 @@
 import { Box, Button, Typography, Grid } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import StadiumIcon from '@mui/icons-material/Stadium';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
@@ -26,7 +26,6 @@ const image = {
     'title': 'Player'
 }
 
-let playerNames = [];
 
 const theme = createTheme({
     components: {
@@ -40,108 +39,19 @@ const theme = createTheme({
     }
 });
 
-
-function Playground() {
-
-    const flatProps = {
-        options: playerNames.map((option) => option.name),
-      };
-
-    const [player, setValue] = useState(null);
   
-    return (
-      <Stack spacing={1} sx={{ width: 300 }}>
-        
-        <Autocomplete
-          {...flatProps}
-          id="controlled-demo"
-          value={player}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => (
-            <TextField {...params} label="Players" variant="standard" />
-          )}
-        />
-       
-      </Stack>
-    );
-  }
-  
-
-// function SearchBar() {
-//     const [searchTerm, setSearchTerm] = useState("");
-//     const [matchedPlayers, setMatchedPlayers] = useState([]);
-  
-//     const handleChange = (event) => {
-//       const { value } = event.target;
-//       setSearchTerm(value);
-  
-//       const matched = playerNames.filter((player) =>
-//         player.toLowerCase().includes(value.toLowerCase())
-//       );
-  
-//       setMatchedPlayers(matched);
-  
-//       if (value === "") {
-//         setMatchedPlayers([])
-//       }
-//     };
-
-//     const onSelectedPlayer = (event) => {
-//         alert(event.target.value)
-//     }
-  
-//     return (
-//       <Box>
-//         <TextField
-//           id="search"
-//           type="search"
-//           label="Search"
-//           value={searchTerm}
-//           sx={{
-//             marginTop: 1,
-//             width: '70%'
-//           }}
-//           onChange={handleChange}
-//           InputProps={{
-//             endAdornment: (
-//               <InputAdornment position="end">
-//                 <SearchIcon />
-//               </InputAdornment>
-//             ),
-//           }}
-//         />
-//         <Box width={'62.5%'} sx={{ 
-//             position: 'absolute',
-//          }}>
-//         {
-//           matchedPlayers.map((player, index) => (
-//             <Box
-//               key={index}
-//               sx={{
-//                 backgroundColor: "#f5f5f5",
-//                 padding: "8px",
-//               }}
-
-//               onClick={onSelectedPlayer}
-//             >
-//               { player }
-//             </Box>
-//           ))
-//         }
-//         </Box>
-//       </Box>
-//     );
-//   }
-
 const Court = (props) => {
+    const playerNames = props.players
 
+    const [value, setValue] = useState(null);
     const [openDialog, setOpenDialog] = useState(false);
 
-    // playerNames = props.players.map((player) => player.name);
-    playerNames = props.players
-    console.log(playerNames);
+    const[selectedPlayer, setSelectedPlayer] = useState({});
+
+    useEffect(() =>
+        { 
+            playerNames.length>0 && setSelectedPlayer(playerNames[0])
+        }, [ playerNames ])
 
     const closeDialog = () => {
         setOpenDialog(false)
@@ -155,13 +65,15 @@ const Court = (props) => {
     const title = props.title
     const booking = props.booking
 
-    const players = [];
     const [player, setPlayer] = useState('');
 
     const changePlayer = (e) => {
         setPlayer(e.target.value)
-        players[0] = player
     }
+
+    const flatProps = {
+        options: playerNames.map((option) => option.name),
+      };
 
     return(
         <ThemeProvider theme={theme}>
@@ -252,28 +164,43 @@ const Court = (props) => {
             >
                 <DialogTitle fontWeight={700} marginTop={2}>ADD SCHEDULING</DialogTitle>
                 <DialogContent>
-                    {/* <SearchBar /> */}
-                    <Playground />
+                    <Stack spacing={1} sx={{ width: 300 }}>
+                        <Autocomplete
+                        {...flatProps}
+                        id="controlled-demo"
+                        value={value}
+                        onChange={(event, newValue) => {
+                            setValue(newValue);
+                            if (playerNames.length !== 0) {
+                                setSelectedPlayer(playerNames.find(player => player.name === newValue))
+                            }
+                        }}
+                        renderInput={(params) => (
+                            <TextField {...params} label="Players" variant="standard" />
+                        )}
+                        />
+                    
+                    </Stack>
                     <Typography marginTop={3} variant='h5'>
-                        Roger Federer
+                        { selectedPlayer.name}
                     </Typography>
-                    <span style={{marginBottom : '10vh'}}>Seeded: 5</span>
+                    <span style={{marginBottom : '10vh'}}>Seeded: {selectedPlayer.tournament_seed}</span>
 
                     <Grid container paddingLeft={1}>
                         <Grid item xs={6}>
                             <Typography marginTop={3} variant='h6'>
-                                <span style={{ color: 'red'}}>Canada</span><br></br>
-                                Handiness: Right <br></br>
-                                Rank: 5
+                                <span style={{ color: 'red'}}>{selectedPlayer.nat}</span><br></br>
+                                Handiness: {selectedPlayer.handiness} <br></br>
+                                {/* Rank: 5 */}
                             </Typography>
                             <Typography color={'green'} variant='h6' marginTop={5}>
-                                Singles In
+                                {selectedPlayer.tournament_status}
                             </Typography>
-                            <Typography color={'red'} variant='h6'>
+                            {/* <Typography color={'red'} variant='h6'>
                                 Doubles Out
-                            </Typography>
+                            </Typography> */}
                             <Typography color={'brown'} variant='h6'>
-                                Stadium 10:00 - 11:00
+                                {props.title} 10:00 - 11:00
                             </Typography>
                             <Typography color={'blue'} variant='h6'>
                                 Court1 13:00 - 13:30
@@ -319,7 +246,7 @@ const Court = (props) => {
                     <Button onClick={closeDialog} variant='contained'>Close</Button>
                     <Button onClick={closeDialog} variant='contained'>Schedule</Button>
                 </DialogActions>
-            </Dialog>
+        </Dialog>
         </ThemeProvider>
     )
 }
