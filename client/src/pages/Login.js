@@ -8,7 +8,6 @@ import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-// import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { loginUser } from '../actions/authActions';
@@ -28,7 +27,6 @@ function Copyright(props) {
 
 const Login = (props) => {
     const history = useNavigate();
-    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const credential = props.credential;
@@ -50,10 +48,8 @@ const Login = (props) => {
         props.LoginUser(user, history)
     }
 
-    // const defaultTheme = createTheme();
 
     return(
-        // <ThemeProvider theme={defaultTheme}>
           <Grid component="main">
             <CssBaseline />
             <Grid item xs={12} sm={8} md={3} margin={'auto'} maxWidth={'500px'} elevation={6} square component={Paper}>
@@ -108,7 +104,6 @@ const Login = (props) => {
               </Box>
             </Grid>
           </Grid>
-        // </ThemeProvider>
     )
 }
 

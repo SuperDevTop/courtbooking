@@ -6,7 +6,6 @@ import ShareIcon from '@mui/icons-material/Share';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useState } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -16,7 +15,6 @@ import { IconButton } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { TextField } from "@mui/material";
-// import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from '@mui/material/Autocomplete';
 
 import ImageCard from '../components/ImageCard';
@@ -26,32 +24,28 @@ const image = {
     'title': 'Player'
 }
 
-
-const theme = createTheme({
-    components: {
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    backgroundColor: '#0ef05d'
-                }
-            }
-        }
-    }
-});
+// const theme = createTheme({
+//     components: {
+//         MuiButton: {
+//             styleOverrides: {
+//                 root: {
+//                     backgroundColor: '#0ef05d'
+//                 }
+//             }
+//         }
+//     }
+// });
 
   
 const Court = (props) => {
-    const playerNames = props.players
-
-    const [value, setValue] = useState(null);
+    const players = props.players
     const [openDialog, setOpenDialog] = useState(false);
-
-    const[selectedPlayer, setSelectedPlayer] = useState({});
+    const [selectedPlayer, setSelectedPlayer] = useState({});
 
     useEffect(() =>
         { 
-            playerNames.length>0 && setSelectedPlayer(playerNames[0])
-        }, [ playerNames ])
+            players.length>0 && setSelectedPlayer(players[0])
+        }, [ players ])
 
     const closeDialog = () => {
         setOpenDialog(false)
@@ -72,11 +66,11 @@ const Court = (props) => {
     }
 
     const flatProps = {
-        options: playerNames.map((option) => option.name),
-      };
+        options: players.map((option) => option.name),
+    };
 
     return(
-        <ThemeProvider theme={theme}>
+        <>
         <Box>
             <Box
                 backgroundColor={headerColor}
@@ -87,10 +81,12 @@ const Court = (props) => {
                    zIndex: 1
                 }}
             >
-                <StadiumIcon sx={{
-                    'verticalAlign' : "bottom"
-                }} />
-                &nbsp; { title }
+                <StadiumIcon 
+                    sx={{
+                        'verticalAlign' : "bottom"
+                    }} 
+                />
+                <strong> &nbsp; { title }</strong>
             </Box>
             {
                 booking.map((book, index) => (
@@ -120,7 +116,7 @@ const Court = (props) => {
                         <Button fullWidth variant='contained' onClick={open_Dialog}
                             sx={{
                                 color: 'white',
-                                backgroundColor: 'primary.dark',
+                                backgroundColor: 'blue',
                                 paddingTop: 2, 
                                 paddingBottom: 2,
                                 width: '95%',
@@ -166,18 +162,17 @@ const Court = (props) => {
                 <DialogContent>
                     <Stack spacing={1} sx={{ width: 300 }}>
                         <Autocomplete
-                        {...flatProps}
-                        id="controlled-demo"
-                        value={value}
-                        onChange={(event, newValue) => {
-                            setValue(newValue);
-                            if (playerNames.length !== 0) {
-                                setSelectedPlayer(playerNames.find(player => player.name === newValue))
-                            }
-                        }}
-                        renderInput={(params) => (
-                            <TextField {...params} label="Players" variant="standard" />
-                        )}
+                            {...flatProps}
+                            id="controlled-demo"
+                            value={selectedPlayer.name}
+                            onChange={(event, newValue) => {
+                                if (players.length !== 0) {
+                                    setSelectedPlayer(players.find(player => player.name === newValue))
+                                }
+                            }}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Players" variant="standard" />
+                            )}
                         />
                     
                     </Stack>
@@ -189,27 +184,16 @@ const Court = (props) => {
                     <Grid container paddingLeft={1}>
                         <Grid item xs={6}>
                             <Typography marginTop={3} variant='h6'>
-                                <span style={{ color: 'red'}}>{selectedPlayer.nat}</span><br></br>
-                                Handiness: {selectedPlayer.handiness} <br></br>
-                                {/* Rank: 5 */}
+                                <span style={{ color: 'red'}}>
+                                    { selectedPlayer.nat }
+                                </span><br/>
+                                Handiness: { selectedPlayer.handiness } <br />
                             </Typography>
-                            <Typography color={'green'} variant='h6' marginTop={5}>
-                                {selectedPlayer.tournament_status}
+                            <Typography color={'green'} variant='h6' marginTop={2}>
+                                { selectedPlayer.tournament_status }
                             </Typography>
-                            {/* <Typography color={'red'} variant='h6'>
-                                Doubles Out
-                            </Typography> */}
                             <Typography color={'brown'} variant='h6'>
-                                {props.title} 10:00 - 11:00
-                            </Typography>
-                            <Typography color={'blue'} variant='h6'>
-                                Court1 13:00 - 13:30
-                            </Typography>
-                            <Typography variant='h6'>
-                                Stadium [Match #3]
-                            </Typography>
-                            <Typography variant='h6'>
-                                R.Federer vs L.Minniti
+                                { props.title } 10:00 - 11:00
                             </Typography>
                             
                         </Grid>
@@ -217,7 +201,7 @@ const Court = (props) => {
                             <ImageCard image={image}/>                            
                         </Grid>
                     </Grid>      
-                    <FormControl variant="filled" sx={{ m: 1, minWidth: 525, marginTop: 2 }}>
+                    <FormControl variant="filled" sx={{ m: 1, minWidth: 525, marginTop: 2, width:'99%' }}>
                         <InputLabel id="demo-simple-select-filled-label">Pick Player</InputLabel>
                         <Select
                             labelId="demo-simple-select-filled-label"
@@ -234,7 +218,7 @@ const Court = (props) => {
                     
                     <Stack direction='row' spacing={1} sx={{float: 'right'}}>
                         <IconButton>
-                            <AddCircleOutlineIcon aria-label='add' color='primary'/>
+                            <AddCircleOutlineIcon aria-label='add' color='primary.light'/>
                         </IconButton>
                         <IconButton>
                             <RemoveCircleOutlineIcon color='secondary'/>
@@ -242,12 +226,12 @@ const Court = (props) => {
                     </Stack>            
 
                 </DialogContent>
-                <DialogActions sx={{paddingRight: 5, paddingBottom: 3}}>
+                <DialogActions sx={{paddingRight: 3, paddingBottom: 3}}>
                     <Button onClick={closeDialog} variant='contained'>Close</Button>
                     <Button onClick={closeDialog} variant='contained'>Schedule</Button>
                 </DialogActions>
         </Dialog>
-        </ThemeProvider>
+        </>
     )
 }
 

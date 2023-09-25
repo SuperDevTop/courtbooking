@@ -4,3 +4,4 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const USER_LOAD = 'USER_LOAD';
 export const LOG_OUT = 'LOG_OUT';
 export const GETPLAYERS_SUCCESS = 'PLAYER_SUCCESS';
+export const CHANGE_CURRENT_PAGE = 'CHANGE_CURRENT_PAGE';

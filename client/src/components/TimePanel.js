@@ -22,12 +22,12 @@ const TimePanel = () => {
                 
             >
                 <TimeIcon sx={{verticalAlign: 'bottom'}}/>
-                &nbsp;Time
+                <strong>&nbsp;Time </strong>
             </Box>
             <Box
                 sx={{
                     backgroundColor: 'primary.light',
-                    color: 'black',
+                    color: 'white',
                     border: '2px solid #a0a0a0',
                 }}
             >

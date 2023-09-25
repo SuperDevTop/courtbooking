@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import Topbar from '../components/Topbar';
+import Topbar from '../components/layout/Topbar';
 import { Box, Grid } from '@mui/material';
 import TimePanel from '../components/TimePanel';
 import Court from '../components/Court';
@@ -472,220 +472,73 @@ const BB_Booking = [
     },
 ];
 
-const Dashboard = ({getPlayersData, players}) => {
+let bookings = [];
+
+for (let index = 0; index < 27; index++) {
+    var remain = index % 3;
+
+    if (remain === 0) {
+        bookings.push(Stadium_Booking)
+    } else if (remain === 1) {
+        bookings.push(Grandstand_Booking)
+    } else {
+        bookings.push(BB_Booking)
+    }
+    
+}
+
+const Dashboard = ({ getPlayersData, players, currentPage }) => {
 
     useEffect(() => {
         getPlayersData();
     }, [getPlayersData])
 
     console.log(players);
+    
+    const titles = ['Stadium', 'Grandstand', 'BB', 'Court1', 'Court2', 'Court3', 'Court4', 'Court5', 
+                    'Court6', 'Court7', 'Court8', 'Court9', 'Court10', 'Court11', 'Court12', 'Court13', 
+                    'Court14', 'Court15', 'Court16', 'Court17', 'Court18', 'Court19', 'Court20', 'Court21',
+                    'Court22', 'Court23', 'Court24'];
+    const colors = ['green', 'red', 'yellow', 'blue', 'pink']
+    const [displayedCourts, setdisplayedCourts] = useState([])
 
+    useEffect(() => {
+        let temp = [];
+
+        if (currentPage === 6) {
+            temp = [25, 26]
+        } else {
+            for (let index = 5 * (currentPage - 1); index < 5 * currentPage; index++) {
+                temp.push(index)            
+            }
+        }
+
+        setdisplayedCourts(temp)
+    }, [currentPage])
+    
     return (
-        <Box>
+        <>
             <Topbar />
             <Box>
                 <Grid container>
                     <Grid item xs={12} sm={3} md={2} lg={2}>
                         <TimePanel />
                     </Grid>
-                    <Grid item xs={12} sm={3} md={2} lg={2}>
-                       <Court 
-                            title='Stadium' 
-                            headerColor='green'
-                            booking = {Stadium_Booking} 
-                            players={players}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={3} md={2} lg={2}>
-                        <Court 
-                            title='Grandstand' 
-                            headerColor='red'
-                            booking = {Grandstand_Booking} 
-                            players={players}
-
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={3} md={2} lg={2}>
-                        <Court 
-                            title='BB' 
-                            headerColor='yellow'
-                            players={players}
-                            booking = {BB_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={3} md={2} lg={2}>
-                        <Court 
-                            title='Court1' 
-                            headerColor='green'
-                            players={players}
-                            booking = {Stadium_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={3} md={2} lg={2}>
-                        <Court 
-                            title='Court2' 
-                            headerColor='red'
-                            players={players}
-                            booking = {Grandstand_Booking} 
-                        /> 
-                    </Grid>
-                    {/* <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court3' 
-                            headerColor='yellow'
-                            booking = {BB_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court4' 
-                            headerColor='green'
-                            booking = {Stadium_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court5' 
-                            headerColor='red'
-                            booking = {Grandstand_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court6' 
-                            headerColor='yellow'
-                            booking = {BB_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court7' 
-                            headerColor='green'
-                            booking = {Stadium_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court8' 
-                            headerColor='red'
-                            booking = {Grandstand_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court9' 
-                            headerColor='yellow'
-                            booking = {BB_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court10' 
-                            headerColor='green'
-                            booking = {Stadium_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court11' 
-                            headerColor='red'
-                            booking = {Grandstand_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court12' 
-                            headerColor='yellow'
-                            booking = {BB_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court13' 
-                            headerColor='green'
-                            booking = {Stadium_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court14' 
-                            headerColor='red'
-                            booking = {Grandstand_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court15' 
-                            headerColor='yellow'
-                            booking = {BB_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court16' 
-                            headerColor='green'
-                            booking = {Stadium_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court17' 
-                            headerColor='red'
-                            booking = {Grandstand_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court18' 
-                            headerColor='yellow'
-                            booking = {BB_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court19' 
-                            headerColor='green'
-                            booking = {Stadium_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court20' 
-                            headerColor='red'
-                            booking = {Grandstand_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court21' 
-                            headerColor='yellow'
-                            booking = {BB_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court22' 
-                            headerColor='green'
-                            booking = {Stadium_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court23' 
-                            headerColor='red'
-                            booking = {Grandstand_Booking} 
-                        /> 
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Court 
-                            title='Court24' 
-                            headerColor='yellow'
-                            booking = {BB_Booking} 
-                        /> 
-                    </Grid> */}
+                    {
+                        displayedCourts.map((court) => (
+                            <Grid item xs={12} sm={3} md={2} lg={2} key={court}>
+                                <Court 
+                                    title={titles[court]} 
+                                    headerColor={ colors[court % 5] }
+                                    booking = { bookings[court] } 
+                                    players={players}
+                                />
+                            </Grid>
+                        ))
+                    }
                 </Grid>
             </Box>
-        </Box>
+        </>
     )
 };
 
@@ -696,6 +549,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
     players: state.players.players,
+    currentPage: state.page.currentPage
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)( Dashboard );
