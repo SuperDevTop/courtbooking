@@ -6,14 +6,36 @@ import TimePanel from '../components/TimePanel';
 import Court from '../components/Court';
 import { getPlayersData } from '../actions/playerActions';
 import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../actions/authActions';
+import setAuthToken from '../utils/setAuthToken';
+import jwtDecode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 const Stadium_Booking = [
     {
         startTime : "8:00",
+        endTime : "8:30",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "8:30",
         endTime : "9:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
+    },
+    {
+        startTime : "9:00",
+        endTime : "9:30",
+        isBooked : false
+    },
+    {
+        startTime : "9:30",
+        endTime : "10:00",
+        isBooked : false
     },
     {
         startTime : "10:00",
@@ -25,137 +47,120 @@ const Stadium_Booking = [
     {
         startTime : "10:30",
         endTime : "11:00",
-        isBooked : false
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
     },
     {
         startTime : "11:00",
         endTime : "11:30",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "11:30",
+        endTime : "12:00",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "12:00",
+        endTime : "12:30",
         isBooked : false
     },
     {
-        startTime : "8:00",
-        endTime : "9:00",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "8:00",
-        endTime : "9:00",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "8:00",
-        endTime : "9:00",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "10:00",
-        endTime : "10:30",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "10:30",
-        endTime : "11:00",
+        startTime : "12:30",
+        endTime : "1:00",
         isBooked : false
     },
     {
-        startTime : "11:00",
-        endTime : "11:30",
+        startTime : "1:00",
+        endTime : "1:30",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "1:30",
+        endTime : "2:00",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "2:00",
+        endTime : "2:30",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "2:30",
+        endTime : "3:00",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "3:00",
+        endTime : "3:30",
         isBooked : false
     },
     {
-        startTime : "8:00",
-        endTime : "9:00",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "8:00",
-        endTime : "9:00",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "8:00",
-        endTime : "9:00",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "10:00",
-        endTime : "10:30",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "10:30",
-        endTime : "11:00",
+        startTime : "3:30",
+        endTime : "4:00",
         isBooked : false
     },
     {
-        startTime : "11:00",
-        endTime : "11:30",
+        startTime : "4:00",
+        endTime : "4:30",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "4:30",
+        endTime : "5:00",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "5:00",
+        endTime : "5:30",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "5:30",
+        endTime : "6:00",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "6:00",
+        endTime : "6:30",
         isBooked : false
     },
     {
-        startTime : "8:00",
-        endTime : "9:00",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "8:00",
-        endTime : "9:00",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "8:00",
-        endTime : "9:00",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "10:00",
-        endTime : "10:30",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "10:30",
-        endTime : "11:00",
+        startTime : "6:30",
+        endTime : "7:00",
         isBooked : false
     },
     {
-        startTime : "11:00",
-        endTime : "11:30",
-        isBooked : false
-    },
-    {
-        startTime : "8:00",
-        endTime : "9:00",
+        startTime : "7:00",
+        endTime : "7:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
     },
     {
-        startTime : "8:00",
-        endTime : "9:00",
+        startTime : "7:30",
+        endTime : "8:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
@@ -202,115 +207,115 @@ const Grandstand_Booking = [
         isBooked : false
     },
     {
-        startTime : "8:00",
-        endTime : "8:30",
+        startTime : "11:00",
+        endTime : "11:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "8:30",
-        endTime : "9:00",
+        startTime : "11:30",
+        endTime : "12:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "9:00",
-        endTime : "9:30",
+        startTime : "12:00",
+        endTime : "12:30",
         isBooked : false
     },
     {
-        startTime : "9:30",
-        endTime : "10:00",
+        startTime : "12:30",
+        endTime : "1:00",
         isBooked : false
     },
     {
-        startTime : "10:00",
-        endTime : "10:30",
+        startTime : "1:00",
+        endTime : "1:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "10:30",
-        endTime : "11:00",
+        startTime : "1:30",
+        endTime : "2:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "8:00",
-        endTime : "8:30",
+        startTime : "2:00",
+        endTime : "2:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "8:30",
-        endTime : "9:00",
+        startTime : "2:30",
+        endTime : "3:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "9:00",
-        endTime : "9:30",
+        startTime : "3:00",
+        endTime : "3:30",
         isBooked : false
     },
     {
-        startTime : "9:30",
-        endTime : "10:00",
+        startTime : "3:30",
+        endTime : "4:00",
         isBooked : false
     },
     {
-        startTime : "10:00",
-        endTime : "10:30",
+        startTime : "4:00",
+        endTime : "4:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "10:30",
-        endTime : "11:00",
+        startTime : "4:30",
+        endTime : "5:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "8:00",
-        endTime : "8:30",
+        startTime : "5:00",
+        endTime : "5:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "8:30",
-        endTime : "9:00",
+        startTime : "5:30",
+        endTime : "6:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "9:00",
-        endTime : "9:30",
+        startTime : "6:00",
+        endTime : "6:30",
         isBooked : false
     },
     {
-        startTime : "9:30",
-        endTime : "10:00",
+        startTime : "6:30",
+        endTime : "7:00",
         isBooked : false
     },
     {
-        startTime : "10:00",
-        endTime : "10:30",
+        startTime : "7:00",
+        endTime : "7:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "10:30",
-        endTime : "11:00",
+        startTime : "7:30",
+        endTime : "8:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
@@ -326,13 +331,13 @@ const BB_Booking = [
         isBooked : true
     },
     {
-        startTime : "9:00",
-        endTime : "9:30",
+        startTime : "8:30",
+        endTime : "9:00",
         isBooked : false
     },
     {
-        startTime : "8:30",
-        endTime : "9:00",
+        startTime : "9:00",
+        endTime : "9:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
@@ -357,119 +362,120 @@ const BB_Booking = [
         isBooked : true
     },
     {
-        startTime : "8:00",
-        endTime : "8:30",
+        startTime : "11:00",
+        endTime : "11:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
     },
     {
-        startTime : "9:00",
-        endTime : "9:30",
+        startTime : "11:30",
+        endTime : "12:00",
         isBooked : false
     },
     {
-        startTime : "8:30",
-        endTime : "9:00",
+        startTime : "12:00",
+        endTime : "12:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
     },
     {
-        startTime : "9:30",
-        endTime : "10:00",
+        startTime : "12:30",
+        endTime : "1:00",
         isBooked : false
     },
     {
-        startTime : "10:00",
-        endTime : "10:30",
+        startTime : "1:00",
+        endTime : "1:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "10:30",
-        endTime : "11:00",
+        startTime : "1:30",
+        endTime : "2:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
     },
     {
-        startTime : "8:00",
-        endTime : "8:30",
+        startTime : "2:00",
+        endTime : "2:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
     },
     {
-        startTime : "9:00",
-        endTime : "9:30",
+        startTime : "2:30",
+        endTime : "3:00",
         isBooked : false
     },
     {
-        startTime : "8:30",
-        endTime : "9:00",
+        startTime : "3:00",
+        endTime : "3:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
     },
     {
-        startTime : "9:30",
-        endTime : "10:00",
-        isBooked : false
-    },
-    {
-        startTime : "10:00",
-        endTime : "10:30",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : false
-    },
-    {
-        startTime : "10:30",
-        endTime : "11:00",
+        startTime : "3:30",
+        endTime : "4:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
     },
     {
-        startTime : "8:00",
-        endTime : "8:30",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "9:00",
-        endTime : "9:30",
+        startTime : "4:00",
+        endTime : "4:30",
         isBooked : false
     },
     {
-        startTime : "8:30",
-        endTime : "9:00",
-        booker : "Andrey Rublev",
-        player : 'Karen Kachanov',
-        isBooked : true
-    },
-    {
-        startTime : "9:30",
-        endTime : "10:00",
-        isBooked : false
-    },
-    {
-        startTime : "10:00",
-        endTime : "10:30",
+        startTime : "4:30",
+        endTime : "5:00",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : false
     },
     {
-        startTime : "10:30",
-        endTime : "11:00",
+        startTime : "5:00",
+        endTime : "5:30",
         booker : "Andrey Rublev",
         player : 'Karen Kachanov',
         isBooked : true
     },
+    {
+        startTime : "5:30",
+        endTime : "6:00",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "6:00",
+        endTime : "6:30",
+        isBooked : false
+    },
+    {
+        startTime : "6:30",
+        endTime : "7:00",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : true
+    },
+    {
+        startTime : "7:00",
+        endTime : "7:30",
+        isBooked : false
+    },
+    {
+        startTime : "7:30",
+        endTime : "8:00",
+        booker : "Andrey Rublev",
+        player : 'Karen Kachanov',
+        isBooked : false
+    },
+
 ];
 
 let bookings = [];
@@ -484,10 +490,28 @@ for (let index = 0; index < 27; index++) {
     } else {
         bookings.push(BB_Booking)
     }
-    
 }
 
 const Dashboard = ({ getPlayersData, players, currentPage }) => {
+
+    const dispatch = useDispatch()
+    const history = useNavigate()
+
+    useEffect(() => {
+        setInterval(() => {
+            if (localStorage.token) {
+                const decoded = jwtDecode(localStorage.token)
+                const currentTime = Date.now() / 1000
+              
+                if (decoded.exp < currentTime) {
+                  console.log(currentTime);
+                  localStorage.removeItem('token')
+                  setAuthToken(false)
+                  dispatch(logOut(history))
+                } 
+            }
+        }, 5000);
+    }, [dispatch, history])
 
     useEffect(() => {
         getPlayersData();
@@ -519,7 +543,7 @@ const Dashboard = ({ getPlayersData, players, currentPage }) => {
     return (
         <>
             <Topbar />
-            <Box>
+            <Box marginBottom={8}>
                 <Grid container>
                     <Grid item xs={12} sm={3} md={2} lg={2}>
                         <TimePanel />
@@ -549,7 +573,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
     players: state.players.players,
-    currentPage: state.page.currentPage
+    currentPage: state.page.currentPage,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)( Dashboard );

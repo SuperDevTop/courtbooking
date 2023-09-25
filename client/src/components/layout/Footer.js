@@ -1,12 +1,11 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import {useTheme} from '@mui/material';
+import { useTheme } from '@mui/material';
 import { connect } from 'react-redux';
 
 const Footer = ({ isAuthenticated }) => {
     const theme = useTheme()
     const { primary } = theme.palette;
-
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
 
@@ -14,9 +13,9 @@ const Footer = ({ isAuthenticated }) => {
         <Box
             bgcolor= {primary.main}
             mt={2}
-            py={2}
-            color={'white'}
-            textAlign={'center'}
+            py={5}
+            color='white'
+            textAlign='center'
             display={
                 isAuthenticated ? "block" : 'none'
             }

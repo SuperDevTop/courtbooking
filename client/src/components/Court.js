@@ -58,7 +58,6 @@ const Court = (props) => {
     const headerColor = props.headerColor
     const title = props.title
     const booking = props.booking
-
     const [player, setPlayer] = useState('');
 
     const changePlayer = (e) => {
@@ -185,17 +184,25 @@ const Court = (props) => {
                         <Grid item xs={6}>
                             <Typography marginTop={3} variant='h6'>
                                 <span style={{ color: 'red'}}>
-                                    { selectedPlayer.nat }
+                                    { selectedPlayer.natl }
                                 </span><br/>
-                                Handiness: { selectedPlayer.handiness } <br />
+                                Handiness: { selectedPlayer.right_handed ? 'Right' : 'Left' } <br />
                             </Typography>
-                            <Typography color={'green'} variant='h6' marginTop={2}>
-                                { selectedPlayer.tournament_status }
+                            <Typography color={'brown'} variant='h6'>
+                                Status: { selectedPlayer.status}
+                            </Typography>
+                            <Typography color={'blue'} variant='h6'>
+                                { selectedPlayer.atp_wta}
+                            </Typography>
+                            <Typography color={'green'} variant='h6'>
+                                { selectedPlayer.singles_in ? 'Singles In' : 'Singles Out'}
+                            </Typography>
+                            <Typography color={'red'} variant='h6'>
+                                { selectedPlayer.doubles_in ? 'Doubles In' : 'Doubles Out'}
                             </Typography>
                             <Typography color={'brown'} variant='h6'>
                                 { props.title } 10:00 - 11:00
                             </Typography>
-                            
                         </Grid>
                         <Grid item xs={6}>
                             <ImageCard image={image}/>                            

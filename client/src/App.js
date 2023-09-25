@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
@@ -10,13 +9,14 @@ import DrawerAppBar from './components/Navbar';
 import Dashboard from './pages/dashboard';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Footer from './components/Footer';
+import Footer from './components/layout/Footer';
 import setAuthToken from './utils/setAuthToken';
 import { useDispatch } from 'react-redux';
 import { loadUser } from './actions/authActions';
 import jwtDecode from 'jwt-decode'
 import PrivateRoute from './components/routes/PrivateRoute';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { logOut } from './actions/authActions';
 
 const theme = createTheme({
   palette: {
@@ -34,17 +34,20 @@ const App = () => {
   const dispatch = useDispatch();
 
     if (localStorage.token) {
-      setAuthToken(localStorage.token)
-      dispatch(loadUser())
 
       const decoded = jwtDecode(localStorage.token)
       const currentTime = Date.now() / 1000
-      
-      if (decoded.exp < currentTime) {
+    
+      if (decoded.exp < currentTime) { 
+        console.log('test');
         localStorage.removeItem('token')
         setAuthToken(false)
-        window.location.href = '/login'
+        dispatch(logOut)
+      } else {
+        setAuthToken(localStorage.token)
+        dispatch(loadUser())
       }
+
     } else {
       if (window.location.pathname !== '/login') {
         <Navigate to={'/login'} />
@@ -56,7 +59,6 @@ const App = () => {
       <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
 
-        {/* {(!hideNavbarRoutes.includes(window.location.pathname)) && !(window.location.pathname === '/') && <DrawerAppBar />} */}
         <DrawerAppBar />
 
         <Container maxWidth='xl'>

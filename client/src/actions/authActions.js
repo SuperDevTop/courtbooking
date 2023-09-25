@@ -56,13 +56,13 @@ export const loginUser = (user, history) => (dispatch) => {
 
     };
 
-export const loadUser = () => async(dispatch) => {
+export const loadUser = () => (dispatch) => {
     dispatch({
         type : USER_LOAD
     })
 }
 
-export const logOut = (history) => async(dispatch) => {
+export const logOut = (history) => (dispatch) => {
     dispatch({
         type: LOG_OUT
     })
