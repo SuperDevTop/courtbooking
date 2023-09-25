@@ -6,12 +6,12 @@ const playerSchema = new mongoose.Schema({
         required: true
     },
 
-    picture: {
+    photo: {
         type: String,
         required: true
     },
 
-    nat: {
+    natl: {
         type: String,
         required: true
     },
@@ -22,17 +22,28 @@ const playerSchema = new mongoose.Schema({
 
     },
 
-    handiness: {
-        type: String,
+    right_handed: {
+        type: Boolean,
         required: true
     },
 
-    tournament_status: {
-        type: [String]
+    singles_in: {
+        type: Boolean,
+        required: true
     },
 
-    kind: {
-        type: String,  //ATP or WTA
+    doubles_in: {
+        type: Boolean,
+        required: true
+    },
+
+    status: {
+        type: String, 
+        required: true
+    },
+
+    atp_wta: {
+        type: String,
         required: true
     },
 

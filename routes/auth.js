@@ -45,7 +45,7 @@ router.post('/login', async(req, res) => {
         if (!user) {
             res.status(401).json(
                 {
-                     message: 'Unregistered User',
+                    message: 'Unregistered User',
                 }
             )
         } else {
@@ -57,11 +57,11 @@ router.post('/login', async(req, res) => {
                     console.log(user.email + 'Login success');
                     
                     // Create and sign a JWT token
-                    const token = jwt.sign({ id: user._id }, 'secretKey', {expiresIn: 3600});
+                    const token = jwt.sign({ id: user._id }, 'secretKey', { expiresIn: 1800 });
 
                     res.status(200).json({ token });
                 } else {
-                   // Passwords do not match, user is not authenticated
+                    // Passwords do not match, user is not authenticated
                     console.log('Incorrect password');
                     res.status(400).json({ message: 'Wrong password' });
                 }
