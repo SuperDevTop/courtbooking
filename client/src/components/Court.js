@@ -91,7 +91,7 @@ const Court = (props) => {
                 booking.map((book, index) => (
                 <Box
                     sx={{
-                        backgroundColor: '#2f2f2f',
+                        backgroundColor: '#343434',
                         paddingTop: 2,
                         border: 'solid 2px #a0a0a0',
                         color: 'white',
@@ -115,7 +115,7 @@ const Court = (props) => {
                         <Button fullWidth variant='contained' onClick={open_Dialog}
                             sx={{
                                 color: 'white',
-                                backgroundColor: 'blue',
+                                backgroundColor: 'primary.accent',
                                 paddingTop: 2, 
                                 paddingBottom: 2,
                                 width: '95%',
@@ -129,7 +129,7 @@ const Court = (props) => {
     
                     <Typography pl={3} pb={3} variant='h6' color={'white'} >
                         <Grid container alignItems="center" spacing={1}>
-                            <Grid item xs={6} color={"#1976d2"}>
+                            <Grid item xs={6} color='secondary.text'>
                                 <span>comments</span>
                             </Grid>
                             <Grid item>

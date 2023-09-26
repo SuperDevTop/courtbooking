@@ -106,7 +106,7 @@ function DrawerAppBar(props) {
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
               <Button key={item} sx={{ color: '#fff' }}>
-                <Typography variant='h6' fontSize={17} fontFamily={'cursive'}>
+                <Typography variant='h6' fontSize={17} >
                   {
                     (item === 'Logout')
                     ?

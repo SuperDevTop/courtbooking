@@ -21,10 +21,16 @@ import { logOut } from './actions/authActions';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#0d0475',
+      main: '#673AB7',
+      dark: '#512DA8',
+      light: '#D1C4E9',
+      text: '##212121',
+      accent: '#7C4DFF',
+      divider: '#BDBDBD',
     },
     secondary: {
       main: '#00ff00',
+      text: '#757575'
     },
   },
 });

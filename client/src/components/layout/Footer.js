@@ -11,7 +11,7 @@ const Footer = ({ isAuthenticated }) => {
 
     return(
         <Box
-            bgcolor= {primary.main}
+            bgcolor= {primary.dark}
             mt={2}
             py={5}
             color='white'
