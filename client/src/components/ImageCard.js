@@ -1,19 +1,20 @@
 import React from 'react';
 import { Card, CardMedia } from '@mui/material';
+import {Typography} from '@mui/material';
 
-const ImageCard = ({image}) => {
+const ImageCard = ({image_Url, title}) => {
     return (
         <Card>
             <CardMedia
                 component='img'
-                image={image.imageUrl}
-                alt={image.title}
+                image={image_Url}
+                alt={title}
             />
-            {/* <CardContent>
-                <Typography variant='body2' color='text.primary'> 
-                    {image.title}
+            <div style={{ padding: 10 }}>
+                <Typography variant='body2' color='text.primary' > 
+                    {title}
                 </Typography>
-            </CardContent> */}
+            </div>
         </Card>
     )
 }

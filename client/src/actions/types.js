@@ -5,3 +5,4 @@ export const USER_LOAD = 'USER_LOAD';
 export const LOG_OUT = 'LOG_OUT';
 export const GETPLAYERS_SUCCESS = 'PLAYER_SUCCESS';
 export const CHANGE_CURRENT_PAGE = 'CHANGE_CURRENT_PAGE';
+export const BOOKING_SUCCESS = 'BOOKING_SUCCESS';

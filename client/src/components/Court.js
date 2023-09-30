@@ -6,23 +6,20 @@ import ShareIcon from '@mui/icons-material/Share';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useState } from 'react';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+// import InputLabel from '@mui/material/InputLabel';
+// import MenuItem from '@mui/material/MenuItem';
+// import FormControl from '@mui/material/FormControl';
+// import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import { IconButton } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { TextField } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
+import { connect } from 'react-redux';
 
 import ImageCard from '../components/ImageCard';
-
-const image = {
-    'imageUrl': '/images/1.jpg',
-    'title': 'Player'
-}
+import { createBook } from '../actions/bookingAction';
 
 // const theme = createTheme({
 //     components: {
@@ -36,18 +33,19 @@ const image = {
 //     }
 // });
 
-  
 const Court = (props) => {
     const players = props.players
     const [openDialog, setOpenDialog] = useState(false);
-    const [selectedPlayer, setSelectedPlayer] = useState({});
+    const [selectedPlayer, setSelectedPlayer] = useState({ });
+    const [schedulingPlayers, setSchdulingPlayers] = useState([]);
+    const [image, setImage] = useState('/images/players/Djokovic.jpg')
 
-    useEffect(() =>
-        { 
-            players.length>0 && setSelectedPlayer(players[0])
+    useEffect(() => { 
+            players.length > 0 && setSelectedPlayer(players[0])
         }, [ players ])
 
     const closeDialog = () => {
+        setSchdulingPlayers([])
         setOpenDialog(false)
     }
 
@@ -55,14 +53,51 @@ const Court = (props) => {
         setOpenDialog(true)
     }
 
+    const onChangePlayer = (event, newValue) => {
+        if (players.length !== 0) {
+
+            if(newValue !== null) {
+                setSelectedPlayer(players.find(player => player.name === newValue))
+                
+                const lastname = newValue.split(' ')
+                setImage('/images/players/' + lastname[lastname.length - 1] + '.jpg')
+            }
+        }
+    }
+
+    const onSchedule = () => {
+        const data = {
+            court_number: 2,
+            booker: 'Admin',
+            start_time: Date.now(),
+            time_slot: 2,
+            reservation_type: 'Practice'
+        }
+
+        props.createBook(data)
+
+    }
+
+    const addPlayer = () => {  // + button
+        if (schedulingPlayers.length === 0) {
+            setSchdulingPlayers([...schedulingPlayers, selectedPlayer.name])
+
+            return
+        } else if(schedulingPlayers.length === 4) {
+            alert('You can book 4 players at max!')
+            return
+        }
+        
+        let bFound = schedulingPlayers.find(element => element === selectedPlayer.name)
+
+        if (!bFound) {
+            setSchdulingPlayers([...schedulingPlayers, selectedPlayer.name])
+        }
+    }
+
     const headerColor = props.headerColor
     const title = props.title
     const booking = props.booking
-    const [player, setPlayer] = useState('');
-
-    const changePlayer = (e) => {
-        setPlayer(e.target.value)
-    }
 
     const flatProps = {
         options: players.map((option) => option.name),
@@ -81,7 +116,7 @@ const Court = (props) => {
                 }}
             >
                 <StadiumIcon 
-                    sx={{
+                    sx = {{
                         'verticalAlign' : "bottom"
                     }} 
                 />
@@ -91,7 +126,8 @@ const Court = (props) => {
                 booking.map((book, index) => (
                 <Box
                     sx={{
-                        backgroundColor: '#343434',
+                        backgroundColor: `${ !book.isBooked ?'#343434' : '#606060'}`,
+                        
                         paddingTop: 2,
                         border: 'solid 2px #a0a0a0',
                         color: 'white',
@@ -101,18 +137,19 @@ const Court = (props) => {
                 >
                     {
                         book.isBooked ? 
-                        <Typography variant='h5' ml={4}>Match Warm - Up </Typography> :
+                        <Typography variant='h5' ml={4}>Match Warm - Up</Typography>
+                        :
                         <Typography variant='h5' ml={4}>Available </Typography>
                     }
                     <Typography variant='h6' ml={4} mt={1}>{book.startTime} - {book.endTime} </Typography>
                     {   book.isBooked 
                         ?
-                    <Box my={3.5} textAlign={'center'}>
+                    <Box my={3.5} textAlign='center'>
                         {book.booker} <br/><br/> {book.player}
                     </Box> 
                         :
                     <Box my={3.5} textAlign={'center'}>
-                        <Button fullWidth variant='contained' onClick={open_Dialog}
+                        <Button fullWidth variant='contained' onClick={ open_Dialog }
                             sx={{
                                 color: 'white',
                                 backgroundColor: 'primary.accent',
@@ -129,9 +166,16 @@ const Court = (props) => {
     
                     <Typography pl={3} pb={3} variant='h6' color={'white'} >
                         <Grid container alignItems="center" spacing={1}>
-                            <Grid item xs={6} color='secondary.text'>
-                                <span>comments</span>
-                            </Grid>
+                            {
+                                book.isBooked ? 
+                                <Grid item xs={6} color='white'>
+                                    <span>comments</span>
+                                </Grid> :
+                                <Grid item xs={6} color='secondary.text'>
+                                    <span>comments</span>
+                                </Grid> 
+                            }
+                            
                             <Grid item>
                                 <FavoriteIcon/>
                             </Grid>
@@ -148,7 +192,6 @@ const Court = (props) => {
                 ))
             }
 
-
         </Box>
         <Dialog open={openDialog} maxWidth='sm' fullWidth
                 PaperProps={{
@@ -164,11 +207,7 @@ const Court = (props) => {
                             {...flatProps}
                             id="controlled-demo"
                             value={selectedPlayer.name}
-                            onChange={(event, newValue) => {
-                                if (players.length !== 0) {
-                                    setSelectedPlayer(players.find(player => player.name === newValue))
-                                }
-                            }}
+                            onChange={onChangePlayer}
                             renderInput={(params) => (
                                 <TextField {...params} label="Players" variant="standard" />
                             )}
@@ -203,29 +242,30 @@ const Court = (props) => {
                             <Typography color={'brown'} variant='h6'>
                                 { props.title } 10:00 - 11:00
                             </Typography>
+                            <Box sx={{ padding: 2, paddingBottom: 3, marginTop: 2, marginRight: 2, backgroundColor:'primary.main', borderRadius: 1.5 }}>
+                                
+                                <Typography color={'white'} variant='h6' textAlign={'center'}>SELECT PLAYERS:</Typography>
+                                {
+                                    schedulingPlayers.map((player, index) => (
+                                        <Box marginTop={1} key={index} sx={{ color: 'white', padding: 1 }}>
+                                            { player }
+                                        </Box>
+                                    ))
+                                }
+                            </Box>
+
                         </Grid>
                         <Grid item xs={6}>
-                            <ImageCard image={image}/>                            
+                            <ImageCard 
+                                image_Url={image}
+                                title={selectedPlayer.name}
+                            />                         
                         </Grid>
                     </Grid>      
-                    <FormControl variant="filled" sx={{ m: 1, minWidth: 525, marginTop: 2, width:'99%' }}>
-                        <InputLabel id="demo-simple-select-filled-label">Pick Player</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-filled-label"
-                            id="demo-simple-select-filled"
-                            value={player}
-                            onChange={changePlayer}
-                        >
-                            <MenuItem value={1}>Andrey Rublev</MenuItem>
-                            <MenuItem value={2}>Karen Kachanov</MenuItem>
-                            <MenuItem value={3}>Dialog Schwartzman</MenuItem>
-                            <MenuItem value={4}>Rafael Nadal</MenuItem>
-                        </Select>
-                    </FormControl>  
                     
                     <Stack direction='row' spacing={1} sx={{float: 'right'}}>
-                        <IconButton>
-                            <AddCircleOutlineIcon aria-label='add' color='primary.light'/>
+                        <IconButton onClick={addPlayer}>
+                            <AddCircleOutlineIcon aria-label='add' sx={{ color: 'red' }}/>
                         </IconButton>
                         <IconButton>
                             <RemoveCircleOutlineIcon color='secondary'/>
@@ -235,11 +275,16 @@ const Court = (props) => {
                 </DialogContent>
                 <DialogActions sx={{paddingRight: 3, paddingBottom: 3}}>
                     <Button onClick={closeDialog} variant='contained'>Close</Button>
-                    <Button onClick={closeDialog} variant='contained'>Schedule</Button>
+                    <Button onClick={onSchedule} variant='contained'>Schedule</Button>
                 </DialogActions>
         </Dialog>
         </>
     )
 }
 
-export default Court;
+
+const mapDispatchToProps = (dispatch) => ({
+    createBook: (data) => dispatch(createBook(data))
+})
+
+export default connect(null, mapDispatchToProps)(Court);

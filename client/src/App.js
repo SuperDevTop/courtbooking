@@ -6,7 +6,7 @@ import { Container } from '@mui/material'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import DrawerAppBar from './components/Navbar';
-import Dashboard from './pages/dashboard';
+import Dashboard from './pages/Dashboard';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Footer from './components/layout/Footer';
@@ -45,7 +45,6 @@ const App = () => {
       const currentTime = Date.now() / 1000
     
       if (decoded.exp < currentTime) { 
-        console.log('test');
         localStorage.removeItem('token')
         setAuthToken(false)
         dispatch(logOut)
@@ -64,9 +63,7 @@ const App = () => {
     <Router>
       <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-
         <DrawerAppBar />
-
         <Container maxWidth='xl'>
           <Routes>
             <Route exact path='/' element={<Navigate to='login' />} ></Route>
