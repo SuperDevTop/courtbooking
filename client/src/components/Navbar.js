@@ -94,7 +94,7 @@ function DrawerAppBar(props) {
             <MenuIcon />
           </IconButton>
           <Link to={'/dashboard'}>
-            <img src={'logo.png'} alt='logo' style={{width:'2vw', marginRight: '1vw', display: { xs: 'none' }}}/>
+            <img src={'/logo.png'} alt='logo' style={{width:'2vw', marginRight: '1vw', display: { xs: 'none' }}}/>
           </Link>
           <Typography
             variant="h6"
