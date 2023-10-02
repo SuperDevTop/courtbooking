@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
-import Topbar from '../components/layout/Topbar';
 import { Box, Grid } from '@mui/material';
-import TimePanel from '../components/TimePanel';
-import Court from '../components/Court';
-import { getPlayersData } from '../actions/playerActions';
 import { connect } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { logOut } from '../actions/authActions';
-import setAuthToken from '../utils/setAuthToken';
 import jwtDecode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+
+import TimePanel from '../components/TimePanel';
+import Court from '../components/Court';
+import { getPlayersData } from '../actions/playerActions';
+import setAuthToken from '../utils/setAuthToken';
+import Topbar from '../components/layout/Topbar';
 
 const Stadium_Booking = [
     {

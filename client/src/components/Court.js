@@ -1,4 +1,4 @@
-import { Box, Button, Typography, Grid } from '@mui/material';
+import { Box, Button, Typography, Grid, MenuItem } from '@mui/material';
 import React, { useEffect } from 'react';
 import StadiumIcon from '@mui/icons-material/Stadium';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -13,9 +13,13 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { TextField } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
 import { connect } from 'react-redux';
+import { Select } from '@mui/material';
+import {FormControl, InputLabel} from '@mui/material';
+import WorldFlag from 'react-country-flag';
 
 import ImageCard from '../components/ImageCard';
 import { createBook } from '../actions/bookingAction';
+import { alpha3ToAlph2 } from '../utils/countryCode';
 
 // const theme = createTheme({
 //     components: {
@@ -35,9 +39,16 @@ const Court = (props) => {
     const [selectedPlayer, setSelectedPlayer] = useState({ });
     const [schedulingPlayers, setSchdulingPlayers] = useState([]);
     const [image, setImage] = useState('/images/players/Djokovic.jpg')
+    const [rownum, setRownum] = useState(0);
+    const [timeLength, setTimeLength] = useState(2);
 
     useEffect(() => { 
             players.length > 0 && setSelectedPlayer(players[0])
+
+            if (players.length > 0) {
+                const lastname = players[0].name.split(' ')
+                setImage('/images/players/' + lastname[lastname.length - 1] + '.jpg')
+            }
         }, [ players ])
 
     const closeDialog = () => {
@@ -45,7 +56,8 @@ const Court = (props) => {
         setOpenDialog(false)
     }
 
-    const open_Dialog = () => {
+    const open_Dialog = (index) => {
+        setRownum(index)
         setOpenDialog(true)
     }
 
@@ -62,11 +74,15 @@ const Court = (props) => {
     }
 
     const onSchedule = () => {
+        const initialDate = new Date('2023-08-09T00:00:00');
+        const newDate = new Date(initialDate.getTime() + rownum * 30 * 60 * 1000); // start time : calculated by row(time is 
+           // increased 30mins row by row, so...)
+
         const data = {
             court_number: 2,
             booker: 'Admin',
-            start_time: Date.now(),
-            time_slot: 2,
+            start_time: newDate,
+            time_slot: timeLength,  // 30 mins * time length
             reservation_type: 'Practice'
         }
 
@@ -89,6 +105,10 @@ const Court = (props) => {
         if (!bFound) {
             setSchdulingPlayers([...schedulingPlayers, selectedPlayer.name])
         }
+    }
+
+    const onChangeTimeLength = (event) => {
+        setTimeLength(event.target.value)
     }
 
     const headerColor = props.headerColor
@@ -141,18 +161,18 @@ const Court = (props) => {
                     {   book.isBooked 
                         ?
                     <Box my={3.5} textAlign='center'>
-                        {book.booker} <br/><br/> {book.player}
+                        { book.booker } <br/><br/> { book.player }
                     </Box> 
                         :
-                    <Box my={3.5} textAlign={'center'}>
-                        <Button fullWidth variant='contained' onClick={ open_Dialog }
+                    <Box my={3.5} textAlign='center'>
+                        <Button fullWidth variant='contained' onClick={ () => { open_Dialog(index) } }
                             sx={{
                                 color: 'white',
                                 backgroundColor: 'primary.accent',
                                 paddingTop: 2, 
                                 paddingBottom: 2,
                                 width: '95%',
-                                marginTop: 2
+                                marginTop: 2,
                             }}
                         >
                             SCHEDULE
@@ -160,7 +180,7 @@ const Court = (props) => {
                     </Box>
                     }
     
-                    <Typography pl={3} pb={3} variant='h6' color={'white'} >
+                    <Typography pl={3} pb={3} variant='h6' color='white' >
                         <Grid container alignItems="center" spacing={1}>
                             {
                                 book.isBooked ? 
@@ -183,7 +203,6 @@ const Court = (props) => {
                             </Grid>
                         </Grid>
                     </Typography>
-    
                 </Box>
                 ))
             }
@@ -198,7 +217,7 @@ const Court = (props) => {
             >
                 <DialogTitle fontWeight={700} marginTop={2}>ADD SCHEDULING</DialogTitle>
                 <DialogContent>
-                    <Stack spacing={1} sx={{ width: 300 }}>
+                    <Stack spacing={1} sx={{ width: '50%' }}>
                         <Autocomplete
                             {...flatProps}
                             id="controlled-demo"
@@ -218,29 +237,45 @@ const Court = (props) => {
                     <Grid container paddingLeft={1}>
                         <Grid item xs={6}>
                             <Typography marginTop={3} variant='h6'>
-                                <span style={{ color: 'red'}}>
+                                <span style={{ color: 'red', marginRight: 30}}>
                                     { selectedPlayer.natl }
-                                </span><br/>
+                                </span>
+                                <WorldFlag countryCode={alpha3ToAlph2[selectedPlayer.natl]} svg style={{ width: '1.5em', height: '1.5em' }} />
+                                <br/>
                                 Handiness: { selectedPlayer.right_handed ? 'Right' : 'Left' } <br />
                             </Typography>
-                            <Typography color={'brown'} variant='h6'>
+                            <Typography color='brown' variant='h6'>
                                 Status: { selectedPlayer.status}
                             </Typography>
-                            <Typography color={'blue'} variant='h6'>
+                            <Typography color='blue' variant='h6'>
                                 { selectedPlayer.atp_wta}
                             </Typography>
-                            <Typography color={'green'} variant='h6'>
+                            <Typography color='green' variant='h6'>
                                 { selectedPlayer.singles_in ? 'Singles In' : 'Singles Out'}
                             </Typography>
-                            <Typography color={'red'} variant='h6'>
+                            <Typography color='red' variant='h6'>
                                 { selectedPlayer.doubles_in ? 'Doubles In' : 'Doubles Out'}
                             </Typography>
-                            <Typography color={'brown'} variant='h6'>
+                            <Typography color='brown' variant='h6'>
                                 { props.title } 10:00 - 11:00
                             </Typography>
+                            <FormControl variant="filled" sx={{ minWidth: 120, marginTop: 2, marginBottom: 2 }} >
+                                <InputLabel id="demo-simple-select-filled-label">Time Length</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-filled-label"
+                                    id="demo-simple-select-filled"
+                                    value={timeLength}
+                                    onChange={onChangeTimeLength}
+                                    label='timeLength'
+                                >
+                                    <MenuItem value={2}>2 (1 hour)</MenuItem>
+                                    <MenuItem value={1}>1 (30 mins)</MenuItem>
+                                    <MenuItem value={4}>4 (2 hour)</MenuItem>
+                                </Select>
+                            </FormControl>
                             <Box sx={{ padding: 2, paddingBottom: 3, marginTop: 2, marginRight: 2, backgroundColor:'primary.main', borderRadius: 1.5 }}>
                                 
-                                <Typography color={'white'} variant='h6' textAlign={'center'}>SELECT PLAYERS:</Typography>
+                                <Typography color='white' variant='h6' textAlign='center'>SELECT PLAYERS:</Typography>
                                 {
                                     schedulingPlayers.map((player, index) => (
                                         <Box marginTop={1} key={index} sx={{ color: 'white', padding: 1 }}>
