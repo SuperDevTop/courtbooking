@@ -1,9 +1,8 @@
 import { backendUrl } from "../config/url";
-import { BOOKING_SUCCESS } from "./types";
+import { BOOKING_SUCCESS, SET_BOOKING_DATE } from "./types";
 import axios from "axios";
 
 export const createBook = (data) => (dispatch) => {
-    console.log(data);
     axios.post(backendUrl + '/api/booking/createBook', data)
     .then((res) => {
 
@@ -13,5 +12,12 @@ export const createBook = (data) => (dispatch) => {
         })
     }).catch((err) => {
         console.log(err);
+    })
+}
+
+export const setBookingDate = (date) => (dispatch) => {
+    dispatch({
+        type: SET_BOOKING_DATE,
+        payload: {booking_date: date}
     })
 }

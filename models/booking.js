@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
-    court_number: {
-        type: Number,
+    court_name: {
+        type: String,
         required: true
     },
 
@@ -26,7 +26,7 @@ const bookingSchema = new mongoose.Schema({
         default: 'Practice'
     },
 
-    players: [String]
+    players: [String]   
 });
 
 module.exports = mongoose.model('Booking', bookingSchema);

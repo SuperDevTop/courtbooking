@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { Box, Grid } from '@mui/material';
 import { connect } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { logOut } from '../actions/authActions';
 import jwtDecode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
+import { logOut } from '../actions/authActions';
 import TimePanel from '../components/TimePanel';
 import Court from '../components/Court';
 import { getPlayersData } from '../actions/playerActions';
@@ -550,10 +550,10 @@ const Dashboard = ({ getPlayersData, players, currentPage }) => {
                         displayedCourts.map((court) => (
                             <Grid item xs={12} sm={3} md={2} lg={2} key={court}>
                                 <Court 
-                                    title={titles[court]} 
+                                    name={ titles[court] } 
                                     headerColor={ colors[court % 5] }
                                     booking = { bookings[court] } 
-                                    players={players}
+                                    players={ players }
                                 />
                             </Grid>
                         ))

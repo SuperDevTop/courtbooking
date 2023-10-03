@@ -30,8 +30,11 @@ const Login = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const credential = props.credential;
-
     const inputRef = useRef(null);
+
+    if (props.isAuthenticated) {
+      window.location.href = '/dashboard'
+    }
 
     useEffect(() => {
       if (inputRef.current) {
@@ -47,7 +50,6 @@ const Login = (props) => {
 
         props.LoginUser(user, history)
     }
-
 
     return(
           <Grid component="main">

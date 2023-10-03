@@ -54,9 +54,9 @@ const App = () => {
       }
 
     } else {
-      if (window.location.pathname !== '/login') {
-        <Navigate to={'/login'} />
-      }
+      // if (window.location.pathname !== '/login') {
+      //   <Navigate to={'/login'} />
+      // }
     }
     
   return(
@@ -66,10 +66,10 @@ const App = () => {
         <DrawerAppBar />
         <Container maxWidth='xl'>
           <Routes>
-            <Route exact path='/' element={<Navigate to='login' />} ></Route>
+            <Route exact path='/' element={<Navigate to='dashboard' />} ></Route>
             <Route exact path='/register' element={<Register />}></Route>
             <Route exact path='/login' element={<Login />}></Route>
-            <Route exact path='/dashboard' element={<PrivateRoute component={Dashboard} />}></Route>
+            <Route exact path='/dashboard' element={<PrivateRoute component={ Dashboard } />}></Route>
           </Routes>
         </Container>
         <Footer />

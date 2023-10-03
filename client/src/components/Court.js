@@ -41,6 +41,13 @@ const Court = (props) => {
     const [image, setImage] = useState('/images/players/Djokovic.jpg')
     const [rownum, setRownum] = useState(0);
     const [timeLength, setTimeLength] = useState(2);
+    const headerColor = props.headerColor
+    const name = props.name
+    const booking = props.booking
+
+    const flatProps = {
+        options: players.map((option) => option.name),
+    };
 
     useEffect(() => { 
             players.length > 0 && setSelectedPlayer(players[0])
@@ -74,16 +81,17 @@ const Court = (props) => {
     }
 
     const onSchedule = () => {
-        const initialDate = new Date('2023-08-09T00:00:00');
+        const initialDate = new Date(props.bookingDate);
         const newDate = new Date(initialDate.getTime() + rownum * 30 * 60 * 1000); // start time : calculated by row(time is 
            // increased 30mins row by row, so...)
 
         const data = {
-            court_number: 2,
+            court_name: name,
             booker: 'Admin',
             start_time: newDate,
             time_slot: timeLength,  // 30 mins * time length
-            reservation_type: 'Practice'
+            reservation_type: 'Practice',
+            players: schedulingPlayers
         }
 
         props.createBook(data)
@@ -111,14 +119,6 @@ const Court = (props) => {
         setTimeLength(event.target.value)
     }
 
-    const headerColor = props.headerColor
-    const title = props.title
-    const booking = props.booking
-
-    const flatProps = {
-        options: players.map((option) => option.name),
-    };
-
     return(
         <>
         <Box>
@@ -136,14 +136,13 @@ const Court = (props) => {
                         'verticalAlign' : "bottom"
                     }} 
                 />
-                <strong> &nbsp; { title }</strong>
+                <strong> &nbsp; { name }</strong>
             </Box>
             {
                 booking.map((book, index) => (
                 <Box
                     sx={{
                         backgroundColor: `${ !book.isBooked ?'#343434' : '#606060'}`,
-                        
                         paddingTop: 2,
                         border: 'solid 2px #a0a0a0',
                         color: 'white',
@@ -157,7 +156,7 @@ const Court = (props) => {
                         :
                         <Typography variant='h5' ml={4}>Available </Typography>
                     }
-                    <Typography variant='h6' ml={4} mt={1}>{book.startTime} - {book.endTime} </Typography>
+                    <Typography variant='h6' ml={4} mt={1}>{ book.startTime } - { book.endTime } </Typography>
                     {   book.isBooked 
                         ?
                     <Box my={3.5} textAlign='center'>
@@ -257,7 +256,7 @@ const Court = (props) => {
                                 { selectedPlayer.doubles_in ? 'Doubles In' : 'Doubles Out'}
                             </Typography>
                             <Typography color='brown' variant='h6'>
-                                { props.title } 10:00 - 11:00
+                                { props.name } 10:00 - 11:00
                             </Typography>
                             <FormControl variant="filled" sx={{ minWidth: 120, marginTop: 2, marginBottom: 2 }} >
                                 <InputLabel id="demo-simple-select-filled-label">Time Length</InputLabel>
@@ -304,7 +303,7 @@ const Court = (props) => {
                     </Stack>            
 
                 </DialogContent>
-                <DialogActions sx={{paddingRight: 3, paddingBottom: 3}}>
+                <DialogActions sx={{ paddingRight: 3, paddingBottom: 3 }}>
                     <Button onClick={closeDialog} variant='contained'>Close</Button>
                     <Button onClick={onSchedule} variant='contained'>Schedule</Button>
                 </DialogActions>
@@ -318,4 +317,8 @@ const mapDispatchToProps = (dispatch) => ({
     createBook: (data) => dispatch(createBook(data))
 })
 
-export default connect(null, mapDispatchToProps)(Court);
+const mapStateToProps = (state) => ({
+    bookingDate: state.booking.bookingDate
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Court);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -9,37 +9,41 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { Pagination } from '@mui/material';
-import { changeCurrentPage } from '../../actions/pageAction';
 import { connect } from 'react-redux';
 
-const Topbar = ({ changeCurrentPage, currentPage }) => {
-    // const [currentPage, setCurrentPage] = useState(1)
+import { changeCurrentPage } from '../../actions/pageAction';
+import { setBookingDate } from '../../actions/bookingAction';
+
+const Topbar = ({ changeCurrentPage, currentPage, setBookingDate }) => {
 
     const handlePageChange = (event, page) => {
-        // setCurrentPage(page)
         changeCurrentPage(page)
     }
 
-    const [value, setValue] = useState(dayjs());
+    const [date, setDate] = useState(dayjs());
     const [today, setToday] = useState(true);
 
     const changeToday = (event) => {
         setToday(event.target.checked)
 
         if (event.target.checked) {
-            setValue((value) => value.add(-1, 'day'));
+            setDate((value) => value.add(-1, 'day'));
         } else {
-            setValue((value) => value.add(1, 'day'));
+            setDate((value) => value.add(1, 'day'));
         }
     }
+
+    useEffect(() => {
+        setBookingDate(date.format('YYYY-MM-DDT00:00:00'))
+    }, [date, setBookingDate])
 
     return (
         <Grid container spacing={1} alignItems='center' maxWidth='xl' textAlign={'center'} my={3}>
             <Grid item xs={12} sm={6} lg={3} justifyContent={'center'}>
                 <DatePicker
                     label="Date"
-                    value={value}
-                    onChange={(newValue) => setValue(newValue)}
+                    value={date}
+                    onChange={(newValue) => {setDate(newValue); }}
                 />
             </Grid>
             <Grid item xs={12} sm={6} lg={3}>
@@ -72,11 +76,12 @@ const Topbar = ({ changeCurrentPage, currentPage }) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    changeCurrentPage: (page) => dispatch(changeCurrentPage(page))
+    changeCurrentPage: (page) => dispatch(changeCurrentPage(page)),
+    setBookingDate: (date) => dispatch(setBookingDate(date))
 })
 
 const mapStateToProps = (state) => ({
-    currentPage: state.page.currentPage
+    currentPage: state.page.currentPage,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)( Topbar );
