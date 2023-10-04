@@ -5,8 +5,6 @@ import axios from "axios";
 export const createBook = (data) => (dispatch) => {
     axios.post(backendUrl + '/api/booking/createBook', data)
     .then((res) => {
-
-        console.log(res.data);
         dispatch ({
             type: BOOKING_SUCCESS,
         })

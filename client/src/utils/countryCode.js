@@ -17,7 +17,7 @@ export const alpha3ToAlph2 = {
     'GER': 'DE',
     'AUS': 'AU',
     'CAN': 'CA',
-    'SUI': 'SU',  // ???
+    'SUI': 'CH',  
     'GBR': 'GB',
     'BUL': 'BG',
     'BRA': 'BR',
@@ -27,12 +27,12 @@ export const alpha3ToAlph2 = {
     'CHN': 'CN',
     'NED': 'NL',
     'UKR': 'UA',
-    'BEL': 'BE', // ??? Belarus OR Belgium OR Belize
+    'BEL': 'BE', 
     'EGY': 'EG',
-    'SLO': 'SL', // Slovakia OR Slovenia
+    'SLO': 'SI', 
     'COL': 'CO',
     'POR': 'PT',
     'SWE': 'SE',
-    'HUN': 'HU', ///
+    'HUN': 'HU', 
     'JPN': 'JP',
 }

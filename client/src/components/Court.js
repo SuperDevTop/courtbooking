@@ -7,19 +7,19 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useState } from 'react';
 import Stack from '@mui/material/Stack';
-import { IconButton } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { TextField } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
 import { connect } from 'react-redux';
 import { Select } from '@mui/material';
 import {FormControl, InputLabel} from '@mui/material';
 import WorldFlag from 'react-country-flag';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 import ImageCard from '../components/ImageCard';
 import { createBook } from '../actions/bookingAction';
 import { alpha3ToAlph2 } from '../utils/countryCode';
+import CustomAlert from './CustomAlert';
+import ChipsWithCloseButton from './ChipsWithCloseButton';
 
 // const theme = createTheme({
 //     components: {
@@ -34,6 +34,9 @@ import { alpha3ToAlph2 } from '../utils/countryCode';
 // });
 
 const Court = (props) => {
+    const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = useState(false);
+
     const players = props.players
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedPlayer, setSelectedPlayer] = useState({ });
@@ -76,14 +79,31 @@ const Court = (props) => {
                 
                 const lastname = newValue.split(' ')
                 setImage('/images/players/' + lastname[lastname.length - 1] + '.jpg')
+
+                
+                if (newValue === 'Juan Manuel Cerundolo') {
+                    setImage('/images/players/Juan-Manuel_Cerundolo.jpg')
+                }
             }
         }
     }
 
     const onSchedule = () => {
+        
         const initialDate = new Date(props.bookingDate);
-        const newDate = new Date(initialDate.getTime() + rownum * 30 * 60 * 1000); // start time : calculated by row(time is 
-           // increased 30mins row by row, so...)
+        const newDate = new Date(initialDate.getTime() + rownum * 30 * 60 * 1000 + 480 * 60 * 1000); // start time : calculated by row(time is 
+           // increased 30mins row by row, and the first row is 8:00 AM)
+    
+        console.log(newDate);
+
+        if (schedulingPlayers.length === 0) {  // if no any players are selected
+            setOpen(false)
+            setTimeout(() => {
+                setOpen(true)
+            }, 200);
+
+            return
+        }
 
         const data = {
             court_name: name,
@@ -104,7 +124,12 @@ const Court = (props) => {
 
             return
         } else if(schedulingPlayers.length === 4) {
-            alert('You can book 4 players at max!')
+            setOpen1(false)
+
+            setTimeout(() => {
+                setOpen1(true)
+            }, 200);
+
             return
         }
         
@@ -119,9 +144,15 @@ const Court = (props) => {
         setTimeLength(event.target.value)
     }
 
+    const handleDeleteChip = (chipToDelete) => {
+        setSchdulingPlayers((schedulingPlayers) => schedulingPlayers.filter((chip) => chip !== chipToDelete));
+    }
+
     return(
         <>
         <Box>
+            <CustomAlert openState={open} text='You must select one player at least !' />
+            <CustomAlert openState={open1} text='You can book 4 players at max !' />
             <Box
                 backgroundColor={headerColor}
                 padding={2}
@@ -179,26 +210,22 @@ const Court = (props) => {
                     </Box>
                     }
     
-                    <Typography pl={3} pb={3} variant='h6' color='white' >
-                        <Grid container alignItems="center" spacing={1}>
-                            {
-                                book.isBooked ? 
-                                <Grid item xs={6} color='white'>
-                                    <span>comments</span>
-                                </Grid> :
-                                <Grid item xs={6} color='secondary.text'>
-                                    <span>comments</span>
-                                </Grid> 
-                            }
-                            
+                    <Typography variant='h6' color='white' >
+                        <Grid container alignItems="center" justifyContent={'space-around'}>
                             <Grid item>
-                                <FavoriteIcon/>
+                                {
+                                    book.isBooked ? 
+                                        <span style={{ color: 'white' }}>comments</span>
+                                    :
+                                        <span style={{ color: '#a9a9a9' }}>comments</span>   
+                                }
                             </Grid>
                             <Grid item>
+                            <Grid container alignItems='center' gap={1}>
+                                <FavoriteIcon />
                                 <ShareIcon />
-                            </Grid>
-                            <Grid item>
                                 <BookmarkIcon />
+                            </Grid>
                             </Grid>
                         </Grid>
                     </Typography>
@@ -209,33 +236,33 @@ const Court = (props) => {
         </Box>
         <Dialog open={openDialog} maxWidth='sm' fullWidth
                 PaperProps={{
-                    style:{
+                    style: {
                         backgroundColor:"#e0e0e0",
                     }
                 }}
             >
+
                 <DialogTitle fontWeight={700} marginTop={2}>ADD SCHEDULING</DialogTitle>
                 <DialogContent>
-                    <Stack spacing={1} sx={{ width: '50%' }}>
-                        <Autocomplete
-                            {...flatProps}
-                            id="controlled-demo"
-                            value={selectedPlayer.name}
-                            onChange={onChangePlayer}
-                            renderInput={(params) => (
-                                <TextField {...params} label="Players" variant="standard" />
-                            )}
-                        />
-                    
-                    </Stack>
-                    <Typography marginTop={3} variant='h5'>
-                        { selectedPlayer.name}
-                    </Typography>
-                    <span style={{marginBottom : '10vh'}}>Seeded: {selectedPlayer.tournament_seed}</span>
-
-                    <Grid container paddingLeft={1}>
+                    <Grid container>
                         <Grid item xs={6}>
-                            <Typography marginTop={3} variant='h6'>
+                            <Stack spacing={1}>
+                                <Autocomplete
+                                    {...flatProps}
+                                    id="controlled-demo"
+                                    value={selectedPlayer.name}
+                                    onChange={onChangePlayer}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Players" variant="standard" />
+                                    )}
+                                />                    
+                            </Stack>
+                            <Typography marginTop={3} variant='h5'>
+                                { selectedPlayer.name }
+                            </Typography>
+                            <span style={{marginBottom : '1vh', color: 'blue'}}>Seeded: { selectedPlayer.tournament_seed }</span>
+
+                            <Typography marginTop={1} variant='h6'>
                                 <span style={{ color: 'red', marginRight: 30}}>
                                     { selectedPlayer.natl }
                                 </span>
@@ -267,41 +294,29 @@ const Court = (props) => {
                                     onChange={onChangeTimeLength}
                                     label='timeLength'
                                 >
-                                    <MenuItem value={2}>2 (1 hour)</MenuItem>
-                                    <MenuItem value={1}>1 (30 mins)</MenuItem>
-                                    <MenuItem value={4}>4 (2 hour)</MenuItem>
+                                    <MenuItem value={2}>Practice (1 hr)</MenuItem>
+                                    <MenuItem value={1}>Warm-Up (30 mins)</MenuItem>
+                                    <MenuItem value={4}>Practice (2 hr)</MenuItem>
                                 </Select>
-                            </FormControl>
-                            <Box sx={{ padding: 2, paddingBottom: 3, marginTop: 2, marginRight: 2, backgroundColor:'primary.main', borderRadius: 1.5 }}>
-                                
-                                <Typography color='white' variant='h6' textAlign='center'>SELECT PLAYERS:</Typography>
+                            </FormControl>       
+                        </Grid>
+                        <Grid item xs={6}>                            
+                            <Box sx={{  marginTop: 8, marginRight: 2, borderRadius: 1.5 }}>                        
+                                <Typography color='black' variant='h6' textAlign='center'>Selected Players:</Typography>
                                 {
-                                    schedulingPlayers.map((player, index) => (
-                                        <Box marginTop={1} key={index} sx={{ color: 'white', padding: 1 }}>
-                                            { player }
-                                        </Box>
-                                    ))
+                                    <ChipsWithCloseButton chip={schedulingPlayers} handleDeleteChipe={handleDeleteChip} />
                                 }
                             </Box>
-
-                        </Grid>
-                        <Grid item xs={6}>
+                            <Button variant='contained' onClick={addPlayer} sx={{ marginTop:2, marginBottom: 2 }}> 
+                                <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
+                                Add Player
+                            </Button>
                             <ImageCard 
                                 image_Url={image}
                                 title={selectedPlayer.name}
-                            />                         
+                            />  
                         </Grid>
-                    </Grid>      
-                    
-                    <Stack direction='row' spacing={1} sx={{float: 'right'}}>
-                        <IconButton onClick={addPlayer}>
-                            <AddCircleOutlineIcon aria-label='add' sx={{ color: 'red' }}/>
-                        </IconButton>
-                        <IconButton>
-                            <RemoveCircleOutlineIcon color='secondary'/>
-                        </IconButton>
-                    </Stack>            
-
+                    </Grid>
                 </DialogContent>
                 <DialogActions sx={{ paddingRight: 3, paddingBottom: 3 }}>
                     <Button onClick={closeDialog} variant='contained'>Close</Button>
