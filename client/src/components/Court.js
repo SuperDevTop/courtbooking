@@ -11,15 +11,17 @@ import { TextField } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
 import { connect } from 'react-redux';
 import { Select } from '@mui/material';
-import {FormControl, InputLabel} from '@mui/material';
+import { FormControl, InputLabel } from '@mui/material';
 import WorldFlag from 'react-country-flag';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 import ImageCard from '../components/ImageCard';
 import { createBook } from '../actions/bookingAction';
 import { alpha3ToAlph2 } from '../utils/countryCode';
 import CustomAlert from './CustomAlert';
 import ChipsWithCloseButton from './ChipsWithCloseButton';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 // const theme = createTheme({
 //     components: {
@@ -32,6 +34,13 @@ import ChipsWithCloseButton from './ChipsWithCloseButton';
 //         }
 //     }
 // });
+
+const withCommonIconStyle = (WrappedComponent) => (props) => (
+    <WrappedComponent {...props} sx={{ marginRight: 1, verticalAlign: 'text-bottom' }} />
+  );
+  
+const CheckCircleWithStyle = withCommonIconStyle(CheckCircleIcon);
+  
 
 const Court = (props) => {
     const [open, setOpen] = useState(false);
@@ -214,18 +223,19 @@ const Court = (props) => {
                         <Grid container alignItems="center" justifyContent={'space-around'}>
                             <Grid item>
                                 {
-                                    book.isBooked ? 
+                                    book.isBooked 
+                                    ? 
                                         <span style={{ color: 'white' }}>comments</span>
                                     :
                                         <span style={{ color: '#a9a9a9' }}>comments</span>   
                                 }
                             </Grid>
                             <Grid item>
-                            <Grid container alignItems='center' gap={1}>
-                                <FavoriteIcon />
-                                <ShareIcon />
-                                <BookmarkIcon />
-                            </Grid>
+                                <Grid container alignItems='center' gap={1}>
+                                    <FavoriteIcon />
+                                    <ShareIcon />
+                                    <BookmarkIcon />
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Typography>
@@ -237,15 +247,19 @@ const Court = (props) => {
         <Dialog open={openDialog} maxWidth='sm' fullWidth
                 PaperProps={{
                     style: {
-                        backgroundColor:"#e0e0e0",
+                        backgroundColor:"#f0f0f0",
                     }
                 }}
             >
 
-                <DialogTitle fontWeight={700} marginTop={2}>ADD SCHEDULING</DialogTitle>
+                <DialogTitle fontWeight={600} variant='h6' marginTop={2} textAlign='center' color='black'>
+                    <CalendarMonthIcon sx={{ verticalAlign: 'text-bottom', marginRight: 1 }}/> 
+                       SCHEDULE
+                    <CalendarMonthIcon sx={{ verticalAlign: 'text-bottom', marginLeft: 1 }}/> 
+                </DialogTitle>
                 <DialogContent>
-                    <Grid container>
-                        <Grid item xs={6}>
+                    <Grid container color='primary.info'>
+                        <Grid item xs={7}>
                             <Stack spacing={1}>
                                 <Autocomplete
                                     {...flatProps}
@@ -257,36 +271,51 @@ const Court = (props) => {
                                     )}
                                 />                    
                             </Stack>
-                            <Typography marginTop={3} variant='h5'>
-                                { selectedPlayer.name }
-                            </Typography>
-                            <span style={{marginBottom : '1vh', color: 'blue'}}>Seeded: { selectedPlayer.tournament_seed }</span>
+                            <Grid container>
+                                <Grid item xs={7} >
+                                    <Typography marginTop={3} variant='h6' alignItems='center'>
+                                        <CheckCircleIcon sx={{ marginRight: 1, verticalAlign: 'text-bottom' }}/>{ selectedPlayer.name }
+                                    </Typography>
+                                    <Typography marginTop={2} marginBottom={2} alignItems='center' variant='h6'>
+                                        <CheckCircleWithStyle />
+                                        Seeded: { selectedPlayer.tournament_seed }
+                                    </Typography>
+                                    <CheckCircleWithStyle />
 
-                            <Typography marginTop={1} variant='h6'>
-                                <span style={{ color: 'red', marginRight: 30}}>
-                                    { selectedPlayer.natl }
-                                </span>
-                                <WorldFlag countryCode={alpha3ToAlph2[selectedPlayer.natl]} svg style={{ width: '1.5em', height: '1.5em' }} />
-                                <br/>
+                                    <span style={{ marginRight: 30}}>
+                                        { selectedPlayer.natl }
+                                    </span>
+                                    
+                                    <WorldFlag countryCode={alpha3ToAlph2[selectedPlayer.natl]} svg style={{ width: '3em', height: '3em' }} />
+                                    <br/>
+                                    
+                                </Grid>
+                                <Grid item xs={5} textAlign='center'>
+                                    <img src={"/images/" + selectedPlayer.atp_wta + ".png"} style={{ width: 100, marginTop: 30 }} alt={selectedPlayer.atp_wta}/>
+                                </Grid>
+                            </Grid>
+                            <Typography variant='h6' marginTop={1}>
+                                <CheckCircleWithStyle />
                                 Handiness: { selectedPlayer.right_handed ? 'Right' : 'Left' } <br />
                             </Typography>
-                            <Typography color='brown' variant='h6'>
+                            <Typography variant='h6' marginTop={2}>                                
+                                <CheckCircleWithStyle />                               
                                 Status: { selectedPlayer.status}
                             </Typography>
-                            <Typography color='blue' variant='h6'>
-                                { selectedPlayer.atp_wta}
-                            </Typography>
-                            <Typography color='green' variant='h6'>
+                            <Typography variant='h6' marginTop={2}>   
+                                <CheckCircleWithStyle />                                
                                 { selectedPlayer.singles_in ? 'Singles In' : 'Singles Out'}
                             </Typography>
-                            <Typography color='red' variant='h6'>
+                            <Typography variant='h6' marginTop={2}>
+                                <CheckCircleWithStyle />                               
                                 { selectedPlayer.doubles_in ? 'Doubles In' : 'Doubles Out'}
                             </Typography>
-                            <Typography color='brown' variant='h6'>
+                            <Typography variant='h6' marginTop={2}>
+                                <CheckCircleWithStyle />                               
                                 { props.name } 10:00 - 11:00
                             </Typography>
-                            <FormControl variant="filled" sx={{ minWidth: 120, marginTop: 2, marginBottom: 2 }} >
-                                <InputLabel id="demo-simple-select-filled-label">Time Length</InputLabel>
+                            <FormControl variant="filled" sx={{ minWidth: 120, marginTop: 2 }} >
+                                <InputLabel id="demo-simple-select-filled-label">Reservation Type</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-filled-label"
                                     id="demo-simple-select-filled"
@@ -300,14 +329,12 @@ const Court = (props) => {
                                 </Select>
                             </FormControl>       
                         </Grid>
-                        <Grid item xs={6}>                            
+                        <Grid item xs={5}>                            
                             <Box sx={{  marginTop: 8, marginRight: 2, borderRadius: 1.5 }}>                        
                                 <Typography color='black' variant='h6' textAlign='center'>Selected Players:</Typography>
-                                {
-                                    <ChipsWithCloseButton chip={schedulingPlayers} handleDeleteChipe={handleDeleteChip} />
-                                }
+                                <ChipsWithCloseButton chip={schedulingPlayers} handleDeleteChipe={handleDeleteChip} />
                             </Box>
-                            <Button variant='contained' onClick={addPlayer} sx={{ marginTop:2, marginBottom: 2 }}> 
+                            <Button variant='outlined' onClick={addPlayer} sx={{ marginTop:2, marginBottom: 2 }}> 
                                 <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
                                 Add Player
                             </Button>
@@ -318,7 +345,7 @@ const Court = (props) => {
                         </Grid>
                     </Grid>
                 </DialogContent>
-                <DialogActions sx={{ paddingRight: 3, paddingBottom: 3 }}>
+                <DialogActions sx={{ paddingRight: 5, paddingBottom: 3 }}>
                     <Button onClick={closeDialog} variant='contained'>Close</Button>
                     <Button onClick={onSchedule} variant='contained'>Schedule</Button>
                 </DialogActions>
@@ -326,7 +353,6 @@ const Court = (props) => {
         </>
     )
 }
-
 
 const mapDispatchToProps = (dispatch) => ({
     createBook: (data) => dispatch(createBook(data))

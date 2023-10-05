@@ -10,20 +10,19 @@ const TimePanel = () => {
         <Box>
             <Box
                 sx={{
-                    backgroundColor: 'yellow',
+                    backgroundColor: '#c278dc',
                     position: 'sticky',
                     top: 0,
                     zIndex: 1
                 }}
-                padding={2}
-                
+                padding={2}                
             >
                 <TimeIcon sx={{verticalAlign: 'bottom'}}/>
                 <strong>&nbsp;Time </strong>
             </Box>
             <Box
                 sx={{
-                    backgroundColor: 'primary.dark',
+                    backgroundColor: '#100852   ',
                     color: 'white',
                     border: '2px solid #a0a0a0',
                 }}

@@ -12,6 +12,8 @@ import Court from '../components/Court';
 import { getPlayersData } from '../actions/playerActions';
 import setAuthToken from '../utils/setAuthToken';
 import Topbar from '../components/layout/Topbar';
+import { courtNames } from '../utils/courtNames';
+import { getBookingData } from '../actions/bookingAction';
 
 const Stadium_Booking = [
     {
@@ -493,11 +495,12 @@ for (let index = 0; index < 27; index++) {
     }
 }
 
-const Dashboard = ({ getPlayersData, players, currentPage }) => {
+const Dashboard = ({ getPlayersData, players, currentPage, getBookingData }) => {
 
     const dispatch = useDispatch()
     const history = useNavigate()
 
+    // Auto Log Out
     useEffect(() => {
         setInterval(() => {
             if (localStorage.token) {
@@ -517,26 +520,28 @@ const Dashboard = ({ getPlayersData, players, currentPage }) => {
         getPlayersData();
     }, [getPlayersData])
 
-    const titles = ['Stadium', 'Grandstand', 'BB', 'Court1', 'Court2', 'Court3', 'Court4', 'Court5', 
-                    'Court6', 'Court7', 'Court8', 'Court9', 'Court10', 'Court11', 'Court12', 'Court13', 
-                    'Court14', 'Court15', 'Court16', 'Court17', 'Court18', 'Court19', 'Court20', 'Court21',
-                    'Court22', 'Court23', 'Court24'];
+    const titles = courtNames;
     const colors = ['green', 'red', 'yellow', 'blue', 'pink']
     const [displayedCourts, setdisplayedCourts] = useState([])
+    const [bookingData, setBookingData] = useState([])
 
     useEffect(() => {
         let temp = [];
+        let displayedCourtNames = [];
 
         if (currentPage === 6) {
             temp = [25, 26]
         } else {
             for (let index = 5 * (currentPage - 1); index < 5 * currentPage; index++) {
-                temp.push(index)            
+                temp.push(index)
+                displayedCourtNames.push(courtNames[index])            
             }
         }
 
         setdisplayedCourts(temp)
-    }, [currentPage])
+        setBookingData(getBookingData({ 'court_names': displayedCourtNames }))
+
+    }, [currentPage, getBookingData])
     
     return (
         <>
@@ -565,7 +570,8 @@ const Dashboard = ({ getPlayersData, players, currentPage }) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    getPlayersData: () => dispatch(getPlayersData())
+    getPlayersData: () => dispatch(getPlayersData()),
+    getBookingData: (court_names) => dispatch(getBookingData(court_names))
  })
  
 
