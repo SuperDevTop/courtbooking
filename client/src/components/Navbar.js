@@ -31,7 +31,7 @@ function DrawerAppBar(props) {
   // const { primary, secondary } = theme.palette;
 
   if (props.isAuthenticated) {
-    navItems = ['Booking', 'About', 'Log out'];
+    navItems = ['Booking', 'About', 'Logout'];
   } else {
     navItems = []
   }
