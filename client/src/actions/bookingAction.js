@@ -24,7 +24,6 @@ export const getBookingData = (data) => (dispatch) => {
     axios.post(backendUrl + '/api/booking/getBookingData', data)
     .then((res) => {
         const { booking_data } = res.data
-        console.log(booking_data);
         
         dispatch({
             type: GET_BOOKING_DATA,

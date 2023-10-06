@@ -31,7 +31,7 @@ function DrawerAppBar(props) {
   // const { primary, secondary } = theme.palette;
 
   if (props.isAuthenticated) {
-    navItems = ['Booking', 'Court', 'About', 'Logout'];
+    navItems = ['Booking', 'About', 'Log out'];
   } else {
     navItems = []
   }
@@ -60,7 +60,7 @@ function DrawerAppBar(props) {
       }} 
      >
       <Typography variant="h6" sx={{ my: 2 }}>
-        CourtBooking
+        <i>CourtBooking</i>
       </Typography>
       <Divider />
       <List>
@@ -82,7 +82,7 @@ function DrawerAppBar(props) {
       props.isAuthenticated ? 'flex' : 'none'
     }>
       <CssBaseline />
-      <AppBar component="nav" position='static' sx={{ backgroundColor: 'primary.dark' }}>
+      <AppBar component="nav" position='static' sx={{ backgroundColor: 'white', color:'black' }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -94,27 +94,27 @@ function DrawerAppBar(props) {
             <MenuIcon />
           </IconButton>
           <Link to={'/dashboard'}>
-            <img src={'/logo.png'} alt='logo' style={{width:'2vw', marginRight: '1vw', display: { xs: 'none' }}}/>
+            <img src={'/logo.png'} alt='logo' style={{width:'2vw', marginRight: '0.3vw', display: { xs: 'none' }}}/>
           </Link>
           <Typography
             variant="h6"
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            CourtBooking
+            <i>CourtBooking</i>
           </Typography>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <Box sx={{ display: { xs: 'none', sm: 'block' }, gap:2 }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#fff' }}>
+              <Button key={item} sx={{ color: 'white', marginRight: 2, textTransform: 'lowercase', borderColor: 'black' }} variant='contained'>
                 <Typography variant='h6' fontSize={17} >
                   {
                     (item === 'Logout')
                     ?
                     <span fontFamily={'cursive'} onClick={onLogOut} style={{textDecoration: 'none', color:'inherit'}}>
-                    {item}
+                      {item}
                     </span>
                     :
-                    <NavLink to={`/${item.toLowerCase()}`} style={{textDecoration: 'none', color:'inherit'}}>
+                    <NavLink to={`/${item}`} style={{textDecoration: 'none', color:'inherit'}}>
                       {item}
                     </NavLink>
                   }

@@ -22,6 +22,8 @@ import { alpha3ToAlph2 } from '../utils/countryCode';
 import CustomAlert from './CustomAlert';
 import ChipsWithCloseButton from './ChipsWithCloseButton';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { colorScale } from '../utils/gradientColor';
+import { courtActiveBackground } from '../utils/gradientColor';
 
 // const theme = createTheme({
 //     components: {
@@ -182,7 +184,8 @@ const Court = (props) => {
                 booking.map((book, index) => (
                 <Box
                     sx={{
-                        backgroundColor: `${ !book.isBooked ?'#343434' : '#606060'}`,
+                        // backgroundColor: `${ !book.isBooked ?'#343434' : '#606060'}`,
+                        backgroundColor: `${courtActiveBackground[index % 5]}`,
                         paddingTop: 2,
                         border: 'solid 2px #a0a0a0',
                         color: 'white',
@@ -273,18 +276,18 @@ const Court = (props) => {
                             </Stack>
                             <Grid container>
                                 <Grid item xs={7} >
-                                    <Typography marginTop={3} variant='h6' alignItems='center'>
+                                    <Typography marginTop={3} variant='h6' alignItems='center' color={colorScale[0]}>
                                         <CheckCircleIcon sx={{ marginRight: 1, verticalAlign: 'text-bottom' }}/>{ selectedPlayer.name }
                                     </Typography>
-                                    <Typography marginTop={2} marginBottom={2} alignItems='center' variant='h6'>
+                                    <Typography marginTop={2} marginBottom={2} alignItems='center' variant='h6' color={colorScale[1]}>
                                         <CheckCircleWithStyle />
                                         Seeded: { selectedPlayer.tournament_seed }
                                     </Typography>
-                                    <CheckCircleWithStyle />
 
-                                    <span style={{ marginRight: 30}}>
+                                    <Typography component={'span'} variant='h6' style={{ marginRight: 30 }} color={colorScale[2]}>
+                                        <CheckCircleWithStyle />
                                         { selectedPlayer.natl }
-                                    </span>
+                                    </Typography >
                                     
                                     <WorldFlag countryCode={alpha3ToAlph2[selectedPlayer.natl]} svg style={{ width: '3em', height: '3em' }} />
                                     <br/>
@@ -294,23 +297,23 @@ const Court = (props) => {
                                     <img src={"/images/" + selectedPlayer.atp_wta + ".png"} style={{ width: 100, marginTop: 30 }} alt={selectedPlayer.atp_wta}/>
                                 </Grid>
                             </Grid>
-                            <Typography variant='h6' marginTop={1}>
+                            <Typography variant='h6' marginTop={1} color={colorScale[3]}>
                                 <CheckCircleWithStyle />
                                 Handiness: { selectedPlayer.right_handed ? 'Right' : 'Left' } <br />
                             </Typography>
-                            <Typography variant='h6' marginTop={2}>                                
+                            <Typography variant='h6' marginTop={2} color={colorScale[4]}>                                
                                 <CheckCircleWithStyle />                               
                                 Status: { selectedPlayer.status}
                             </Typography>
-                            <Typography variant='h6' marginTop={2}>   
+                            <Typography variant='h6' marginTop={2} color={colorScale[5]}>   
                                 <CheckCircleWithStyle />                                
                                 { selectedPlayer.singles_in ? 'Singles In' : 'Singles Out'}
                             </Typography>
-                            <Typography variant='h6' marginTop={2}>
+                            <Typography variant='h6' marginTop={2} color={colorScale[6]}>
                                 <CheckCircleWithStyle />                               
                                 { selectedPlayer.doubles_in ? 'Doubles In' : 'Doubles Out'}
                             </Typography>
-                            <Typography variant='h6' marginTop={2}>
+                            <Typography variant='h6' marginTop={2} color={colorScale[7]}>
                                 <CheckCircleWithStyle />                               
                                 { props.name } 10:00 - 11:00
                             </Typography>

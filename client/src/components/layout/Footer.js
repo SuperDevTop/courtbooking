@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { useTheme } from '@mui/material';
 import { connect } from 'react-redux';
 
@@ -9,18 +9,27 @@ const Footer = ({ isAuthenticated }) => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
 
-    return(
+    return (
         <Box
             bgcolor= {primary.dark}
             mt={2}
-            py={5}
+            py={4}
             color='white'
             textAlign='center'
             display={
                 isAuthenticated ? "block" : 'none'
             }
         >
-            Copyright @ {currentYear} BookingCourt
+            <Grid container alignItems={'center'}>
+                <Grid item xs={4}>
+                    6, 345, 450 <br></br>
+                    Registered Players
+                </Grid>
+                <Grid item xs={4}>
+                    Copyright @ {currentYear} BookingCourt
+                </Grid>
+                <Grid item xs={4}></Grid>
+            </Grid>
         </Box>
     )
 }

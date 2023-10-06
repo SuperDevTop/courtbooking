@@ -30,17 +30,24 @@ router.post('/createBook', async(req, res) => {
 
 router.post('/getBookingdata', async(req, res) => {
     try {
-        const { court_names } = req.body
+        const { court_names, date } = req.body
 
+        const realDate = new Date(date);
+        const nextDay = new Date(realDate);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+        Booking.find({
+        start_time: {
+            $gte: realDate,
+            $lt: nextDay,
+        }});
         // Use map and Promise.all to execute queries concurrently
         const booking_data = await Promise.all(
             court_names.map(async (court) => {
-                const bookings = await Booking.find({ court_name: court });
+                const bookings = await Booking.find({ court_name: court, start_time: { $gte: realDate, $lt: nextDay }});
                 return bookings;
             })
         );
-
-        console.log(booking_data);
 
         res.status(200).json({ 'booking_data': booking_data })
 

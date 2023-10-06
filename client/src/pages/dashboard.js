@@ -495,10 +495,12 @@ for (let index = 0; index < 27; index++) {
     }
 }
 
-const Dashboard = ({ getPlayersData, players, currentPage, getBookingData }) => {
+const Dashboard = ({ getPlayersData, players, currentPage, getBookingData, booking_data, booking_date }) => {
 
     const dispatch = useDispatch()
     const history = useNavigate()
+
+    console.log(booking_data);
 
     // Auto Log Out
     useEffect(() => {
@@ -523,7 +525,6 @@ const Dashboard = ({ getPlayersData, players, currentPage, getBookingData }) => 
     const titles = courtNames;
     const colors = ['green', 'red', 'yellow', 'blue', 'pink']
     const [displayedCourts, setdisplayedCourts] = useState([])
-    const [bookingData, setBookingData] = useState([])
 
     useEffect(() => {
         let temp = [];
@@ -539,9 +540,9 @@ const Dashboard = ({ getPlayersData, players, currentPage, getBookingData }) => 
         }
 
         setdisplayedCourts(temp)
-        setBookingData(getBookingData({ 'court_names': displayedCourtNames }))
+        getBookingData({ 'court_names': displayedCourtNames, 'date': booking_date })
 
-    }, [currentPage, getBookingData])
+    }, [currentPage, getBookingData, booking_date])
     
     return (
         <>
@@ -571,13 +572,15 @@ const Dashboard = ({ getPlayersData, players, currentPage, getBookingData }) => 
 
 const mapDispatchToProps = (dispatch) => ({
     getPlayersData: () => dispatch(getPlayersData()),
-    getBookingData: (court_names) => dispatch(getBookingData(court_names))
+    getBookingData: (court_names, date) => dispatch(getBookingData(court_names, date))
  })
  
 
 const mapStateToProps = (state) => ({
     players: state.players.players,
     currentPage: state.page.currentPage,
+    booking_data: state.booking.booking_data,
+    booking_date: state.booking.bookingDate,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)( Dashboard );
