@@ -2,7 +2,7 @@ import { BOOKING_SUCCESS, SET_BOOKING_DATE, GET_BOOKING_DATA } from "../actions/
 
 const initialState = {
     bookingDate: new Date(),
-    booking_data: [],
+    booking_data: [[], [], [], [], []],
 };
 
 const bookingReducer = (state = initialState, action) => {

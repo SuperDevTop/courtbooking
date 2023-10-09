@@ -553,13 +553,14 @@ const Dashboard = ({ getPlayersData, players, currentPage, getBookingData, booki
                         <TimePanel />
                     </Grid>
                     {
-                        displayedCourts.map((court) => (
+                        displayedCourts.map((court, index) => (
                             <Grid item xs={12} sm={3} md={2} lg={2} key={court}>
                                 <Court 
                                     name={ titles[court] } 
                                     headerColor={ colors[court % 5] }
                                     booking = { bookings[court] } 
                                     players={ players }
+                                    booking_data={ booking_data[index] }
                                 />
                             </Grid>
                         ))
