@@ -6,7 +6,6 @@ export const createBook = (data, callback) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/createBook", data)
     .then((res) => {
-        console.log('booking success');
         callback && callback();
 
         dispatch({

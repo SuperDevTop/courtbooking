@@ -5,7 +5,7 @@ import { Container } from '@mui/material'
 
 import Register from './pages/Register'
 import Login from './pages/Login'
-import DrawerAppBar from './components/Navbar';
+import DrawerAppBar from './components/layout/Navbar';
 import Dashboard from './pages/Dashboard';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

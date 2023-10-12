@@ -17,10 +17,10 @@ import Button from '@mui/material/Button';
 import { Link, NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import { connect } from 'react-redux';
-import { logOut } from '../actions/authActions';
+import { logOut } from '../../actions/authActions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import setAuthToken from '../utils/setAuthToken';
+import setAuthToken from '../../utils/setAuthToken';
 // import { useTheme } from '@emotion/react';
 
 const drawerWidth = 240;

@@ -20,6 +20,8 @@ import { FormControl, InputLabel } from "@mui/material";
 import WorldFlag from "react-country-flag";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import EditIcon from "@mui/icons-material/Edit";
+import IconButton from "@mui/material/IconButton";
 
 import ImageCard from "../components/ImageCard";
 import { createBook } from "../actions/bookingAction";
@@ -29,6 +31,7 @@ import ChipsWithCloseButton from "./ChipsWithCloseButton";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { colorScale } from "../utils/gradientColor";
 import { courtActiveBackground } from "../utils/gradientColor";
+import EditDialog from "./reservation/EditDialog";
 
 // const theme = createTheme({
 //     components: {
@@ -59,14 +62,17 @@ const Court = (props) => {
 
   const players = props.players;
   const [openDialog, setOpenDialog] = useState(false);
+  const [editDialog, setEditDialog] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState({});
   const [schedulingPlayers, setSchdulingPlayers] = useState([]);
   const [image, setImage] = useState("/images/players/Djokovic.jpg");
   const [rownum, setRownum] = useState(0);
   const [timeLength, setTimeLength] = useState(2);
+  const [reservation_type, setReservationType] = useState("Practice");
+  const [warmupCheckedCount, setWarmupCheckedCount] = useState(0);
+  const [dataofEditDialog, setDataofEditDialog] = useState({});
   const headerColor = props.headerColor;
   const name = props.name;
-  // const booking = props.booking
   const bookedTimeIndexes = [];
 
   // 10/6
@@ -106,7 +112,6 @@ const Court = (props) => {
     const hour = date.getHours().toString();
     const min = date.getMinutes().toString().padStart(2, "0");
     const time = hour + ":" + min;
-
     const ind = timeTexts.indexOf(time);
     bookedTimeIndexes.push(ind);
     dat[ind] = booking_data[index];
@@ -125,9 +130,18 @@ const Court = (props) => {
     }
   }, [players]);
 
+  useEffect(() => {
+    if (warmupCheckedCount === 0) {
+      setReservationType("Practice");
+    } else {
+      setReservationType("Warm Up");
+    }
+  }, [warmupCheckedCount]);
+
   const closeDialog = () => {
     setSchdulingPlayers([]);
     setOpenDialog(false);
+    setWarmupCheckedCount(0);
   };
 
   const open_Dialog = (index) => {
@@ -152,6 +166,18 @@ const Court = (props) => {
 
   const bookingSuccess = () => {
     setbookingCreated(true);
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  };
+
+  const handleWarmupCheck = (value) => {
+    if (value) {
+      setWarmupCheckedCount(warmupCheckedCount + 1);
+    } else {
+      setWarmupCheckedCount(warmupCheckedCount - 1);
+    }
   };
 
   const onSchedule = () => {
@@ -159,8 +185,6 @@ const Court = (props) => {
     const newDate = new Date(
       initialDate.getTime() + rownum * 30 * 60 * 1000 + 480 * 60 * 1000
     ); // start time : calculated by row(time is increased 30mins row by row, and the first row is 8:00)
-
-    console.log(newDate);
 
     if (schedulingPlayers.length === 0) {
       // if no any players are selected
@@ -170,14 +194,6 @@ const Court = (props) => {
       }, 200);
 
       return;
-    }
-
-    let reservation_type = "Warm Up";
-
-    if (timeLength === 1) {
-      reservation_type = "Warm Up";
-    } else {
-      reservation_type = "Practice";
     }
 
     const data = {
@@ -227,19 +243,32 @@ const Court = (props) => {
     );
   };
 
+  const onEdit = (index) => {
+    setEditDialog(true)
+    setDataofEditDialog(dat[index])
+  }
+
+  const onEditDialogClose = () => {
+    setEditDialog(false)
+  }
+
   return (
     <>
       <Box>
         <CustomAlert
           openState={open}
           text="You must select one player at least !"
-          severity='warning'
+          severity="warning"
         />
-        <CustomAlert openState={open1} text="You can book 4 players at max !" severity='warning' />
+        <CustomAlert
+          openState={open1}
+          text="You can book 4 players at max !"
+          severity="warning"
+        />
         <CustomAlert
           openState={bookingCreated}
           text="A booking has been created successfully!"
-          severity='success'
+          severity="success"
         />
         <Box
           backgroundColor={headerColor}
@@ -268,14 +297,21 @@ const Court = (props) => {
             }}
             key={index}
           >
-            {
-              <Typography variant="h5" textAlign="center">
-                {bookedTimeIndexes.includes(index)
-                  ? dat[index].reservation_type
-                  : "Available"}
-              </Typography>
-            }
-            {/* <Typography variant='h6' ml={4} mt={1}>{ time }  </Typography> */}
+            <Typography variant="h5" textAlign="center">
+              {bookedTimeIndexes.includes(index) ? (
+                <>
+                  {dat[index].reservation_type}{" "}
+                  <IconButton aria-label="edit" size="small" onClick={() => { onEdit(index) }}>
+                    <EditIcon                    
+                      sx={{ verticalAlign: "text-bottom", color: "white" }}
+                    />
+                  </IconButton>{" "}
+                </>
+              ) : (
+                "Available"
+              )}
+            </Typography>
+
             {bookedTimeIndexes.includes(index) ? (
               <Box my={3.5} textAlign="center">
                 {dat[index].players.map((player, index) => (
@@ -327,6 +363,7 @@ const Court = (props) => {
           </Box>
         ))}
       </Box>
+      {/* Create Reservation Dialog */}
       <Dialog
         open={openDialog}
         maxWidth="sm"
@@ -334,6 +371,7 @@ const Court = (props) => {
         PaperProps={{
           style: {
             backgroundColor: "#f0f0f0",
+            maxWidth: "800px",
           },
         }}
       >
@@ -354,7 +392,7 @@ const Court = (props) => {
         </DialogTitle>
         <DialogContent>
           <Grid container color="primary.info">
-            <Grid item xs={7}>
+            <Grid item xs={6}>
               <Stack spacing={1}>
                 <Autocomplete
                   {...flatProps}
@@ -450,20 +488,21 @@ const Court = (props) => {
                   onChange={onChangeTimeLength}
                   label="timeLength"
                 >
-                  <MenuItem value={2}>Practice (1 hr)</MenuItem>
-                  <MenuItem value={1}>Warm-Up (30 mins)</MenuItem>
-                  <MenuItem value={4}>Practice (2 hr)</MenuItem>
+                  <MenuItem value={2}>1 hr</MenuItem>
+                  <MenuItem value={1}>30 mins</MenuItem>
+                  <MenuItem value={4}>2 hrs</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={6}>
               <Box sx={{ marginTop: 8, marginRight: 2, borderRadius: 1.5 }}>
                 <Typography color="black" variant="h6" textAlign="center">
                   Selected Players:
                 </Typography>
                 <ChipsWithCloseButton
                   chip={schedulingPlayers}
-                  handleDeleteChipe={handleDeleteChip}
+                  handleDeleteChip={handleDeleteChip}
+                  handleWarmupCheck={handleWarmupCheck}
                 />
               </Box>
               <Button
@@ -487,6 +526,9 @@ const Court = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Edit Reservation Dialog */}
+      <EditDialog open={editDialog} close={onEditDialogClose} data={dataofEditDialog}/>
     </>
   );
 };

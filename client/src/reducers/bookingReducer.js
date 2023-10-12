@@ -1,7 +1,7 @@
 import { BOOKING_SUCCESS, SET_BOOKING_DATE, GET_BOOKING_DATA } from "../actions/types";
 
 const initialState = {
-    bookingDate: new Date(),
+    booking_date: '',
     booking_data: [[], [], [], [], []],
 };
 
@@ -15,7 +15,7 @@ const bookingReducer = (state = initialState, action) => {
         case SET_BOOKING_DATE:
             return {
                 ...state,
-                bookingDate: action.payload.booking_date
+                booking_date: action.payload.booking_date
             }
 
         case GET_BOOKING_DATA:

@@ -20,7 +20,7 @@ const Topbar = ({ changeCurrentPage, currentPage, setBookingDate }) => {
         changeCurrentPage(page)
     }
 
-    const [date, setDate] = useState(dayjs());
+    const [date, setDate] = useState(dayjs().subtract(1, "day"));
     const [today, setToday] = useState(true);
 
     const changeToday = (event) => {
