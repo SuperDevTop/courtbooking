@@ -1,5 +1,5 @@
 import { Box, Button, Typography, Grid, MenuItem } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Dialog,
   DialogActions,
@@ -17,6 +17,16 @@ import ChipsWithCloseButton from "../ChipsWithCloseButton";
 
 const EditDialog = ({ open, close, data }) => {
   const [timeLength, setTimeLength] = useState(2);
+  const [warmupCheckedCount, setWarmupCheckedCount] = useState(0);
+  const [chip, setChip] = useState([]);
+
+  console.log(chip);
+
+  useEffect(() => {
+    if (data.hasOwnProperty('players')) {
+      setChip(data.players)
+    }
+  }, [data])
 
   // Save edited reservation
   const onSave = () => {
@@ -25,9 +35,26 @@ const EditDialog = ({ open, close, data }) => {
     }
   };
 
+  const handleWarmupCheck = (value) => {
+    if (value === true) {
+      setWarmupCheckedCount(warmupCheckedCount + 1)
+    } else {
+      setWarmupCheckedCount(warmupCheckedCount - 1)
+    }
+  }
+
   const onChangeTimeLength = (event) => {
     setTimeLength(event.target.value);
   };
+
+  const handleDeleteChip = (chipToDelete) => {
+    setChip(chip.filter((one) => one !== chipToDelete))
+  }
+
+  const onClose = () => {
+    setChip(data.players)
+    close();
+  }
 
   return (
     <Dialog
@@ -78,16 +105,16 @@ const EditDialog = ({ open, close, data }) => {
                 Selected Players:
               </Typography>
               <ChipsWithCloseButton
-                chip={data.players}
-                // handleDeleteChip={handleDeleteChip}
-                // handleWarmupCheck={handleWarmupCheck}
+                chip={chip}
+                handleDeleteChip={handleDeleteChip}
+                handleWarmupCheck={handleWarmupCheck}
               />
             </Box>
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions sx={{ paddingRight: 3, paddingBottom: 3 }}>
-        <Button onClick={close} variant="contained">
+        <Button onClick={onClose} variant="contained">
           Close
         </Button>
         <Button onClick={onSave} variant="contained">

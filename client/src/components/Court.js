@@ -538,7 +538,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  bookingDate: state.booking.bookingDate,
+  bookingDate: state.booking.booking_date,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Court);

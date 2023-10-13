@@ -1,13 +1,13 @@
 const express = require('express')
 const router = express.Router();
 
-const Player = require('../models/players')
 const Booking = require('../models/booking')
 
 router.post('/createBook', async(req, res) => {
     try {
         const { court_name, booker, start_time, time_slot, reservation_type, players } = req.body
 
+        console.log(start_time);
         const newBook =  new Booking({
             court_name,
             booker,
