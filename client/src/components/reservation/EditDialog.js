@@ -12,27 +12,39 @@ import { Select } from "@mui/material";
 import { FormControl, InputLabel } from "@mui/material";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 
+import { updateBook } from "../../actions/bookingAction";
 import CustomAlert from "../CustomAlert";
 import ChipsWithCloseButton from "../ChipsWithCloseButton";
 
-const EditDialog = ({ open, close, data }) => {
+const EditDialog = ({ open, close, data, updateBook }) => {
   const [timeLength, setTimeLength] = useState(2);
   const [warmupCheckedCount, setWarmupCheckedCount] = useState(0);
   const [chip, setChip] = useState([]);
-
-  console.log(chip);
+  const [alertOpen, setAlertOpen] = useState(false)
 
   useEffect(() => {
     if (data.hasOwnProperty('players')) {
       setChip(data.players)
+      setTimeLength(data.time_slot)
     }
   }, [data])
 
   // Save edited reservation
   const onSave = () => {
-    const data = {
+    let reservation_type = 'Practice'
 
+    if (warmupCheckedCount > 0) {
+      reservation_type = 'Warm Up'
     }
+
+    const dat = {
+      id: data._id,
+      time_slot: timeLength,
+      players: chip,
+      reservation_type: reservation_type
+    }
+
+    updateBook(dat, updateSuccess)
   };
 
   const handleWarmupCheck = (value) => {
@@ -53,13 +65,21 @@ const EditDialog = ({ open, close, data }) => {
 
   const onClose = () => {
     setChip(data.players)
+    setAlertOpen(false)
     close();
+  }
+
+  const updateSuccess = () => {
+    setAlertOpen(true)
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000);
   }
 
   return (
     <Dialog
       open={open}
-      maxWidth="md"
+      maxWidth="sm"
       fullWidth
       PaperProps={{
         style: {
@@ -67,6 +87,11 @@ const EditDialog = ({ open, close, data }) => {
         },
       }}
     >
+      <CustomAlert
+          openState={alertOpen}
+          text="The reservation has been updated successfully !"
+          severity="success"
+        />
       <DialogTitle
         fontWeight={600}
         variant="h6"
@@ -81,8 +106,8 @@ const EditDialog = ({ open, close, data }) => {
       </DialogTitle>
       <DialogContent>
         <Grid container color="primary.info">
-          <Grid item xs={6}>
-            <FormControl variant="filled" sx={{ minWidth: 190, marginTop: 2 }}>
+          <Grid item xs={3}>
+            <FormControl variant="filled" sx={{ minWidth: 120, marginTop: 2 }}>
               <InputLabel id="demo-simple-select-filled-label">
                 Reservation Type
               </InputLabel>
@@ -99,8 +124,8 @@ const EditDialog = ({ open, close, data }) => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
-            <Box sx={{ marginRight: 2, borderRadius: 1.5 }}>
+          <Grid item xs={9}>
+            <Box sx={{ marginRight: 2, borderRadius: 1.5, marginLeft:2 }}>
               <Typography color="black" variant="h6" textAlign="center" marginBottom={2}>
                 Selected Players:
               </Typography>
@@ -125,4 +150,8 @@ const EditDialog = ({ open, close, data }) => {
   );
 };
 
-export default EditDialog;
+const mapDispatchToProps = (dispatch) => ({
+  updateBook:(data, callback) => dispatch(updateBook(data, callback))
+})
+
+export default connect(null, mapDispatchToProps) (EditDialog);

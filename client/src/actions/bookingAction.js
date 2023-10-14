@@ -17,6 +17,18 @@ export const createBook = (data, callback) => (dispatch) => {
     });
 };
 
+export const updateBook = (data, callback) => (dispatch) => {
+  console.log(data);
+  axios
+    .post(backendUrl + "/api/booking/updateBook", data)
+    .then((res) => {
+        callback && callback();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 export const setBookingDate = (date) => (dispatch) => {
   dispatch({
     type: SET_BOOKING_DATE,
