@@ -6,11 +6,18 @@ export const createBook = (data, callback) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/createBook", data)
     .then((res) => {
-        callback && callback();
+      const { booking_data } = res.data;
 
-        dispatch({
-            type: BOOKING_SUCCESS,
-        });
+      dispatch({
+        type: GET_BOOKING_DATA,
+        payload: { booking_data },
+      });
+
+      callback && callback();
+
+      dispatch({
+        type: BOOKING_SUCCESS,
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -18,11 +25,17 @@ export const createBook = (data, callback) => (dispatch) => {
 };
 
 export const updateBook = (data, callback) => (dispatch) => {
-  console.log(data);
   axios
     .post(backendUrl + "/api/booking/updateBook", data)
     .then((res) => {
-        callback && callback();
+      const { booking_data } = res.data;
+
+      dispatch({
+        type: GET_BOOKING_DATA,
+        payload: { booking_data },
+      });
+
+      callback && callback();
     })
     .catch((err) => {
       console.log(err);

@@ -1,17 +1,17 @@
 import React from 'react';
-// import Spinner from '../layout/Spinner';
+import Spinner from '../layout/Spinner';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const PrivateRoute = ({
     component: Component,
-    auth: {isAuthenticated, loading}
+    auth: { isAuthenticated, loading }
 }) => {
-    // alert(loading)
-    // if (loading) {
-    //     return <Spinner />
-    // }
+    if (loading) {
+        return <Spinner />
+    }
+
     if (isAuthenticated) {
         return <Component />
     }

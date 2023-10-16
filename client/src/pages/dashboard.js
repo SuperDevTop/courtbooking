@@ -14,6 +14,7 @@ import setAuthToken from "../utils/setAuthToken";
 import Topbar from "../components/layout/Topbar";
 import { courtNames } from "../utils/courtNames";
 import { getBookingData } from "../actions/bookingAction";
+import { currentPageToCourts } from "../utils/currentPageToCourts";
 
 const Dashboard = ({
   getPlayersData,
@@ -54,24 +55,10 @@ const Dashboard = ({
   const [displayedCourts, setdisplayedCourts] = useState([]);
 
   useEffect(() => {
-    let temp = [];
-    let displayedCourtNames = [];
 
-    if (currentPage === 6) {
-      temp = [25, 26];
-      displayedCourtNames = courtNames.slice(25, 27);
-    } else {
-      for (
-        let index = 5 * (currentPage - 1);
-        index < 5 * currentPage;
-        index++
-      ) {
-        temp.push(index);
-        displayedCourtNames.push(courtNames[index]);
-      }
-    }
+    const {displayedCourtNumbers, displayedCourtNames} = currentPageToCourts(currentPage)
 
-    setdisplayedCourts(temp);
+    setdisplayedCourts(displayedCourtNumbers);
     
     if (displayedCourtNames.length !== 0 && booking_date !== '') {
       getBookingData({ court_names: displayedCourtNames, date: booking_date });

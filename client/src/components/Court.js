@@ -32,6 +32,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { colorScale } from "../utils/gradientColor";
 import { courtActiveBackground } from "../utils/gradientColor";
 import EditDialog from "./reservation/EditDialog";
+import { playerColors } from "../utils/playerColors";
+import { currentPageToCourts } from "../utils/currentPageToCourts";
 
 // const theme = createTheme({
 //     components: {
@@ -166,9 +168,10 @@ const Court = (props) => {
 
   const bookingSuccess = () => {
     setbookingCreated(true);
+    closeDialog()
 
     setTimeout(() => {
-      window.location.reload();
+      setbookingCreated(false)
     }, 2000);
   };
 
@@ -181,7 +184,7 @@ const Court = (props) => {
   };
 
   const onSchedule = () => {
-    const initialDate = new Date(props.bookingDate);
+    const initialDate = new Date(props.booking_date);
     const newDate = new Date(
       initialDate.getTime() + rownum * 30 * 60 * 1000 + 480 * 60 * 1000
     ); // start time : calculated by row(time is increased 30mins row by row, and the first row is 8:00)
@@ -196,6 +199,8 @@ const Court = (props) => {
       return;
     }
 
+    const {displayedCourtNames} = currentPageToCourts(props.currentPage)
+
     const data = {
       court_name: name,
       booker: "Admin",
@@ -203,6 +208,8 @@ const Court = (props) => {
       time_slot: timeLength, // 30 mins * time length
       reservation_type: reservation_type,
       players: schedulingPlayers,
+      court_names: displayedCourtNames,
+      date: props.booking_date,
     };
 
     props.createBook(data, bookingSuccess);
@@ -315,7 +322,7 @@ const Court = (props) => {
             {bookedTimeIndexes.includes(index) ? (
               <Box my={3.5} textAlign="center">
                 {dat[index].players.map((player, index) => (
-                  <Typography variant="h6" key={index}>
+                  <Typography variant="h6" key={index} color={playerColors[index]}>
                     {player}
                   </Typography>
                 ))}
@@ -528,7 +535,7 @@ const Court = (props) => {
       </Dialog>
 
       {/* Edit Reservation Dialog */}
-      <EditDialog open={editDialog} close={onEditDialogClose} data={dataofEditDialog}/>
+      <EditDialog open={editDialog} close={onEditDialogClose} data={dataofEditDialog} players={props.players}/>
     </>
   );
 };
@@ -538,7 +545,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  bookingDate: state.booking.booking_date,
+  booking_date: state.booking.booking_date,
+  currentPage: state.page.currentPage,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Court);

@@ -65,7 +65,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DrawerAppBar />
-        <Container maxWidth='xl'>
+        <Container maxWidth='1536'>
           <Routes>
             <Route exact path='/' element={<Navigate to='dashboard' />} ></Route>
             <Route exact path='/register' element={<Register />}></Route>

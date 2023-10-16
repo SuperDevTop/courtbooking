@@ -12,6 +12,8 @@ router.post("/createBook", async (req, res) => {
       time_slot,
       reservation_type,
       players,
+      date,
+      court_names,
     } = req.body;
 
     const newBook = new Booking({
@@ -26,7 +28,21 @@ router.post("/createBook", async (req, res) => {
     await newBook.save();
     console.log("book success");
 
-    res.status(200).json({ message: "A book created successfully!" });
+    const realDate = new Date(date);
+    const nextDay = new Date(realDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    const booking_data = await Promise.all(
+      court_names.map(async (court) => {
+        const bookings = await Booking.find({
+          court_name: court,
+          start_time: { $gte: realDate, $lt: nextDay },
+        });
+        return bookings;
+      })
+    );
+
+    res.status(200).json({ message: "A book created successfully!", booking_data: booking_data});
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
@@ -35,7 +51,7 @@ router.post("/createBook", async (req, res) => {
 
 router.post("/updateBook", async (req, res) => {
   try {
-    const { id, time_slot, reservation_type, players } = req.body;
+    const { id, time_slot, reservation_type, players, court_names, date } = req.body;
 
     console.log("update booking " + id);
     const result = await Booking.updateOne(
@@ -49,12 +65,24 @@ router.post("/updateBook", async (req, res) => {
       },
     );
 
-    console.log(`${result.nModified} document updated`);
     console.log("update success");
+    const realDate = new Date(date);
+    const nextDay = new Date(realDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    const booking_data = await Promise.all(
+      court_names.map(async (court) => {
+        const bookings = await Booking.find({
+          court_name: court,
+          start_time: { $gte: realDate, $lt: nextDay },
+        });
+        return bookings;
+      })
+    );
 
     res
       .status(200)
-      .json({ message: "The reservation was updated successfully!" });
+      .json({ message: "The reservation was updated successfully!", booking_data: booking_data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
