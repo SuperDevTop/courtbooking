@@ -56,6 +56,11 @@ const playerSchema = new mongoose.Schema({
 
     comments: {
         type: [String]
+    },
+
+    ball: {
+        type: Boolean,
+        default: false
     }
     
 })

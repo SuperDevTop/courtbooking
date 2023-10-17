@@ -55,9 +55,12 @@ const App = () => {
       }
 
     } else {
-      // if (window.location.pathname !== '/login') {
-      //   <Navigate to={'/login'} />
-      // }
+      // console.log('no token');
+      // // if (window.location.pathname !== '/login') {
+      // //   <Navigate to={'/login'} />
+      // // }
+      // setAuthToken(false)
+      // dispatch(logOut)
     }
     
   return(

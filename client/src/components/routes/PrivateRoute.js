@@ -8,7 +8,7 @@ const PrivateRoute = ({
     component: Component,
     auth: { isAuthenticated, loading }
 }) => {
-    if (loading) {
+    if (isAuthenticated && loading) {
         return <Spinner />
     }
 
