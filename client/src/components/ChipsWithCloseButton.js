@@ -37,7 +37,11 @@ const ChipsWithCloseButton = ({
     newBalls[index] = value
 
     setBalls(newBalls)
-    setParentBalls(newBalls)
+
+    if (ball) {
+      setParentBalls(newBalls)
+    }
+
     console.log(newBalls);
 
   };
@@ -45,7 +49,10 @@ const ChipsWithCloseButton = ({
   useEffect(() => {
     setChips(chip);
     setBalls([]);
-    setParentBalls([])
+
+    if (ball) {
+      setParentBalls([])
+    }
 
     let temp = [];
 
@@ -55,7 +62,10 @@ const ChipsWithCloseButton = ({
     });
 
     setBalls(temp);
-    setParentBalls(temp);
+    
+    if (ball) {
+      setParentBalls(temp);
+    }
     // eslint-disable-next-line
   }, [chip, players]);
 
