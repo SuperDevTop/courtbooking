@@ -510,6 +510,7 @@ const Court = (props) => {
                   chip={schedulingPlayers}
                   handleDeleteChip={handleDeleteChip}
                   handleWarmupCheck={handleWarmupCheck}
+                  ball={false}
                 />
               </Box>
               <Button

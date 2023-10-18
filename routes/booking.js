@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Booking = require("../models/booking");
+const Player = require("../models/players");
 
 router.post("/createBook", async (req, res) => {
   try {
@@ -51,7 +52,7 @@ router.post("/createBook", async (req, res) => {
 
 router.post("/updateBook", async (req, res) => {
   try {
-    const { id, time_slot, reservation_type, players, court_names, date } = req.body;
+    const { id, time_slot, reservation_type, players, court_names, date, balls } = req.body;
 
     console.log("update booking " + id);
     const result = await Booking.updateOne(
@@ -64,6 +65,18 @@ router.post("/updateBook", async (req, res) => {
         },
       },
     );
+
+    balls.map(async (ball, index) => {
+      await Player.updateOne(
+        { name: players[index] },
+        {
+          $set: {
+            ball: ball
+          }
+        }
+        )
+    })
+    const updatedPlayers = await Player.find({  });
 
     console.log("update success");
     const realDate = new Date(date);
@@ -82,7 +95,7 @@ router.post("/updateBook", async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "The reservation was updated successfully!", booking_data: booking_data });
+      .json({ message: "The reservation was updated successfully!", booking_data: booking_data, players: updatedPlayers });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });

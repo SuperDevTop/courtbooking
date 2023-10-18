@@ -44,6 +44,7 @@ const EditDialog = ({
   const [maxPlayersCountWarning, setMaxPlayersCountWarning] = useState(false);
   const [noSelectWarning, setNoSelectWarning] = useState(false);
   const [bExistingUser, setExistingUser] = useState(false);
+  const [balls, setBalls] = useState([]);
 
   const flatProps = {
     options: players.map((option) => option.name),
@@ -63,6 +64,9 @@ const EditDialog = ({
       reservation_type = "Warm Up";
     }
 
+    console.log(balls);
+    console.log(chip);
+
     const { displayedCourtNames } = currentPageToCourts(currentPage);
     const dat = {
       id: data._id,
@@ -71,6 +75,7 @@ const EditDialog = ({
       reservation_type: reservation_type,
       court_names: displayedCourtNames,
       date: booking_date,
+      balls: balls,
     };
 
     updateBook(dat, updateSuccess);
@@ -238,6 +243,8 @@ const EditDialog = ({
                 chip={chip}
                 handleDeleteChip={handleDeleteChip}
                 handleWarmupCheck={handleWarmupCheck}
+                ball={true}
+                setParentBalls={setBalls}
               />
             </Box>
           </Grid>
