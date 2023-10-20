@@ -12,15 +12,15 @@ const Footer = ({ isAuthenticated }) => {
     return (
         <Box
             bgcolor= {primary.dark}
-            mt={2}
-            py={4}
+            py={2}
             color='white'
             textAlign='center'
             display={
                 isAuthenticated ? "block" : 'none'
             }
+            boxShadow={2}
         >
-            <Grid container alignItems={'center'}>
+            <Grid container alignItems='center'>
                 <Grid item xs={4}>
                     6, 345, 450 <br></br>
                     Registered Players

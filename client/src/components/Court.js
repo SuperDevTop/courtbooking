@@ -79,7 +79,34 @@ const Court = (props) => {
 
   // 10/6
   const booking_data = props.booking_data;
-  const timeTexts = [
+  let timeTexts = [
+    "8:00",
+    "8:30",
+    "9:00",
+    "9:30",
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+    "12:00",
+    "12:30",
+    "13:00",
+    "13:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+    "17:00",
+    "17:30",
+    "18:00",
+    "18:30",
+    "19:00",
+    "19:30",
+  ];
+
+  const times = [
     "8:00",
     "8:30",
     "9:00",
@@ -117,6 +144,15 @@ const Court = (props) => {
     const ind = timeTexts.indexOf(time);
     bookedTimeIndexes.push(ind);
     dat[ind] = booking_data[index];
+
+    // for expansion of panel
+    const time_slot = booking_data[index].time_slot;
+
+    if (time_slot > 1) {
+      for (let i = 1; i < time_slot; i++) {
+        timeTexts.splice(ind + i, 1);
+      }
+    }
   });
 
   const flatProps = {
@@ -147,7 +183,7 @@ const Court = (props) => {
   };
 
   const open_Dialog = (index) => {
-    setRownum(index);
+    setRownum(times.indexOf(index));
     setOpenDialog(true);
   };
 
@@ -168,10 +204,10 @@ const Court = (props) => {
 
   const bookingSuccess = () => {
     setbookingCreated(true);
-    closeDialog()
+    closeDialog();
 
     setTimeout(() => {
-      setbookingCreated(false)
+      setbookingCreated(false);
     }, 2000);
   };
 
@@ -199,7 +235,7 @@ const Court = (props) => {
       return;
     }
 
-    const {displayedCourtNames} = currentPageToCourts(props.currentPage)
+    const { displayedCourtNames } = currentPageToCourts(props.currentPage);
 
     const data = {
       court_name: name,
@@ -251,13 +287,13 @@ const Court = (props) => {
   };
 
   const onEdit = (index) => {
-    setEditDialog(true)
-    setDataofEditDialog(dat[index])
-  }
+    setEditDialog(true);
+    setDataofEditDialog(dat[index]);
+  };
 
   const onEditDialogClose = () => {
-    setEditDialog(false)
-  }
+    setEditDialog(false);
+  };
 
   return (
     <>
@@ -297,57 +333,69 @@ const Court = (props) => {
           <Box
             sx={{
               backgroundColor: `${courtActiveBackground[index % 5]}`,
-              paddingTop: 2,
               border: "solid 2px #a0a0a0",
               color: "white",
-              height: 280,
+              height: bookedTimeIndexes.includes(index)
+                ? 280 * dat[index].time_slot
+                : 280,
             }}
             key={index}
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"center"}
           >
             <Typography variant="h5" textAlign="center">
               {bookedTimeIndexes.includes(index) ? (
                 <>
                   {dat[index].reservation_type}{" "}
-                  <IconButton aria-label="edit" size="small" onClick={() => { onEdit(index) }}>
-                    <EditIcon                    
+                  <IconButton
+                    aria-label="edit"
+                    size="small"
+                    onClick={() => {
+                      onEdit(index);
+                    }}
+                  >
+                    <EditIcon
                       sx={{ verticalAlign: "text-bottom", color: "white" }}
                     />
                   </IconButton>{" "}
+                  <Box my={3.5} textAlign="center">
+                    {dat[index].players.map((player, index) => (
+                      <Typography
+                        variant="h6"
+                        key={index}
+                        color={playerColors[index]}
+                      >
+                        {player}
+                      </Typography>
+                    ))}
+                  </Box>
                 </>
               ) : (
-                "Available"
+                <>
+                  Available
+                  <Box my={3.5} textAlign="center">
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      onClick={() => {
+                        open_Dialog(time);
+                      }}
+                      sx={{
+                        color: "white",
+                        backgroundColor: "primary.accent",
+                        paddingTop: 2,
+                        paddingBottom: 2,
+                        width: "95%",
+                        marginTop: 2,
+                      }}
+                    >
+                      SCHEDULE
+                    </Button>
+                  </Box>
+                </>
               )}
             </Typography>
-
-            {bookedTimeIndexes.includes(index) ? (
-              <Box my={3.5} textAlign="center">
-                {dat[index].players.map((player, index) => (
-                  <Typography variant="h6" key={index} color={playerColors[index]}>
-                    {player}
-                  </Typography>
-                ))}
-              </Box>
-            ) : (
-              <Box my={3.5} textAlign="center">
-                <Button
-                  fullWidth
-                  variant="contained"
-                  onClick={() => {
-                    open_Dialog(index);
-                  }}
-                  sx={{
-                    color: "white",
-                    backgroundColor: "primary.accent",
-                    paddingTop: 2,
-                    paddingBottom: 2,
-                    width: "95%",
-                    marginTop: 2,
-                  }}
-                >
-                  SCHEDULE
-                </Button>
-              </Box>
-            )}
 
             <Typography variant="h6" color="white">
               <Grid container alignItems="center" justifyContent="space-around">
@@ -370,6 +418,7 @@ const Court = (props) => {
           </Box>
         ))}
       </Box>
+
       {/* Create Reservation Dialog */}
       <Dialog
         open={openDialog}
@@ -479,7 +528,7 @@ const Court = (props) => {
               </Typography>
               <Typography variant="h6" marginTop={2} color={colorScale[7]}>
                 <CheckCircleWithStyle />
-                {props.name} 10:00 - 11:00
+                {props.name}
               </Typography>
               <FormControl
                 variant="filled"
@@ -514,7 +563,7 @@ const Court = (props) => {
                 />
               </Box>
               <Button
-                variant="outlined"
+                variant="contained"
                 onClick={addPlayer}
                 sx={{ marginTop: 2, marginBottom: 2 }}
               >
@@ -536,7 +585,12 @@ const Court = (props) => {
       </Dialog>
 
       {/* Edit Reservation Dialog */}
-      <EditDialog open={editDialog} close={onEditDialogClose} data={dataofEditDialog} players={props.players}/>
+      <EditDialog
+        open={editDialog}
+        close={onEditDialogClose}
+        data={dataofEditDialog}
+        players={props.players}
+      />
     </>
   );
 };

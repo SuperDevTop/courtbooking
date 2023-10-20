@@ -34,7 +34,7 @@ const TimePanel = () => {
                         display: 'flex',
                         justifyContent: 'center'
                     }}>
-                    <Typography textAlign={'center'} variant='h5'>
+                    <Typography textAlign='center' variant='h5'>
                         8:00 AM
                     </Typography>
                 </Box>

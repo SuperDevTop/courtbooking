@@ -54,7 +54,7 @@ const Login = (props) => {
     return(
           <Grid component="main">
             <CssBaseline />
-            <Grid item xs={12} sm={8} md={3} margin={'auto'} maxWidth={'500px'} elevation={6} square component={Paper}>
+            <Grid item xs={12} sm={8} md={3} margin='auto' maxWidth='500px' elevation={6} square component={Paper}>
               <Box
                 sx={{
                   mt: 18,

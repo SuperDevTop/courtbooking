@@ -93,8 +93,8 @@ function DrawerAppBar(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Link to={'/dashboard'}>
-            <img src={'/logo.png'} alt='logo' style={{width:'2vw', marginRight: '0.3vw', display: { xs: 'none' }}}/>
+          <Link to='/dashboard'>
+            <img src='/logo.png' alt='logo' style={{width:'2vw', marginRight: '0.3vw', display: { xs: 'none' }}}/>
           </Link>
           <Typography
             variant="h6"
@@ -110,7 +110,7 @@ function DrawerAppBar(props) {
                   {
                     (item === 'Logout')
                     ?
-                    <span fontFamily={'cursive'} onClick={onLogOut} style={{textDecoration: 'none', color:'inherit'}}>
+                    <span fontFamily='cursive' onClick={onLogOut} style={{textDecoration: 'none', color:'inherit'}}>
                       {item}
                     </span>
                     :

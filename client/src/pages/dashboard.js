@@ -68,7 +68,7 @@ const Dashboard = ({
   return (
     <>
       <Topbar />
-      <Box marginBottom={8}>
+      <Box>
         <Grid container>
           <Grid item xs={12} sm={3} md={2} lg={2}>
             <TimePanel />

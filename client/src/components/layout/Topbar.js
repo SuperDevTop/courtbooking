@@ -38,8 +38,8 @@ const Topbar = ({ changeCurrentPage, currentPage, setBookingDate }) => {
     }, [date, setBookingDate])
 
     return (
-        <Grid container spacing={1} alignItems='center' maxWidth='xl' textAlign={'center'} my={3}>
-            <Grid item xs={12} sm={6} lg={3} justifyContent={'center'}>
+        <Grid container spacing={1} alignItems='center' maxWidth='xl' textAlign='center' my={3}>
+            <Grid item xs={12} sm={6} lg={3} justifyContent='center'>
                 <DatePicker
                     label="Date"
                     value={date}

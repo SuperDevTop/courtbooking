@@ -2,9 +2,9 @@ import React from 'react';
 import { Card, CardMedia } from '@mui/material';
 import {Typography} from '@mui/material';
 
-const ImageCard = ({image_Url, title}) => {
+const ImageCard = ({image_Url, title, style}) => {
     return (
-        <Card>
+        <Card sx={style}>
             <CardMedia
                 component='img'
                 image={image_Url}

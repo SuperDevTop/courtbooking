@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 
 const TimeBox = ({ text }) => {
     return(
-        <Box justifyContent={'center'} sx={{
+        <Box justifyContent='center' sx={{
             borderBottom: '2px solid #a0a0a0',
             borderTop: '2px solid #a0a0a0',
             height: 280,
@@ -12,7 +12,7 @@ const TimeBox = ({ text }) => {
             display: 'flex',
             justifyContent: 'center'
         }}>
-            <Typography textAlign={'center'} justifyContent={'center'} variant='h5'>
+            <Typography textAlign='center' justifyContent='center' variant='h5'>
                 {text}
             </Typography>
         </Box>
