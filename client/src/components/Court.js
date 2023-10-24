@@ -73,6 +73,7 @@ const Court = (props) => {
   const [reservation_type, setReservationType] = useState("Practice");
   const [warmupCheckedCount, setWarmupCheckedCount] = useState(0);
   const [dataofEditDialog, setDataofEditDialog] = useState({});
+  const [warmups, setWarmups] = useState([]);
   const headerColor = props.headerColor;
   const name = props.name;
   const bookedTimeIndexes = [];
@@ -237,6 +238,8 @@ const Court = (props) => {
 
     const { displayedCourtNames } = currentPageToCourts(props.currentPage);
 
+    console.log(warmups);
+
     const data = {
       court_name: name,
       booker: "Admin",
@@ -246,6 +249,7 @@ const Court = (props) => {
       players: schedulingPlayers,
       court_names: displayedCourtNames,
       date: props.booking_date,
+      warmups: warmups
     };
 
     props.createBook(data, bookingSuccess);
@@ -560,6 +564,7 @@ const Court = (props) => {
                   handleDeleteChip={handleDeleteChip}
                   handleWarmupCheck={handleWarmupCheck}
                   ball={false}
+                  setParentWarmups={setWarmups}
                 />
               </Box>
               <Button

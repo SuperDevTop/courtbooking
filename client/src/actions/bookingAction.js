@@ -1,16 +1,26 @@
 import { backendUrl } from "../config/url";
-import { BOOKING_SUCCESS, SET_BOOKING_DATE, GET_BOOKING_DATA, GETPLAYERS_SUCCESS } from "./types";
+import {
+  BOOKING_SUCCESS,
+  SET_BOOKING_DATE,
+  GET_BOOKING_DATA,
+  GETPLAYERS_SUCCESS,
+} from "./types";
 import axios from "axios";
 
 export const createBook = (data, callback) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/createBook", data)
     .then((res) => {
-      const { booking_data } = res.data;
+      const { booking_data, players } = res.data;
 
       dispatch({
         type: GET_BOOKING_DATA,
         payload: { booking_data },
+      });
+
+      dispatch({
+        type: GETPLAYERS_SUCCESS,
+        payload: { players },
       });
 
       callback && callback();

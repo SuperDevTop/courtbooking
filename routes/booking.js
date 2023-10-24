@@ -15,7 +15,21 @@ router.post("/createBook", async (req, res) => {
       players,
       date,
       court_names,
+      warmups,
     } = req.body;
+
+    warmups.map(async (warmup, index) => {
+      await Player.updateOne(
+        { name: players[index] },
+        {
+          $set: {
+            warm_up: warmup,
+          },
+        }
+      );
+    });
+
+    const updatedPlayers = await Player.find({});
 
     const newBook = new Booking({
       court_name,
@@ -43,7 +57,13 @@ router.post("/createBook", async (req, res) => {
       })
     );
 
-    res.status(200).json({ message: "A book created successfully!", booking_data: booking_data});
+    res
+      .status(200)
+      .json({
+        message: "A book created successfully!",
+        booking_data: booking_data,
+        players: updatedPlayers
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
@@ -52,7 +72,16 @@ router.post("/createBook", async (req, res) => {
 
 router.post("/updateBook", async (req, res) => {
   try {
-    const { id, time_slot, reservation_type, players, court_names, date, balls } = req.body;
+    const {
+      id,
+      time_slot,
+      reservation_type,
+      players,
+      court_names,
+      date,
+      balls,
+      warmups,
+    } = req.body;
 
     console.log("update booking " + id);
     const result = await Booking.updateOne(
@@ -63,7 +92,7 @@ router.post("/updateBook", async (req, res) => {
           reservation_type: reservation_type,
           players: players,
         },
-      },
+      }
     );
 
     balls.map(async (ball, index) => {
@@ -71,12 +100,13 @@ router.post("/updateBook", async (req, res) => {
         { name: players[index] },
         {
           $set: {
-            ball: ball
-          }
+            ball: ball,
+            warm_up: warmups[index],
+          },
         }
-        )
-    })
-    const updatedPlayers = await Player.find({  });
+      );
+    });
+    const updatedPlayers = await Player.find({});
 
     console.log("update success");
     const realDate = new Date(date);
@@ -95,7 +125,11 @@ router.post("/updateBook", async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "The reservation was updated successfully!", booking_data: booking_data, players: updatedPlayers });
+      .json({
+        message: "The reservation was updated successfully!",
+        booking_data: booking_data,
+        players: updatedPlayers,
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });

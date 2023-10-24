@@ -12,16 +12,24 @@ const ChipsWithCloseButton = ({
   players,
   ball,
   setParentBalls,
+  setParentWarmups
 }) => {
   const [chips, setChips] = useState(chip);
   const [balls, setBalls] = useState([]);
+  const [warmups, setWarmups] = useState([]);
 
-  const handleChange = (event) => {
+  const handleChange = (event, index) => {
     if (event.target.checked) {
       handleWarmupCheck(true);
     } else {
       handleWarmupCheck(false);
     }
+
+    const newWarmups = [...warmups]
+    newWarmups[index] = event.target.checked
+
+    setWarmups(newWarmups)
+    setParentWarmups(newWarmups)
   };
 
   const handleBallChange = (event, index) => {
@@ -33,36 +41,37 @@ const ChipsWithCloseButton = ({
       value = false;
     }
 
-    const newBalls = [...balls]
-    newBalls[index] = value
+    const newBalls = [...balls];
+    newBalls[index] = value;
 
-    setBalls(newBalls)
+    setBalls(newBalls);
 
     if (ball) {
-      setParentBalls(newBalls)
+      setParentBalls(newBalls);
     }
-
-    console.log(newBalls);
-
   };
 
   useEffect(() => {
     setChips(chip);
     setBalls([]);
+    setWarmups([]);
 
     if (ball) {
-      setParentBalls([])
+      setParentBalls([]);
     }
 
-    let temp = [];
+    let temp = [],
+      tempWarmups = [];
 
     chip.forEach((one) => {
       const player = players.find((player) => player.name === one);
       temp.push(player.ball);
+      tempWarmups.push(player.warm_up);
     });
 
     setBalls(temp);
-    
+    setWarmups(tempWarmups);
+
     if (ball) {
       setParentBalls(temp);
     }
@@ -84,10 +93,17 @@ const ChipsWithCloseButton = ({
             variant="filled"
             style={{ margin: "7px" }}
           />
-          <FormControlLabel
-            control={<Checkbox onChange={handleChange} />}
-            label="Warm Up"
-          />
+          {warmups[index] === true ? (
+            <FormControlLabel
+              control={<Checkbox onChange={(event) => {handleChange(event, index)}} checked={true} />}
+              label="Warm Up"
+            />
+          ) : (
+            <FormControlLabel
+              control={<Checkbox onChange={(event) => {handleChange(event, index)}} checked={false} />}
+              label="Warm Up"
+            />
+          )}
           {ball ? (
             balls[index] === true ? (
               <FormControlLabel

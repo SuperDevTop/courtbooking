@@ -61,6 +61,11 @@ const playerSchema = new mongoose.Schema({
     ball: {
         type: Boolean,
         default: false
+    },
+
+    warm_up: {
+        type: Boolean,
+        default: false
     }
     
 })

@@ -60,6 +60,7 @@ const EditDialog = ({
   const [noSelectWarning, setNoSelectWarning] = useState(false);
   const [bExistingUser, setExistingUser] = useState(false);
   const [balls, setBalls] = useState([]);
+  const [warmups, setWarmups] = useState([]);
   const [selectedPlayerData, setSelectedPlayerData] = useState({});
   const [image, setImage] = useState("");
 
@@ -89,12 +90,11 @@ const EditDialog = ({
   const onSave = () => {
     let reservation_type = "Practice";
 
+    console.log(warmups);
+
     if (warmupCheckedCount > 0) {
       reservation_type = "Warm Up";
     }
-
-    console.log(balls);
-    console.log(chip);
 
     const { displayedCourtNames } = currentPageToCourts(currentPage);
     const dat = {
@@ -105,6 +105,7 @@ const EditDialog = ({
       court_names: displayedCourtNames,
       date: booking_date,
       balls: balls,
+      warmups: warmups,
     };
 
     updateBook(dat, updateSuccess);
@@ -351,6 +352,7 @@ const EditDialog = ({
                 handleWarmupCheck={handleWarmupCheck}
                 ball={true}
                 setParentBalls={setBalls}
+                setParentWarmups={setWarmups}
               />
               <Button
                 variant="contained"
