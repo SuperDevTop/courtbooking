@@ -79,3 +79,21 @@ export const getBookingData = (data) => (dispatch) => {
       console.log(err);
     });
 };
+
+export const deleteBooking = (data, callback) => (dispatch) => {
+  axios
+    .post(backendUrl + "/api/booking/deleteBooking", data)
+    .then((res) => {
+      const { booking_data } = res.data;
+
+      dispatch({
+        type: GET_BOOKING_DATA,
+        payload: { booking_data },
+      });
+
+      callback && callback();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};

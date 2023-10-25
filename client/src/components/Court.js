@@ -3,7 +3,9 @@ import React, { useEffect } from "react";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
+// import BookmarkIcon from "@mui/icons-material/Bookmark";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import {
   Dialog,
   DialogActions,
@@ -24,7 +26,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 
 import ImageCard from "../components/ImageCard";
-import { createBook } from "../actions/bookingAction";
+import { createBook, deleteBooking } from "../actions/bookingAction";
 import { alpha3ToAlph2 } from "../utils/countryCode";
 import CustomAlert from "./CustomAlert";
 import ChipsWithCloseButton from "./ChipsWithCloseButton";
@@ -34,6 +36,7 @@ import { courtActiveBackground } from "../utils/gradientColor";
 import EditDialog from "./reservation/EditDialog";
 import { playerColors } from "../utils/playerColors";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
+import LoadingOverlay from "./layout/LoadingOverlay";
 
 // const theme = createTheme({
 //     components: {
@@ -61,6 +64,7 @@ const Court = (props) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [bookingCreated, setbookingCreated] = useState(false);
+  const [bookingDeleted, setbookingDeleted] = useState(false);
 
   const players = props.players;
   const [openDialog, setOpenDialog] = useState(false);
@@ -74,6 +78,8 @@ const Court = (props) => {
   const [warmupCheckedCount, setWarmupCheckedCount] = useState(0);
   const [dataofEditDialog, setDataofEditDialog] = useState({});
   const [warmups, setWarmups] = useState([]);
+  const [isBooking, setIsBooking] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const headerColor = props.headerColor;
   const name = props.name;
   const bookedTimeIndexes = [];
@@ -204,6 +210,7 @@ const Court = (props) => {
   };
 
   const bookingSuccess = () => {
+    setIsBooking(false);
     setbookingCreated(true);
     closeDialog();
 
@@ -249,9 +256,10 @@ const Court = (props) => {
       players: schedulingPlayers,
       court_names: displayedCourtNames,
       date: props.booking_date,
-      warmups: warmups
+      warmups: warmups,
     };
 
+    setIsBooking(true);
     props.createBook(data, bookingSuccess);
   };
 
@@ -299,8 +307,37 @@ const Court = (props) => {
     setEditDialog(false);
   };
 
+  const deleteReservation = (index) => {
+    if (window.confirm("Do you want to delete this reservation really?")) {
+      const id = booking_data[index]._id;
+      const { displayedCourtNames } = currentPageToCourts(props.currentPage);
+
+      const data = {
+        id: id,
+        court_names: displayedCourtNames,
+        date: props.booking_date,
+      };
+
+      setIsDeleting(true);
+      props.deleteBooking(data, deleteReservationSuccess);
+    } else {
+      console.log("Reservation remove was cancelled");
+    }
+  };
+
+  const deleteReservationSuccess = () => {
+    setIsDeleting(false);
+    setbookingDeleted(true);
+
+    setTimeout(() => {
+      setbookingDeleted(false);
+    }, 2000);
+  };
+
   return (
     <>
+      {isBooking && <LoadingOverlay text={"Booking..."} color='success'/>}
+      {isDeleting && <LoadingOverlay text={"Deleting..."} color='warning'/>}
       <Box>
         <CustomAlert
           openState={open}
@@ -315,6 +352,11 @@ const Court = (props) => {
         <CustomAlert
           openState={bookingCreated}
           text="A booking has been created successfully!"
+          severity="success"
+        />
+        <CustomAlert
+          openState={bookingDeleted}
+          text="The reservation was removed successfully!"
           severity="success"
         />
         <Box
@@ -337,7 +379,7 @@ const Court = (props) => {
           <Box
             sx={{
               backgroundColor: `${courtActiveBackground[index % 5]}`,
-              border: "solid 2px #a0a0a0",
+              border: "solid 1px #a0a0a0",
               color: "white",
               height: bookedTimeIndexes.includes(index)
                 ? 280 * dat[index].time_slot
@@ -414,7 +456,15 @@ const Court = (props) => {
                   <Grid container alignItems="center" gap={1}>
                     <FavoriteIcon />
                     <ShareIcon />
-                    <BookmarkIcon />
+                    {bookedTimeIndexes.includes(index) ? (
+                      <DeleteIcon
+                        onClick={() => {
+                          deleteReservation(index);
+                        }}
+                      />
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
@@ -602,6 +652,7 @@ const Court = (props) => {
 
 const mapDispatchToProps = (dispatch) => ({
   createBook: (data, callback) => dispatch(createBook(data, callback)),
+  deleteBooking: (data, callback) => dispatch(deleteBooking(data, callback)),
 });
 
 const mapStateToProps = (state) => ({

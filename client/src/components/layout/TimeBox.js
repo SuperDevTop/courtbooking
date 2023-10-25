@@ -5,8 +5,8 @@ import { Box } from '@mui/material';
 const TimeBox = ({ text }) => {
     return(
         <Box justifyContent='center' sx={{
-            borderBottom: '2px solid #a0a0a0',
-            borderTop: '2px solid #a0a0a0',
+            borderBottom: '1px solid #a0a0a0',
+            borderTop: '1px solid #a0a0a0',
             height: 280,
             alignItems: 'center',
             display: 'flex',

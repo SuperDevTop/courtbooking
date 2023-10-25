@@ -57,13 +57,11 @@ router.post("/createBook", async (req, res) => {
       })
     );
 
-    res
-      .status(200)
-      .json({
-        message: "A book created successfully!",
-        booking_data: booking_data,
-        players: updatedPlayers
-      });
+    res.status(200).json({
+      message: "A book created successfully!",
+      booking_data: booking_data,
+      players: updatedPlayers,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
@@ -106,6 +104,7 @@ router.post("/updateBook", async (req, res) => {
         }
       );
     });
+
     const updatedPlayers = await Player.find({});
 
     console.log("update success");
@@ -119,17 +118,16 @@ router.post("/updateBook", async (req, res) => {
           court_name: court,
           start_time: { $gte: realDate, $lt: nextDay },
         });
+
         return bookings;
       })
     );
 
-    res
-      .status(200)
-      .json({
-        message: "The reservation was updated successfully!",
-        booking_data: booking_data,
-        players: updatedPlayers,
-      });
+    res.status(200).json({
+      message: "The reservation was updated successfully!",
+      booking_data: booking_data,
+      players: updatedPlayers,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
@@ -143,7 +141,39 @@ router.post("/getBookingdata", async (req, res) => {
     const realDate = new Date(date);
     const nextDay = new Date(realDate);
     nextDay.setDate(nextDay.getDate() + 1);
-    console.log(realDate);
+
+    // Use map and Promise.all to execute queries concurrently
+    const booking_data = await Promise.all(
+      court_names.map(async (court) => {
+        const bookings = await Booking.find({
+          court_name: court,
+          start_time: { $gte: realDate, $lt: nextDay },
+        });
+        return bookings;
+      })
+    );
+
+    res.status(200).json({ booking_data: booking_data });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
+  }
+});
+
+router.post("/deleteBooking", async (req, res) => {
+  try {
+    const { id, court_names, date } = req.body;
+    console.log(id);
+
+    const response = await Booking.deleteOne({ _id: id });
+
+    if (response.deletedCount !== 1) {
+      res.status(500).json({ message: 'Booking not found with id: ' + id });
+    }
+
+    const realDate = new Date(date);
+    const nextDay = new Date(realDate);
+    nextDay.setDate(nextDay.getDate() + 1);
 
     // Use map and Promise.all to execute queries concurrently
     const booking_data = await Promise.all(

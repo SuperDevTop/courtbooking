@@ -24,11 +24,11 @@ const TimePanel = () => {
                 sx={{
                     backgroundColor: '#100852   ',
                     color: 'white',
-                    border: '2px solid #a0a0a0',
+                    border: '1px solid #a0a0a0',
                 }}
             >
                 <Box sx={{
-                        borderBottom: '2px solid #a0a0a0',
+                        borderBottom: '1px solid #a0a0a0',
                         height: 278,
                         alignItems: 'center',
                         display: 'flex',

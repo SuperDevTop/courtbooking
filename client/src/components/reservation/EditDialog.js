@@ -31,6 +31,7 @@ import ChipsWithCloseButton from "../ChipsWithCloseButton";
 import { currentPageToCourts } from "../../utils/currentPageToCourts";
 import { colorScale } from "../../utils/gradientColor";
 import ImageCard from "../ImageCard";
+import LoadingOverlay from "../layout/LoadingOverlay";
 
 const EditDialog = ({
   open,
@@ -63,6 +64,7 @@ const EditDialog = ({
   const [warmups, setWarmups] = useState([]);
   const [selectedPlayerData, setSelectedPlayerData] = useState({});
   const [image, setImage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     players.length > 0 && setSelectedPlayer(players[0].name);
@@ -108,6 +110,7 @@ const EditDialog = ({
       warmups: warmups,
     };
 
+    setIsSaving(true);
     updateBook(dat, updateSuccess);
   };
 
@@ -134,6 +137,7 @@ const EditDialog = ({
   };
 
   const updateSuccess = () => {
+    setIsSaving(false);
     setAlertOpen(true);
 
     setTimeout(() => {
@@ -193,6 +197,7 @@ const EditDialog = ({
         },
       }}
     >
+      {isSaving && <LoadingOverlay text='Saving...' color='success'/>}
       <CustomAlert
         openState={alertOpen}
         text="The reservation has been updated successfully !"
