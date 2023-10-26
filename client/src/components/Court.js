@@ -37,6 +37,8 @@ import EditDialog from "./reservation/EditDialog";
 import { playerColors } from "../utils/playerColors";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import LoadingOverlay from "./layout/LoadingOverlay";
+import ConfirmationDialog from "./reservation/ConfirmDialog";
+import BookingOptionDialog from "./dialog/BookingOptionDialog";
 
 // const theme = createTheme({
 //     components: {
@@ -80,6 +82,9 @@ const Court = (props) => {
   const [warmups, setWarmups] = useState([]);
   const [isBooking, setIsBooking] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [indexToBeDeleted, setIndexToBeDeleted] = useState(0);
+  const [openBookingOptionDialog, setOpenBookingOptionDialog] = useState(false);
   const headerColor = props.headerColor;
   const name = props.name;
   const bookedTimeIndexes = [];
@@ -308,36 +313,43 @@ const Court = (props) => {
   };
 
   const deleteReservation = (index) => {
-    if (window.confirm("Do you want to delete this reservation really?")) {
-      const id = booking_data[index]._id;
-      const { displayedCourtNames } = currentPageToCourts(props.currentPage);
-
-      const data = {
-        id: id,
-        court_names: displayedCourtNames,
-        date: props.booking_date,
-      };
-
-      setIsDeleting(true);
-      props.deleteBooking(data, deleteReservationSuccess);
-    } else {
-      console.log("Reservation remove was cancelled");
-    }
+    setIndexToBeDeleted(index);
+    setOpenConfirmDialog(true);
   };
 
   const deleteReservationSuccess = () => {
     setIsDeleting(false);
     setbookingDeleted(true);
+    setOpenConfirmDialog(false);
 
     setTimeout(() => {
       setbookingDeleted(false);
     }, 2000);
   };
 
+  const onCloseConfirm = () => {
+    setOpenConfirmDialog(false);
+  };
+
+  const onConfirm = () => {
+    const id = booking_data[indexToBeDeleted]._id;
+    const { displayedCourtNames } = currentPageToCourts(props.currentPage);
+
+    const data = {
+      id: id,
+      court_names: displayedCourtNames,
+      date: props.booking_date,
+    };
+
+    setIsDeleting(true);
+    props.deleteBooking(data, deleteReservationSuccess);
+  };
+
   return (
     <>
-      {isBooking && <LoadingOverlay text={"Booking..."} color='success'/>}
-      {isDeleting && <LoadingOverlay text={"Deleting..."} color='warning'/>}
+      {isBooking && <LoadingOverlay text={"Booking..."} color="success" />}
+      {isDeleting && <LoadingOverlay text={"Deleting..."} color="warning" />}
+      <BookingOptionDialog open={openBookingOptionDialog} onClose={() => {setOpenBookingOptionDialog(false)}}/>
       <Box>
         <CustomAlert
           openState={open}
@@ -358,6 +370,11 @@ const Court = (props) => {
           openState={bookingDeleted}
           text="The reservation was removed successfully!"
           severity="success"
+        />
+        <ConfirmationDialog
+          open={openConfirmDialog}
+          onClose={onCloseConfirm}
+          onConfirm={onConfirm}
         />
         <Box
           backgroundColor={headerColor}
@@ -624,6 +641,14 @@ const Court = (props) => {
               >
                 <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
                 Add Player
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => {setOpenBookingOptionDialog(true)}}
+                sx={{ marginTop: 2, marginBottom: 2, float: "right" }}
+              >
+                <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
+                Add Options
               </Button>
               <ImageCard image_Url={image} title={selectedPlayer.name} />
             </Grid>

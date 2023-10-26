@@ -12,7 +12,7 @@ const ChipsWithCloseButton = ({
   players,
   ball,
   setParentBalls,
-  setParentWarmups
+  setParentWarmups,
 }) => {
   const [chips, setChips] = useState(chip);
   const [balls, setBalls] = useState([]);
@@ -25,11 +25,12 @@ const ChipsWithCloseButton = ({
       handleWarmupCheck(false);
     }
 
-    const newWarmups = [...warmups]
-    newWarmups[index] = event.target.checked
+    const newWarmups = [...warmups];
+    newWarmups[index] = event.target.checked;
 
-    setWarmups(newWarmups)
-    setParentWarmups(newWarmups)
+    setWarmups(newWarmups);
+    console.log(newWarmups);
+    setParentWarmups(newWarmups);
   };
 
   const handleBallChange = (event, index) => {
@@ -95,12 +96,26 @@ const ChipsWithCloseButton = ({
           />
           {warmups[index] === true ? (
             <FormControlLabel
-              control={<Checkbox onChange={(event) => {handleChange(event, index)}} checked={true} />}
+              control={
+                <Checkbox
+                  onChange={(event) => {
+                    handleChange(event, index);
+                  }}
+                  checked={true}
+                />
+              }
               label="Warm Up"
             />
           ) : (
             <FormControlLabel
-              control={<Checkbox onChange={(event) => {handleChange(event, index)}} checked={false} />}
+              control={
+                <Checkbox
+                  onChange={(event) => {
+                    handleChange(event, index);
+                  }}
+                  checked={false}
+                />
+              }
               label="Warm Up"
             />
           )}

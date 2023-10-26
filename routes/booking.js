@@ -18,7 +18,7 @@ router.post("/createBook", async (req, res) => {
       warmups,
     } = req.body;
 
-    warmups.map(async (warmup, index) => {
+    await Promise.all(warmups.map(async (warmup, index) => {
       await Player.updateOne(
         { name: players[index] },
         {
@@ -27,7 +27,7 @@ router.post("/createBook", async (req, res) => {
           },
         }
       );
-    });
+    }));
 
     const updatedPlayers = await Player.find({});
 

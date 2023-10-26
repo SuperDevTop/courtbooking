@@ -4,7 +4,7 @@ import { Dialog, DialogContent } from "@mui/material";
 
 export default function LoadingOverlay({ text, color }) {
   return (
-    <Dialog open={true} disableBackdropClick={true} disableEscapeKeyDown={true}>
+    <Dialog open={true} disableEscapeKeyDown={true}>
       <DialogContent>
         <div
           style={{

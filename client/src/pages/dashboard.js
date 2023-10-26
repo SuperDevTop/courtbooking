@@ -27,7 +27,7 @@ const Dashboard = ({
   const dispatch = useDispatch();
   const history = useNavigate();
 
-  console.log(booking_data);
+  // console.log(booking_data);
 
   // Auto Log Out
   useEffect(() => {
@@ -43,7 +43,6 @@ const Dashboard = ({
         }
       }
     }, 5000);
-
   }, [dispatch, history]);
 
   useEffect(() => {
@@ -55,12 +54,12 @@ const Dashboard = ({
   const [displayedCourts, setdisplayedCourts] = useState([]);
 
   useEffect(() => {
-
-    const {displayedCourtNumbers, displayedCourtNames} = currentPageToCourts(currentPage)
+    const { displayedCourtNumbers, displayedCourtNames } =
+      currentPageToCourts(currentPage);
 
     setdisplayedCourts(displayedCourtNumbers);
-    
-    if (displayedCourtNames.length !== 0 && booking_date !== '') {
+
+    if (displayedCourtNames.length !== 0 && booking_date !== "") {
       getBookingData({ court_names: displayedCourtNames, date: booking_date });
     }
   }, [currentPage, getBookingData, booking_date]);

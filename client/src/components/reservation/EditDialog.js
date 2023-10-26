@@ -92,8 +92,6 @@ const EditDialog = ({
   const onSave = () => {
     let reservation_type = "Practice";
 
-    console.log(warmups);
-
     if (warmupCheckedCount > 0) {
       reservation_type = "Warm Up";
     }
