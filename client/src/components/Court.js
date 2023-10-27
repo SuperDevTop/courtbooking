@@ -250,8 +250,6 @@ const Court = (props) => {
 
     const { displayedCourtNames } = currentPageToCourts(props.currentPage);
 
-    console.log(warmups);
-
     const data = {
       court_name: name,
       booker: "Admin",
@@ -332,7 +330,7 @@ const Court = (props) => {
   };
 
   const onConfirm = () => {
-    const id = booking_data[indexToBeDeleted]._id;
+    const id = dat[indexToBeDeleted]._id;
     const { displayedCourtNames } = currentPageToCourts(props.currentPage);
 
     const data = {
@@ -349,7 +347,12 @@ const Court = (props) => {
     <>
       {isBooking && <LoadingOverlay text={"Booking..."} color="success" />}
       {isDeleting && <LoadingOverlay text={"Deleting..."} color="warning" />}
-      <BookingOptionDialog open={openBookingOptionDialog} onClose={() => {setOpenBookingOptionDialog(false)}}/>
+      <BookingOptionDialog
+        open={openBookingOptionDialog}
+        onClose={() => {
+          setOpenBookingOptionDialog(false);
+        }}
+      />
       <Box>
         <CustomAlert
           openState={open}
@@ -644,7 +647,9 @@ const Court = (props) => {
               </Button>
               <Button
                 variant="contained"
-                onClick={() => {setOpenBookingOptionDialog(true)}}
+                onClick={() => {
+                  setOpenBookingOptionDialog(true);
+                }}
                 sx={{ marginTop: 2, marginBottom: 2, float: "right" }}
               >
                 <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
