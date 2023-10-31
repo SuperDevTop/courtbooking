@@ -26,6 +26,10 @@ const bookingSchema = new mongoose.Schema({
         default: 'Practice'
     },
 
+    option: {
+        type: String
+    },
+    
     players: [String]   
 });
 

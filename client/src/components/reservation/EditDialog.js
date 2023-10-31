@@ -23,8 +23,8 @@ import Stack from "@mui/material/Stack";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import WorldFlag from "react-country-flag";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { alpha3ToAlph2 } from "../../utils/countryCode";
 
+import { alpha3ToAlph2 } from "../../utils/countryCode";
 import { updateBook } from "../../actions/bookingAction";
 import CustomAlert from "../CustomAlert";
 import ChipsWithCloseButton from "../ChipsWithCloseButton";
@@ -32,6 +32,7 @@ import { currentPageToCourts } from "../../utils/currentPageToCourts";
 import { colorScale } from "../../utils/gradientColor";
 import ImageCard from "../ImageCard";
 import LoadingOverlay from "../layout/LoadingOverlay";
+import { bookingOptionTexts } from "../../utils/texts";
 
 const EditDialog = ({
   open,
@@ -65,6 +66,11 @@ const EditDialog = ({
   const [selectedPlayerData, setSelectedPlayerData] = useState({});
   const [image, setImage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const flatOptionProps = {
+    options: bookingOptionTexts,
+  };
 
   useEffect(() => {
     players.length > 0 && setSelectedPlayer(players[0].name);
@@ -86,6 +92,7 @@ const EditDialog = ({
     if (data.hasOwnProperty("players")) {
       setChip(data.players);
       setTimeLength(data.time_slot);
+      setSelectedOption(data.option);
     }
   }, [data]);
 
@@ -106,6 +113,7 @@ const EditDialog = ({
       date: booking_date,
       balls: balls,
       warmups: warmups,
+      option: selectedOption,
     };
 
     setIsSaving(true);
@@ -184,6 +192,10 @@ const EditDialog = ({
     }
   };
 
+  const onOptionChange = (event, value) => {
+    setSelectedOption(value);
+  };
+
   return (
     <Dialog
       open={open}
@@ -195,7 +207,7 @@ const EditDialog = ({
         },
       }}
     >
-      {isSaving && <LoadingOverlay text='Saving...' color='success'/>}
+      {isSaving && <LoadingOverlay text="Saving..." color="success" />}
       <CustomAlert
         openState={alertOpen}
         text="The reservation has been updated successfully !"
@@ -357,14 +369,31 @@ const EditDialog = ({
                 setParentBalls={setBalls}
                 setParentWarmups={setWarmups}
               />
-              <Button
-                variant="contained"
-                onClick={addPlayer}
-                sx={{ marginTop: 2, marginBottom: 2 }}
-              >
-                <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
-                Add Player
-              </Button>
+              <div style={{ display: "flex", justifyContent: "space-between", width: '85%' }}>
+                <Button
+                  variant="contained"
+                  onClick={addPlayer}
+                  sx={{ marginTop: 2, marginBottom: 2 }}
+                >
+                  <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
+                  Add Player
+                </Button>
+                <Stack spacing={1} sx={{ width: "55%" }}>
+                  <Autocomplete
+                    {...flatOptionProps}
+                    id="controlled-options"
+                    value={selectedOption}
+                    onChange={onOptionChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Options"
+                        variant="standard"
+                      />
+                    )}
+                  />
+                </Stack>
+              </div>
               <ImageCard
                 image_Url={image}
                 title={selectedPlayer}

@@ -16,18 +16,21 @@ router.post("/createBook", async (req, res) => {
       date,
       court_names,
       warmups,
+      option,
     } = req.body;
 
-    await Promise.all(warmups.map(async (warmup, index) => {
-      await Player.updateOne(
-        { name: players[index] },
-        {
-          $set: {
-            warm_up: warmup,
-          },
-        }
-      );
-    }));
+    await Promise.all(
+      warmups.map(async (warmup, index) => {
+        await Player.updateOne(
+          { name: players[index] },
+          {
+            $set: {
+              warm_up: warmup,
+            },
+          }
+        );
+      })
+    );
 
     const updatedPlayers = await Player.find({});
 
@@ -38,6 +41,7 @@ router.post("/createBook", async (req, res) => {
       time_slot,
       reservation_type,
       players,
+      option,
     });
 
     await newBook.save();
@@ -79,6 +83,7 @@ router.post("/updateBook", async (req, res) => {
       date,
       balls,
       warmups,
+      option,
     } = req.body;
 
     console.log("update booking " + id);
@@ -89,6 +94,7 @@ router.post("/updateBook", async (req, res) => {
           time_slot: time_slot,
           reservation_type: reservation_type,
           players: players,
+          option: option,
         },
       }
     );
@@ -168,7 +174,7 @@ router.post("/deleteBooking", async (req, res) => {
     const response = await Booking.deleteOne({ _id: id });
 
     if (response.deletedCount !== 1) {
-      res.status(500).json({ message: 'Booking not found with id: ' + id });
+      res.status(500).json({ message: "Booking not found with id: " + id });
     }
 
     const realDate = new Date(date);

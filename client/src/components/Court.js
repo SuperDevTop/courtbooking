@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-// import BookmarkIcon from "@mui/icons-material/Bookmark";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import {
@@ -38,7 +37,8 @@ import { playerColors } from "../utils/playerColors";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import LoadingOverlay from "./layout/LoadingOverlay";
 import ConfirmationDialog from "./reservation/ConfirmDialog";
-import BookingOptionDialog from "./dialog/BookingOptionDialog";
+import { bookingOptionTexts } from "../utils/texts";
+// import BookingOptionDialog from "./dialog/BookingOptionDialog";
 
 // const theme = createTheme({
 //     components: {
@@ -84,10 +84,11 @@ const Court = (props) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [indexToBeDeleted, setIndexToBeDeleted] = useState(0);
-  const [openBookingOptionDialog, setOpenBookingOptionDialog] = useState(false);
+  // const [openBookingOptionDialog, setOpenBookingOptionDialog] = useState(false);
   const headerColor = props.headerColor;
   const name = props.name;
   const bookedTimeIndexes = [];
+  const [selectedOption, setSelectedOption] = useState("");
 
   // 10/6
   const booking_data = props.booking_data;
@@ -169,6 +170,10 @@ const Court = (props) => {
 
   const flatProps = {
     options: players.map((option) => option.name),
+  };
+
+  const flatOptionProps = {
+    options: bookingOptionTexts
   };
 
   useEffect(() => {
@@ -260,6 +265,7 @@ const Court = (props) => {
       court_names: displayedCourtNames,
       date: props.booking_date,
       warmups: warmups,
+      option: selectedOption,
     };
 
     setIsBooking(true);
@@ -343,16 +349,20 @@ const Court = (props) => {
     props.deleteBooking(data, deleteReservationSuccess);
   };
 
+  const onOptionChange = (event, option) => {
+    setSelectedOption(option);
+  };
+
   return (
     <>
       {isBooking && <LoadingOverlay text={"Booking..."} color="success" />}
       {isDeleting && <LoadingOverlay text={"Deleting..."} color="warning" />}
-      <BookingOptionDialog
+      {/* <BookingOptionDialog
         open={openBookingOptionDialog}
         onClose={() => {
           setOpenBookingOptionDialog(false);
         }}
-      />
+      /> */}
       <Box>
         <CustomAlert
           openState={open}
@@ -435,6 +445,9 @@ const Court = (props) => {
                         {player}
                       </Typography>
                     ))}
+                  </Box>
+                  <Box sx={{ bgcolor: '#999' }}>
+                    <Typography variant="h6">{dat[index].option}</Typography>
                   </Box>
                 </>
               ) : (
@@ -637,15 +650,16 @@ const Court = (props) => {
                   setParentWarmups={setWarmups}
                 />
               </Box>
-              <Button
-                variant="contained"
-                onClick={addPlayer}
-                sx={{ marginTop: 2, marginBottom: 2 }}
-              >
-                <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
-                Add Player
-              </Button>
-              <Button
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Button
+                  variant="contained"
+                  onClick={addPlayer}
+                  sx={{ marginTop: 2, marginBottom: 2 }}
+                >
+                  <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
+                  Add Player
+                </Button>
+                {/* <Button
                 variant="contained"
                 onClick={() => {
                   setOpenBookingOptionDialog(true);
@@ -654,7 +668,23 @@ const Court = (props) => {
               >
                 <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
                 Add Options
-              </Button>
+              </Button> */}
+                <Stack spacing={1} sx={{ width: "50%" }}>
+                  <Autocomplete
+                    {...flatOptionProps}
+                    id="controlled-demo"
+                    value={selectedOption}
+                    onChange={onOptionChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Options"
+                        variant="standard"
+                      />
+                    )}
+                  />
+                </Stack>
+              </div>
               <ImageCard image_Url={image} title={selectedPlayer.name} />
             </Grid>
           </Grid>
