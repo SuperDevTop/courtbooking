@@ -87,7 +87,7 @@ router.post("/updateBook", async (req, res) => {
     } = req.body;
 
     console.log("update booking " + id);
-    const result = await Booking.updateOne(
+    await Booking.updateOne(
       { _id: id },
       {
         $set: {
