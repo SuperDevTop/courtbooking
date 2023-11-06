@@ -22,6 +22,7 @@ app.use(cors());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/player', require('./routes/players'));
 app.use('/api/booking', require('./routes/booking'));
+app.use('/api/admin', require('./routes/admin'));
 
 // Your code
 if (process.env.NODE_ENV === "production") {

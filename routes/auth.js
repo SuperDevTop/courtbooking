@@ -80,16 +80,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/getUsers", async (req, res) => {
-  const users = await User.find({});
-
-  if (!users) {
-    res.status(200).json({ users });
-  } else {
-    res.status(500).json({ message: "Server error!" });
-  }
-});
-
 router.post("/updatePassword", async (req, res) => {
   const { newPassword, email } = req.body;
   const salt = await bcrypt.genSalt(10);
