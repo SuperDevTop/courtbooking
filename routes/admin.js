@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 
 const User = require("../models/user");
+const Court = require("../models/court");
 
 router.get("/getUsers", async (req, res) => {
   try {
@@ -44,11 +45,37 @@ router.post("/addUser", async (req, res) => {
     await newUser.save();
     const users = await User.find({});
 
-    res.status(201).json({ message: "User registered successfully!", users: users });
+    res
+      .status(201)
+      .json({ message: "User registered successfully!", users: users });
   } catch (error) {
     console.log(error);
 
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/updateCourt", async (req, res) => {
+  try {
+    const { courtName, blocked } = req.body;
+
+    Court.updateOne(
+      { name: courtName },
+      {
+        $set: {
+          blocked: blocked,
+        },
+      }
+    )
+      .then(async () => {
+        const courts = await Court.find({});
+        res.status(200).json({ courts });
+      })
+      .catch((err) => {
+        res.status(500).json({ message: err });
+      });
+  } catch (error) {
+    res.status(500).json({ message: error });
   }
 });
 

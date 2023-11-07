@@ -106,7 +106,6 @@ router.post("/updatePassword", async (req, res) => {
 
 router.post("/updateUser", async (req, res) => {
   const { name, email, role, phone } = req.body;
-  console.log(phone);
 
   User.findOneAndUpdate(
     { email: email },

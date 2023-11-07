@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
-const Booking = require('./booking');
+// const Booking = require('./booking');
 
 const courtSchema = new mongoose.Schema({
-    court_number: {
-        type: Number,
+    // number: {
+    //     type: Number,
+    //     required: true
+    // },
+
+    name: {
+        type: String,
         required: true
     },
 
@@ -12,17 +17,17 @@ const courtSchema = new mongoose.Schema({
         default: false
     },
 
-    kind: {
-        type: String,
-        default: 'ATP'
-    },
+    // kind: {
+    //     type: String,
+    //     default: 'ATP'
+    // },
 
-    bookings: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Booking'
-    }], 
+    // bookings: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Booking'
+    // }], 
 
-    bookedTimes: [String]
+    // bookedTimes: [String]
 });
 
 module.exports = mongoose.model('Court', courtSchema);
