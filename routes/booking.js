@@ -169,7 +169,6 @@ router.post("/getBookingdata", async (req, res) => {
 router.post("/deleteBooking", async (req, res) => {
   try {
     const { id, court_names, date } = req.body;
-    console.log(id);
 
     const response = await Booking.deleteOne({ _id: id });
 

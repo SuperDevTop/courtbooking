@@ -55,6 +55,52 @@ router.post("/addUser", async (req, res) => {
   }
 });
 
+router.post("/deleteUser", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    await User.deleteOne({ email: email });
+
+    const users = await User.find({});
+
+    res
+      .status(201)
+      .json({ message: "The user has been deleted successfully!", users: users });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/addCourt", async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    const existingCourt = await Court.findOne({ name });
+
+    if (existingCourt) {
+      return res.status(400).json({ message: "Court already exists!" });
+    }
+
+    // Create a new court
+    const newCourt = new Court({
+      name,
+    });
+
+    await newCourt.save();
+    const courts = await Court.find({});
+
+    res
+      .status(201)
+      .json({ message: "Court registered successfully!", courts: courts });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 router.post("/updateCourt", async (req, res) => {
   try {
     const { courtName, blocked } = req.body;
@@ -77,6 +123,30 @@ router.post("/updateCourt", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error });
   }
+});
+
+router.post("/updateUser", async (req, res) => {
+  const { name, email, role, phone } = req.body;
+
+  User.findOneAndUpdate(
+    { email: email },
+    {
+      $set: {
+        name: name,
+        phone: phone,
+        role: role,
+      },
+    },
+    { new: true }
+  )
+    .then((user) => {
+      console.log("updated user:");
+      console.log(user);
+      res.status(200).json({ user });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err });
+    });
 });
 
 module.exports = router;
