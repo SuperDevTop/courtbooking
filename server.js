@@ -4,9 +4,6 @@ const app = express();
 const cors = require('cors')
 
 // mongoose.connect('mongodb://127.0.0.1:27017/tennis_court_booking', {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-// })
 mongoose.connect('mongodb+srv://ctori0816:QwBaTtsIJcRJLTOM@cluster0.psaminp.mongodb.net/tennis_court_booking', {
     useNewUrlParser: true,
     useUnifiedTopology: true,

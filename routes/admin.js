@@ -4,6 +4,7 @@ const router = express.Router();
 
 const User = require("../models/user");
 const Court = require("../models/court");
+const Player = require("../models/players");
 
 router.get("/getUsers", async (req, res) => {
   try {
@@ -63,9 +64,10 @@ router.post("/deleteUser", async (req, res) => {
 
     const users = await User.find({});
 
-    res
-      .status(201)
-      .json({ message: "The user has been deleted successfully!", users: users });
+    res.status(201).json({
+      message: "The user has been deleted successfully!",
+      users: users,
+    });
   } catch (error) {
     console.log(error);
 
@@ -126,16 +128,21 @@ router.post("/updateCourt", async (req, res) => {
 });
 
 router.post("/updateUser", async (req, res) => {
-  const { name, email, role, phone } = req.body;
+  const { name, email, role, phone, password } = req.body;
+  let set;
+
+  if (password === "") {
+    set = { name, phone, role };
+  } else {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    set = { name, phone, role, password: hashedPassword };
+  }
 
   User.findOneAndUpdate(
     { email: email },
     {
-      $set: {
-        name: name,
-        phone: phone,
-        role: role,
-      },
+      $set: set,
     },
     { new: true }
   )
@@ -147,6 +154,40 @@ router.post("/updateUser", async (req, res) => {
     .catch((err) => {
       res.status(500).json({ message: err });
     });
+});
+
+router.post("/deletePlayer", async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    await Player.deleteOne({ name: name });
+
+    res.status(201).json({
+      message: "The player has been deleted successfully!",
+      name,
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/deleteCourt", async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    await Court.deleteOne({ name: name });
+
+    res.status(201).json({
+      message: "The court has been deleted successfully!",
+      name,
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = router;
