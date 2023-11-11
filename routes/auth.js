@@ -134,7 +134,7 @@ router.post("/updateUser", async (req, res) => {
 
 // Multer configuration
 const storage = multer.diskStorage({
-  destination: "images/avatars", // Specify the path where you want to save the uploaded files
+  destination: "/images/avatars", // Specify the path where you want to save the uploaded files
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
     cb(null, `${Date.now()}${ext}`);
