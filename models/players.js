@@ -8,12 +8,18 @@ const playerSchema = new mongoose.Schema({
 
     photo: {
         type: String,
-        required: true
+        default: null
     },
 
     natl: {
         type: String,
         required: true
+    },
+
+    rank: {
+        type: Number,
+        required: true,
+        default: 0
     },
 
     tournament_seed: {
@@ -24,17 +30,20 @@ const playerSchema = new mongoose.Schema({
 
     right_handed: {
         type: Boolean,
-        required: true
+        required: true,
+        default: true,
     },
 
     singles_in: {
         type: Boolean,
-        required: true
+        required: true,
+        default: false
     },
 
     doubles_in: {
         type: Boolean,
-        required: true
+        required: true,
+        default: false
     },
 
     status: {
@@ -60,14 +69,13 @@ const playerSchema = new mongoose.Schema({
 
     ball: {
         type: Boolean,
-        default: false
+        default: false,
     },
 
     warm_up: {
         type: Boolean,
         default: false
     }
-    
 })
 
 module.exports = mongoose.model('Player', playerSchema);

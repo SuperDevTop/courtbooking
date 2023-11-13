@@ -190,4 +190,79 @@ router.post("/deleteCourt", async (req, res) => {
   }
 });
 
+router.post("/addPlayer", async (req, res) => {
+  try {
+    const { name, natl, atp_wta, rank, status, tournament_seed } = req.body;
+
+    const existingPlayer = await Player.findOne({ name });
+
+    if (existingPlayer) {
+      return res.status(400).json({ message: "Player already exists!" });
+    }
+
+    // Create a new Player
+    const newPlayer = new Player({
+      name,
+      natl,
+      atp_wta,
+      rank,
+      status,
+      tournament_seed,
+    });
+
+    await newPlayer.save();
+    const savedPlayer = await Player.findOne({ name });
+
+    res
+      .status(201)
+      .json({
+        message: "Player registered successfully!",
+        players: savedPlayer,
+      });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/updatePlayer", async (req, res) => {
+  const {
+    name,
+    natl,
+    rank,
+    status,
+    atp_wta,
+    singles_in,
+    doubles_in,
+    tournament_seed,
+    right_handed,
+  } = req.body;
+
+  Player.findOneAndUpdate(
+    { name: name },
+    {
+      $set: {
+        natl: natl,
+        rank: rank,
+        status: status,
+        atp_wta: atp_wta,
+        tournament_seed: tournament_seed,
+        right_handed: right_handed,
+        singles_in: singles_in,
+        doubles_in: doubles_in,
+      },
+    },
+    { new: true }
+  )
+    .then((player) => {
+      console.log("updated player:");
+      console.log(player);
+      res.status(200).json({ player });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err });
+    });
+});
+
 module.exports = router;
