@@ -1,13 +1,13 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// const multer = require("multer");
+const multer = require("multer");
 const path = require("path");
 
 const router = express.Router();
 
 const User = require("../models/user");
-// const backendUrl = require('../config/url')
+const backendUrl = require('../config/url')
 
 router.post("/register", async (req, res) => {
   try {
@@ -133,42 +133,42 @@ router.post("/updateUser", async (req, res) => {
 });
 
 // Multer configuration
-// const storage = multer.diskStorage({
-//   destination: "images/avatars", // Specify the path where you want to save the uploaded files
-//   filename: (req, file, cb) => {
-//     const ext = path.extname(file.originalname);
-//     cb(null, `${Date.now()}${ext}`);
-//   },
-// });
+const storage = multer.diskStorage({
+  destination: "images/avatars", // Specify the path where you want to save the uploaded files
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}${ext}`);
+  },
+});
 
-// const upload = multer({ storage });
+const upload = multer({ storage });
 
-// router.post("/uploadAvatar", upload.single("avatar"), async (req, res) => {
-//   // Check if a file was provided in the request
-//   if (!req.file) {
-//     return res.status(400).json({ message: "No file uploaded" });
-//   }
+router.post("/uploadAvatar", upload.single("avatar"), async (req, res) => {
+  // Check if a file was provided in the request
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
 
-//   // If you reached here, the file was successfully uploaded
-//   const uploadedFilePath = req.file.path;
-//   const {email} = req.body;
+  // If you reached here, the file was successfully uploaded
+  const uploadedFilePath = req.file.path;
+  const {email} = req.body;
 
-//   User.findOneAndUpdate(
-//     { email: email },
-//     {
-//       $set: {
-//         avatar: backendUrl + '/' + uploadedFilePath,
-//       },
-//     },
-//     { new: true }
-//   )
-//     .then((user) => {
-//       res.status(200).json({ user });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(500).json({ message: err });
-//     });
-// });
+  User.findOneAndUpdate(
+    { email: email },
+    {
+      $set: {
+        avatar: backendUrl + '/' + uploadedFilePath,
+      },
+    },
+    { new: true }
+  )
+    .then((user) => {
+      res.status(200).json({ user });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ message: err });
+    });
+});
 
 module.exports = router;

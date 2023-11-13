@@ -4,6 +4,8 @@ const app = express();
 const cors = require("cors");
 const path = require("path");
 
+require('dotenv').config();
+
 // mongoose.connect('mongodb://127.0.0.1:27017/tennis_court_booking', {
 mongoose
   .connect(
@@ -27,7 +29,7 @@ app.use("/api/booking", require("./routes/booking"));
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/court", require("./routes/court"));
 
-// app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 // Your code
 if (process.env.NODE_ENV === "production") {
