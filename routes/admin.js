@@ -217,7 +217,7 @@ router.post("/addPlayer", async (req, res) => {
       .status(201)
       .json({
         message: "Player registered successfully!",
-        players: savedPlayer,
+        player: savedPlayer,
       });
   } catch (error) {
     console.log(error);
