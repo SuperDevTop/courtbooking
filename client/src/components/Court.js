@@ -38,7 +38,6 @@ import { currentPageToCourts } from "../utils/currentPageToCourts";
 import LoadingOverlay from "./layout/LoadingOverlay";
 import ConfirmationDialog from "./reservation/ConfirmDialog";
 import { bookingOptionTexts } from "../utils/texts";
-// import BookingOptionDialog from "./dialog/BookingOptionDialog";
 
 // const theme = createTheme({
 //     components: {
@@ -89,9 +88,11 @@ const Court = (props) => {
   const name = props.name;
   const bookedTimeIndexes = [];
   const [selectedOption, setSelectedOption] = useState("");
+  const { court } = props;
 
   // 10/6
   const booking_data = props.booking_data;
+
   let timeTexts = [
     "8:00",
     "8:30",
@@ -157,6 +158,18 @@ const Court = (props) => {
     const ind = timeTexts.indexOf(time);
     bookedTimeIndexes.push(ind);
     dat[ind] = booking_data[index];
+    dat[ind]["seeded"] = new Array(dat[ind].players.length);
+
+    // eslint-disable-next-line
+    dat[ind].players.map((player, index) => {
+      const match = players.find((one) => one.name === player);
+
+      if (match.tournament_seed !== 0) {
+        dat[ind]["seeded"][index] = true;
+      } else {
+        dat[ind]["seeded"][index] = false;
+      }
+    });
 
     // for expansion of panel
     const time_slot = booking_data[index].time_slot;
@@ -173,7 +186,7 @@ const Court = (props) => {
   };
 
   const flatOptionProps = {
-    options: bookingOptionTexts
+    options: bookingOptionTexts,
   };
 
   useEffect(() => {
@@ -357,12 +370,6 @@ const Court = (props) => {
     <>
       {isBooking && <LoadingOverlay text={"Booking..."} color="success" />}
       {isDeleting && <LoadingOverlay text={"Deleting..."} color="warning" />}
-      {/* <BookingOptionDialog
-        open={openBookingOptionDialog}
-        onClose={() => {
-          setOpenBookingOptionDialog(false);
-        }}
-      /> */}
       <Box>
         <CustomAlert
           openState={open}
@@ -436,42 +443,75 @@ const Court = (props) => {
                     />
                   </IconButton>{" "}
                   <Box my={3.5} textAlign="center">
-                    {dat[index].players.map((player, index) => (
-                      <Typography
-                        variant="h6"
-                        key={index}
-                        color={playerColors[index]}
-                      >
-                        {player}
-                      </Typography>
+                    {dat[index].players.map((player, index2) => (
+                      <Box key={index}>
+                        {dat[index].seeded[index2] ? (
+                          <>
+                            <Typography
+                              variant="h6"
+                              key={index}
+                              color={playerColors[index]}
+                              sx={{
+                                backgroundColor: "red",
+                              }}
+                            >
+                              {player}
+                            </Typography>
+                          </>
+                        ) : (
+                          <>
+                            <Typography
+                              variant="h6"
+                              key={index}
+                              color={playerColors[index]}
+                            >
+                              {player}
+                            </Typography>
+                          </>
+                        )}
+                      </Box>
                     ))}
                   </Box>
-                  <Box sx={{ bgcolor: '#999' }}>
+                  <Box sx={{ bgcolor: "#999" }}>
                     <Typography variant="h6">{dat[index].option}</Typography>
                   </Box>
                 </>
               ) : (
                 <>
-                  Available
-                  <Box my={3.5} textAlign="center">
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      onClick={() => {
-                        open_Dialog(time);
-                      }}
-                      sx={{
-                        color: "white",
-                        backgroundColor: "primary.accent",
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        width: "95%",
-                        marginTop: 2,
+                  {court && !court.blocked && (
+                    <>
+                      Available
+                      <Box my={3.5} textAlign="center">
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          onClick={() => {
+                            open_Dialog(time);
+                          }}
+                          sx={{
+                            color: "white",
+                            backgroundColor: "primary.accent",
+                            paddingTop: 2,
+                            paddingBottom: 2,
+                            width: "95%",
+                            marginTop: 2,
+                          }}
+                        >
+                          SCHEDULE
+                        </Button>
+                      </Box>
+                    </>
+                  )}
+                  {court && court.blocked && (
+                    <div
+                      style={{
+                        background:
+                          "linear-gradient(360deg, #0e0d0d, transparent)",
                       }}
                     >
-                      SCHEDULE
-                    </Button>
-                  </Box>
+                      Not Available
+                    </div>
+                  )}
                 </>
               )}
             </Typography>
@@ -659,16 +699,6 @@ const Court = (props) => {
                   <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
                   Add Player
                 </Button>
-                {/* <Button
-                variant="contained"
-                onClick={() => {
-                  setOpenBookingOptionDialog(true);
-                }}
-                sx={{ marginTop: 2, marginBottom: 2, float: "right" }}
-              >
-                <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
-                Add Options
-              </Button> */}
                 <Stack spacing={1} sx={{ width: "50%" }}>
                   <Autocomplete
                     {...flatOptionProps}

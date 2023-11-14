@@ -4,7 +4,8 @@ const initialState = {
   isAuthenticated: false,
   token: null,
   credential: '',
-  loading: true
+  loading: true, 
+  user: {},
 };
 
 const authReducer = (state = initialState, action) => {
@@ -22,6 +23,7 @@ const authReducer = (state = initialState, action) => {
         ...state,
         isAuthenticated: true,
         token: action.payload.token,
+        user: action.payload.user,
       };
 
     case LOGIN_FAILURE:
@@ -31,17 +33,22 @@ const authReducer = (state = initialState, action) => {
       }
     
     case USER_LOAD:
+      const user = JSON.parse(localStorage.getItem('user'))
+
       return {
         ...state,
         isAuthenticated: true,
-        loading : false
+        loading : false,
+        user: user
       }
 
     case LOG_OUT:
       return {
         ...state,
         isAuthenticated: false,
-        loading : false
+        loading : false,
+        user: {},
+        courts: []
       }
 
     default:

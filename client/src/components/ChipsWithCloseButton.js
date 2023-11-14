@@ -29,7 +29,6 @@ const ChipsWithCloseButton = ({
     newWarmups[index] = event.target.checked;
 
     setWarmups(newWarmups);
-    console.log(newWarmups);
     setParentWarmups(newWarmups);
   };
 
@@ -67,7 +66,8 @@ const ChipsWithCloseButton = ({
     chip.forEach((one) => {
       const player = players.find((player) => player.name === one);
       temp.push(player.ball);
-      tempWarmups.push(player.warm_up);
+      // tempWarmups.push(player.warm_up);
+      tempWarmups.push(false)
     });
 
     setBalls(temp);
@@ -94,20 +94,20 @@ const ChipsWithCloseButton = ({
             variant="filled"
             style={{ margin: "7px" }}
           />
-          {warmups[index] === true ? (
+          {/* {warmups[index] === true ? ( */}
             <FormControlLabel
               control={
                 <Checkbox
                   onChange={(event) => {
                     handleChange(event, index);
                   }}
-                  checked={true}
+                  checked={warmups[index]}
                 />
               }
               label="Warm Up"
             />
-          ) : (
-            <FormControlLabel
+          {/* ) : ( */}
+            {/* <FormControlLabel
               control={
                 <Checkbox
                   onChange={(event) => {
@@ -117,8 +117,8 @@ const ChipsWithCloseButton = ({
                 />
               }
               label="Warm Up"
-            />
-          )}
+            /> */}
+          {/* )} */}
           {ball ? (
             balls[index] === true ? (
               <FormControlLabel

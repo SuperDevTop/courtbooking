@@ -3,6 +3,7 @@ import { BOOKING_SUCCESS, SET_BOOKING_DATE, GET_BOOKING_DATA } from "../actions/
 const initialState = {
     booking_date: '',
     booking_data: [[], [], [], [], []],
+    courts: []
 };
 
 const bookingReducer = (state = initialState, action) => {
@@ -19,9 +20,18 @@ const bookingReducer = (state = initialState, action) => {
             }
 
         case GET_BOOKING_DATA:
-            return {
-                ...state,
-                booking_data: action.payload.booking_data
+
+            if(action.payload.courts) {
+                return {
+                    ...state,
+                    booking_data: action.payload.booking_data,
+                    courts: action.payload.courts
+                }
+            } else {                
+                return {
+                    ...state,
+                    booking_data: action.payload.booking_data,
+                }
             }
         default:
             return state;

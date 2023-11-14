@@ -7,7 +7,7 @@ const path = require("path");
 const router = express.Router();
 
 const User = require("../models/user");
-const backendUrl = require('../config/url')
+const backendUrl = require("../config/url");
 
 router.post("/register", async (req, res) => {
   try {
@@ -153,13 +153,13 @@ router.post("/uploadAvatar", async (req, res) => {
 
   // If you reached here, the file was successfully uploaded
   const uploadedFilePath = req.file.path;
-  const {email} = req.body;
+  const { email } = req.body;
 
   User.findOneAndUpdate(
     { email: email },
     {
       $set: {
-        avatar: backendUrl + '/' + uploadedFilePath,
+        avatar: backendUrl + "/" + uploadedFilePath,
       },
     },
     { new: true }

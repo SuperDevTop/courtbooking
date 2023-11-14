@@ -68,11 +68,11 @@ export const getBookingData = (data) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/getBookingData", data)
     .then((res) => {
-      const { booking_data } = res.data;
+      const { booking_data, courts } = res.data;
 
       dispatch({
         type: GET_BOOKING_DATA,
-        payload: { booking_data },
+        payload: { booking_data, courts },
       });
     })
     .catch((err) => {

@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Booking = require("../models/booking");
 const Player = require("../models/players");
+const Court = require("../models/court");
 
 router.post("/createBook", async (req, res) => {
   try {
@@ -19,18 +20,18 @@ router.post("/createBook", async (req, res) => {
       option,
     } = req.body;
 
-    await Promise.all(
-      warmups.map(async (warmup, index) => {
-        await Player.updateOne(
-          { name: players[index] },
-          {
-            $set: {
-              warm_up: warmup,
-            },
-          }
-        );
-      })
-    );
+    // await Promise.all(
+    //   warmups.map(async (warmup, index) => {
+    //     await Player.updateOne(
+    //       { name: players[index] },
+    //       {
+    //         $set: {
+    //           warm_up: warmup,
+    //         },
+    //       }
+    //     );
+    //   })
+    // );
 
     const updatedPlayers = await Player.find({});
 
@@ -155,11 +156,14 @@ router.post("/getBookingdata", async (req, res) => {
           court_name: court,
           start_time: { $gte: realDate, $lt: nextDay },
         });
+
         return bookings;
       })
     );
 
-    res.status(200).json({ booking_data: booking_data });
+    const courts = await Court.find({});
+
+    res.status(200).json({ booking_data: booking_data, courts });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error });

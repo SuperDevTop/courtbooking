@@ -12,7 +12,7 @@ import Court from "../components/Court";
 import { getPlayersData } from "../actions/playerActions";
 import setAuthToken from "../utils/setAuthToken";
 import Topbar from "../components/layout/Topbar";
-import { courtNames } from "../utils/courtNames";
+// import { courtNames } from "../utils/courtNames";
 import { getBookingData } from "../actions/bookingAction";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 
@@ -23,11 +23,10 @@ const Dashboard = ({
   getBookingData,
   booking_data,
   booking_date,
+  courts,
 }) => {
   const dispatch = useDispatch();
   const history = useNavigate();
-
-  // console.log(booking_data);
 
   // Auto Log Out
   useEffect(() => {
@@ -49,9 +48,10 @@ const Dashboard = ({
     getPlayersData();
   }, [getPlayersData]);
 
-  const titles = courtNames;
+  // const titles = courtNames;
   const colors = ["green", "red", "yellow", "blue", "pink"];
   const [displayedCourts, setdisplayedCourts] = useState([]);
+  const [titles, setTitles] = useState([]);
 
   useEffect(() => {
     const { displayedCourtNumbers, displayedCourtNames } =
@@ -63,6 +63,12 @@ const Dashboard = ({
       getBookingData({ court_names: displayedCourtNames, date: booking_date });
     }
   }, [currentPage, getBookingData, booking_date]);
+
+  useEffect(() => {
+    if (courts.length !== 0) {
+      setTitles(courts.map((court) => court.name));
+    }
+  }, [courts]);
 
   return (
     <>
@@ -78,7 +84,8 @@ const Dashboard = ({
                 name={titles[court]}
                 headerColor={colors[court % 5]}
                 players={players}
-                booking_data={booking_data[index]}
+                booking_data={booking_data[index] ? booking_data[index] : []}
+                court={courts[court]}
               />
             </Grid>
           ))}
@@ -99,6 +106,7 @@ const mapStateToProps = (state) => ({
   currentPage: state.page.currentPage,
   booking_data: state.booking.booking_data,
   booking_date: state.booking.booking_date,
+  courts: state.booking.courts,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
