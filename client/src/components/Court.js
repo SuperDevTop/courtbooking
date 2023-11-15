@@ -446,7 +446,7 @@ const Court = (props) => {
                   <Box my={3.5} textAlign="center">
                     {dat[index].players.map((player, index2) => (
                       <Box key={index2}>
-                        {dat[index].seeded[index2] ? (
+                        {/* {dat[index].seeded[index2] ? (
                           <>
                             <Typography
                               variant="h6"
@@ -459,7 +459,7 @@ const Court = (props) => {
                               {player}
                             </Typography>
                           </>
-                        ) : (
+                        ) : ( */}
                           <>
                             <Typography
                               variant="h6"
@@ -469,7 +469,7 @@ const Court = (props) => {
                               {player}
                             </Typography>
                           </>
-                        )}
+                        {/* )} */}
                       </Box>
                     ))}
                   </Box>
