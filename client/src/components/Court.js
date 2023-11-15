@@ -83,7 +83,6 @@ const Court = (props) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [indexToBeDeleted, setIndexToBeDeleted] = useState(0);
-  // const [openBookingOptionDialog, setOpenBookingOptionDialog] = useState(false);
   const headerColor = props.headerColor;
   const name = props.name;
   const bookedTimeIndexes = [];
@@ -160,16 +159,18 @@ const Court = (props) => {
     dat[ind] = booking_data[index];
     dat[ind]["seeded"] = new Array(dat[ind].players.length);
 
-    // eslint-disable-next-line
-    dat[ind].players.map((player, index) => {
-      const match = players.find((one) => one.name === player);
+    if (dat[ind]) {
+      // eslint-disable-next-line
+      dat[ind].players.map((player, index) => {
+        const match = players.find((one) => one.name === player);
 
-      if (match.tournament_seed !== 0) {
-        dat[ind]["seeded"][index] = true;
-      } else {
-        dat[ind]["seeded"][index] = false;
-      }
-    });
+        if (match.tournament_seed !== 0) {
+          dat[ind]["seeded"][index] = true;
+        } else {
+          dat[ind]["seeded"][index] = false;
+        }
+      });
+    }
 
     // for expansion of panel
     const time_slot = booking_data[index].time_slot;
@@ -444,7 +445,7 @@ const Court = (props) => {
                   </IconButton>{" "}
                   <Box my={3.5} textAlign="center">
                     {dat[index].players.map((player, index2) => (
-                      <Box key={index}>
+                      <Box key={index2}>
                         {dat[index].seeded[index2] ? (
                           <>
                             <Typography
@@ -452,7 +453,7 @@ const Court = (props) => {
                               key={index}
                               color={playerColors[index]}
                               sx={{
-                                backgroundColor: "red",
+                                backgroundColor: "black",
                               }}
                             >
                               {player}
