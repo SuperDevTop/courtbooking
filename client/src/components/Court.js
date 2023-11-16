@@ -159,18 +159,18 @@ const Court = (props) => {
     dat[ind] = booking_data[index];
     dat[ind]["seeded"] = new Array(dat[ind].players.length);
 
-    if (dat[ind]) {
-      // eslint-disable-next-line
-      dat[ind].players.map((player, index) => {
-        const match = players.find((one) => one.name === player);
+    // if (dat[ind]) {
+    //   // eslint-disable-next-line
+    //   dat[ind].players.map((player, index) => {
+    //     const match = players.find((one) => one.name === player);
 
-        if (match.tournament_seed !== 0) {
-          dat[ind]["seeded"][index] = true;
-        } else {
-          dat[ind]["seeded"][index] = false;
-        }
-      });
-    }
+    //     if (match.tournament_seed !== 0) {
+    //       dat[ind]["seeded"][index] = true;
+    //     } else {
+    //       dat[ind]["seeded"][index] = false;
+    //     }
+    //   });
+    // }
 
     // for expansion of panel
     const time_slot = booking_data[index].time_slot;
