@@ -30,7 +30,11 @@ const bookingSchema = new mongoose.Schema({
         type: String
     },
     
-    players: [String]   
+    players: [String],
+    
+    warmups : [Number],
+
+    balls: [Number]
 });
 
 module.exports = mongoose.model('Booking', bookingSchema);

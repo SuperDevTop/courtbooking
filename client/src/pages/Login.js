@@ -27,10 +27,7 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Court Booking
-      </Link>{" "}
+      {"Copyright © Court Booking "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -76,6 +73,7 @@ const Login = (props) => {
         elevation={6}
         square
         component={Paper}
+        borderRadius={1}
       >
         <Box
           sx={{
@@ -84,14 +82,23 @@ const Login = (props) => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            py: 2,
+            // py: 2,
+            p:2
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+          <Avatar sx={{ m: 1 }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography variant="h5">Sign in</Typography>
-          <form onSubmit={handleLogin}>
+          <form
+            onSubmit={handleLogin}
+            sx={{
+              "& .MuiTextField-root .MuiInputBase-input": {
+                m: 1,
+                width: "25ch",
+              },
+            }}
+          >
             <TextField
               label="Email"
               variant="outlined"
@@ -100,6 +107,12 @@ const Login = (props) => {
               fullWidth
               margin="normal"
               inputRef={inputRef}
+              required
+              sx={{
+                "& .MuiInputBase-input": {
+                  fontSize: 17,
+                },
+              }}
             />
             <TextField
               label="Password"
@@ -110,6 +123,12 @@ const Login = (props) => {
               fullWidth
               margin="normal"
               focused
+              required
+              sx={{
+                "& .MuiInputBase-input": {
+                  fontSize: 17,
+                },
+              }}
             />
             <FormHelperText error>{credential}</FormHelperText>
             <FormControlLabel
@@ -118,7 +137,7 @@ const Login = (props) => {
             />
             <Button
               onClick={handleLogin}
-              variant="contained"
+              variant="outlined"
               color="primary"
               fullWidth
               sx={{ mt: 3, mb: 2, fontSize: 16, py: 1 }}

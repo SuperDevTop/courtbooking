@@ -31,13 +31,14 @@ import CustomAlert from "./CustomAlert";
 import ChipsWithCloseButton from "./ChipsWithCloseButton";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { colorScale } from "../utils/gradientColor";
-import { courtActiveBackground } from "../utils/gradientColor";
+// import { courtActiveBackground } from "../utils/gradientColor";
 import EditDialog from "./reservation/EditDialog";
-import { playerColors } from "../utils/playerColors";
+// import { playerColors } from "../utils/playerColors";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import LoadingOverlay from "./layout/LoadingOverlay";
 import ConfirmationDialog from "./reservation/ConfirmDialog";
 import { bookingOptionTexts } from "../utils/texts";
+import { useTheme } from "@emotion/react";
 
 // const theme = createTheme({
 //     components: {
@@ -83,11 +84,12 @@ const Court = (props) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [indexToBeDeleted, setIndexToBeDeleted] = useState(0);
-  const headerColor = props.headerColor;
+  // const headerColor = props.headerColor;
   const name = props.name;
   const bookedTimeIndexes = [];
   const [selectedOption, setSelectedOption] = useState("");
   const { court } = props;
+  const theme = useTheme();
 
   // 10/6
   const booking_data = props.booking_data;
@@ -265,6 +267,7 @@ const Court = (props) => {
       }, 200);
 
       return;
+      //
     }
 
     const { displayedCourtNames } = currentPageToCourts(props.currentPage);
@@ -398,12 +401,14 @@ const Court = (props) => {
           onConfirm={onConfirm}
         />
         <Box
-          backgroundColor={headerColor}
+          backgroundColor={theme.header.background}
+          border={theme.palette.primary.light}
           padding={2}
           sx={{
             position: "sticky",
             top: 0,
             zIndex: 1,
+            border: `${theme.palette.primary.light} solid 1px`,
           }}
         >
           <StadiumIcon
@@ -416,8 +421,10 @@ const Court = (props) => {
         {timeTexts.map((time, index) => (
           <Box
             sx={{
-              backgroundColor: `${courtActiveBackground[index % 5]}`,
-              border: "solid 1px #a0a0a0",
+              // backgroundColor: `${courtActiveBackground[index % 5]}`,
+              backgroundColor: `${theme.header.background}`,
+              // border: "solid 1px #a0a0a0",
+              border: `solid 1px ${theme.palette.primary.light}`,
               color: "white",
               height: bookedTimeIndexes.includes(index)
                 ? 280 * dat[index].time_slot
@@ -460,21 +467,22 @@ const Court = (props) => {
                             </Typography>
                           </>
                         ) : ( */}
-                          <>
-                            <Typography
-                              variant="h6"
-                              key={index}
-                              color={playerColors[index]}
-                            >
-                              {player}
-                            </Typography>
-                          </>
+                        <>
+                          <Typography
+                            variant="h6"
+                            key={index}
+                            // color={playerColors[index]}
+                            color='primary.main'
+                          >
+                            {player}
+                          </Typography>
+                        </>
                         {/* )} */}
                       </Box>
                     ))}
                   </Box>
                   <Box sx={{ bgcolor: "#999" }}>
-                    <Typography variant="h6">{dat[index].option}</Typography>
+                    <Typography variant="h6" mb={3} py={1}>{dat[index].option}</Typography>
                   </Box>
                 </>
               ) : (
@@ -485,7 +493,7 @@ const Court = (props) => {
                       <Box my={3.5} textAlign="center">
                         <Button
                           fullWidth
-                          variant="contained"
+                          variant="outlined"
                           onClick={() => {
                             open_Dialog(time);
                           }}
@@ -496,6 +504,7 @@ const Court = (props) => {
                             paddingBottom: 2,
                             width: "95%",
                             marginTop: 2,
+                            borderWidth: 2,
                           }}
                         >
                           SCHEDULE
@@ -554,7 +563,7 @@ const Court = (props) => {
         fullWidth
         PaperProps={{
           style: {
-            backgroundColor: "#f0f0f0",
+            // backgroundColor: "#f0f0f0",
             maxWidth: "800px",
           },
         }}
@@ -564,12 +573,12 @@ const Court = (props) => {
           variant="h6"
           marginTop={2}
           textAlign="center"
-          color="black"
+          // color="black"
         >
           <CalendarMonthIcon
             sx={{ verticalAlign: "text-bottom", marginRight: 1 }}
           />
-          SCHEDULE
+          <span style={{ fontSize: 18 }}>SCHEDULE</span>
           <CalendarMonthIcon
             sx={{ verticalAlign: "text-bottom", marginLeft: 1 }}
           />
@@ -680,7 +689,7 @@ const Court = (props) => {
             </Grid>
             <Grid item xs={6}>
               <Box sx={{ marginTop: 8, marginRight: 2, borderRadius: 1.5 }}>
-                <Typography color="black" variant="h6" textAlign="center">
+                <Typography variant="h6" textAlign="center">
                   Selected Players:
                 </Typography>
                 <ChipsWithCloseButton
@@ -693,7 +702,8 @@ const Court = (props) => {
               </Box>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button
-                  variant="contained"
+                  variant="outlined"
+                  color="primary"
                   onClick={addPlayer}
                   sx={{ marginTop: 2, marginBottom: 2 }}
                 >
@@ -721,10 +731,10 @@ const Court = (props) => {
           </Grid>
         </DialogContent>
         <DialogActions sx={{ paddingRight: 5, paddingBottom: 3 }}>
-          <Button onClick={closeDialog} variant="contained">
+          <Button onClick={closeDialog} variant="outlined">
             Close
           </Button>
-          <Button onClick={onSchedule} variant="contained">
+          <Button onClick={onSchedule} variant="outlined">
             Schedule
           </Button>
         </DialogActions>

@@ -57,7 +57,7 @@ const EditDialog = ({
   const [warmupCheckedCount, setWarmupCheckedCount] = useState(0);
   const [chip, setChip] = useState([]);
   const [alertOpen, setAlertOpen] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState("");
+  const [selectedPlayer, setSelectedPlayer] = useState("test");
   const [maxPlayersCountWarning, setMaxPlayersCountWarning] = useState(false);
   const [noSelectWarning, setNoSelectWarning] = useState(false);
   const [bExistingUser, setExistingUser] = useState(false);
@@ -74,7 +74,6 @@ const EditDialog = ({
 
   useEffect(() => {
     players.length > 0 && setSelectedPlayer(players[0].name);
-
     players.length > 0 && setSelectedPlayerData(players[0]);
 
     if (players.length > 0) {
@@ -201,11 +200,11 @@ const EditDialog = ({
       open={open}
       maxWidth="md"
       fullWidth
-      PaperProps={{
-        style: {
-          backgroundColor: "#f0f0f0",
-        },
-      }}
+      // PaperProps={{
+      //   style: {
+      //     backgroundColor: "#f0f0f0",
+      //   },
+      // }}
     >
       {isSaving && <LoadingOverlay text="Saving..." color="success" />}
       <CustomAlert
@@ -234,7 +233,7 @@ const EditDialog = ({
         marginTop={2}
         marginBottom={3}
         textAlign="center"
-        color="black"
+        // color="black"
       >
         <EditNoteIcon sx={{ verticalAlign: "text-bottom", marginRight: 1 }} />
         Edit reservation
@@ -249,6 +248,7 @@ const EditDialog = ({
                 id="controlled-demo"
                 value={selectedPlayer}
                 onChange={onChangePlayer}
+                isOptionEqualToValue={(option, value) => option.value === value.value}
                 renderInput={(params) => (
                   <TextField {...params} label="Players" variant="standard" />
                 )}
@@ -353,7 +353,7 @@ const EditDialog = ({
               }}
             >
               <Typography
-                color="black"
+                // color="black"
                 variant="h6"
                 textAlign="center"
                 marginBottom={2}
@@ -371,7 +371,7 @@ const EditDialog = ({
               />
               <div style={{ display: "flex", justifyContent: "space-between", width: '85%' }}>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   onClick={addPlayer}
                   sx={{ marginTop: 2, marginBottom: 2 }}
                 >
@@ -404,10 +404,10 @@ const EditDialog = ({
         </Grid>
       </DialogContent>
       <DialogActions sx={{ paddingRight: 3, paddingBottom: 3 }}>
-        <Button onClick={onClose} variant="contained">
+        <Button onClick={onClose} variant="outlined">
           Close
         </Button>
-        <Button onClick={onSave} variant="contained">
+        <Button onClick={onSave} variant="outlined">
           Save
         </Button>
       </DialogActions>

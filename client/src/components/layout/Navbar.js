@@ -23,17 +23,17 @@ import { useNavigate } from "react-router-dom";
 import setAuthToken from "../../utils/setAuthToken";
 import { Avatar } from "@mui/material";
 import AccountPopover from "../account/accountPopover";
-// import { useTheme } from '@emotion/react';
+// import { useTheme } from "@emotion/react";
 
 const drawerWidth = 240;
 let navItems = [];
 
 function DrawerAppBar(props) {
-  // const theme = useTheme()
+  // const theme = useTheme();
   // const { primary, secondary } = theme.palette;
 
   if (props.isAuthenticated) {
-    navItems = ["Booking", "About"];
+    navItems = ["Booking", "About", "Messages"];
   } else {
     navItems = [];
   }
@@ -86,12 +86,15 @@ function DrawerAppBar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box display={props.isAuthenticated ? "flex" : "none"}>
+    <Box
+      display={props.isAuthenticated ? "flex" : "none"}
+    >
       <CssBaseline />
       <AppBar
         component="nav"
         position="static"
-        sx={{ backgroundColor: "white", color: "black" }}
+        sx={{ color: "black", padding:2 }}
+
       >
         <Toolbar>
           <IconButton
@@ -117,6 +120,7 @@ function DrawerAppBar(props) {
           <Typography
             variant="h6"
             component="div"
+            color='white'
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
             <i>CourtBooking</i>
@@ -125,13 +129,11 @@ function DrawerAppBar(props) {
             {navItems.map((item) => (
               <Button
                 key={item}
+                color="primary"
                 sx={{
-                  color: "white",
                   marginRight: 2,
-                  textTransform: "lowercase",
-                  borderColor: "black",
                 }}
-                variant="contained"
+                variant="outlined"
               >
                 <Typography variant="h6" fontSize={17}>
                   {item === "Logout" ? (

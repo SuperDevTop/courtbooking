@@ -1,17 +1,17 @@
 import React from 'react';
 import { Box, Grid } from '@mui/material';
-import { useTheme } from '@mui/material';
+// import { useTheme } from '@mui/material';
 import { connect } from 'react-redux';
 
 const Footer = ({ isAuthenticated }) => {
-    const theme = useTheme()
-    const { primary } = theme.palette;
+    // const theme = useTheme()
+    // const { primary } = theme.palette;
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
 
     return (
         <Box
-            bgcolor= {primary.dark}
+            // bgcolor= {primary.dark}
             py={2}
             color='white'
             textAlign='center'
@@ -20,7 +20,7 @@ const Footer = ({ isAuthenticated }) => {
             }
             boxShadow={2}
         >
-            <Grid container alignItems='center'>
+            <Grid container alignItems='center' color='secondary.main'>
                 <Grid item xs={4}>
                     6, 345, 450 <br></br>
                     Registered Players
