@@ -482,7 +482,7 @@ const Court = (props) => {
                           >
                             {player}
 
-                            {dat[index].balls[index2] && <img src="/ball.png" width={15} alt="ball" style={{ marginLeft: 5 }}></img>}
+                            {dat[index].balls[index2] && <img src="/images/ball.png" width={15} alt="ball" style={{ marginLeft: 5 }}></img>}
                           </Typography>
                         </>
                         {/* )} */}
