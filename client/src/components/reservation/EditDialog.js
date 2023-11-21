@@ -92,13 +92,16 @@ const EditDialog = ({
       setChip(data.players);
       setTimeLength(data.time_slot);
       setSelectedOption(data.option);
+      setWarmups(data.warmups);
+      setBalls(data.balls);
     }
   }, [data]);
 
   const onSave = () => {
     let reservation_type = "Practice";
+    const warmupCount = warmups.filter((one) => one === true).length;
 
-    if (warmupCheckedCount > 0) {
+    if (warmupCount > 0) {
       reservation_type = "Warm Up";
     }
 
@@ -132,10 +135,20 @@ const EditDialog = ({
   };
 
   const handleDeleteChip = (chipToDelete) => {
+    const chipIndex = chip.findIndex((one) => one === chipToDelete);
+
     setChip(chip.filter((one) => one !== chipToDelete));
+
+    setWarmups((warmups) => {
+      const newWarmups = [...warmups];
+      newWarmups.splice(chipIndex, 1);
+
+      return newWarmups;
+    });
   };
 
   const onClose = () => {
+    setWarmups(data.warmups); // set warmups again as initail because the user might open edit_dialog again
     setChip(data.players);
     setAlertOpen(false);
     close();
@@ -182,6 +195,7 @@ const EditDialog = ({
 
     if (!bFound) {
       setChip([...chip, selectedPlayer]);
+      setWarmups([...warmups, false]);
     } else {
       setExistingUser(true);
 
@@ -248,7 +262,9 @@ const EditDialog = ({
                 id="controlled-demo"
                 value={selectedPlayer}
                 onChange={onChangePlayer}
-                isOptionEqualToValue={(option, value) => option.value === value.value}
+                isOptionEqualToValue={(option, value) =>
+                  option.value === value.value
+                }
                 renderInput={(params) => (
                   <TextField {...params} label="Players" variant="standard" />
                 )}
@@ -368,8 +384,16 @@ const EditDialog = ({
                 ball={true}
                 setParentBalls={setBalls}
                 setParentWarmups={setWarmups}
+                parentWarmups={warmups}
+                parentBalls={balls}
               />
-              <div style={{ display: "flex", justifyContent: "space-between", width: '85%' }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "85%",
+                }}
+              >
                 <Button
                   variant="outlined"
                   onClick={addPlayer}

@@ -38,16 +38,11 @@ export const updateBook = (data, callback) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/updateBook", data)
     .then((res) => {
-      const { booking_data, players } = res.data;
+      const { booking_data } = res.data;
 
       dispatch({
         type: GET_BOOKING_DATA,
         payload: { booking_data },
-      });
-
-      dispatch({
-        type: GETPLAYERS_SUCCESS,
-        payload: { players },
       });
 
       callback && callback();

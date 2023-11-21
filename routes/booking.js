@@ -17,21 +17,9 @@ router.post("/createBook", async (req, res) => {
       date,
       court_names,
       warmups,
+      balls,
       option,
     } = req.body;
-
-    // await Promise.all(
-    //   warmups.map(async (warmup, index) => {
-    //     await Player.updateOne(
-    //       { name: players[index] },
-    //       {
-    //         $set: {
-    //           warm_up: warmup,
-    //         },
-    //       }
-    //     );
-    //   })
-    // );
 
     const updatedPlayers = await Player.find({});
 
@@ -43,6 +31,8 @@ router.post("/createBook", async (req, res) => {
       reservation_type,
       players,
       option,
+      warmups,
+      balls,
     });
 
     await newBook.save();
@@ -82,8 +72,8 @@ router.post("/updateBook", async (req, res) => {
       players,
       court_names,
       date,
-      balls,
       warmups,
+      balls,
       option,
     } = req.body;
 
@@ -96,23 +86,11 @@ router.post("/updateBook", async (req, res) => {
           reservation_type: reservation_type,
           players: players,
           option: option,
+          warmups: warmups,
+          balls: balls,
         },
       }
     );
-
-    balls.map(async (ball, index) => {
-      await Player.updateOne(
-        { name: players[index] },
-        {
-          $set: {
-            ball: ball,
-            warm_up: warmups[index],
-          },
-        }
-      );
-    });
-
-    const updatedPlayers = await Player.find({});
 
     console.log("update success");
     const realDate = new Date(date);
@@ -133,7 +111,6 @@ router.post("/updateBook", async (req, res) => {
     res.status(200).json({
       message: "The reservation was updated successfully!",
       booking_data: booking_data,
-      players: updatedPlayers,
     });
   } catch (error) {
     console.log(error);
@@ -191,6 +168,7 @@ router.post("/deleteBooking", async (req, res) => {
           court_name: court,
           start_time: { $gte: realDate, $lt: nextDay },
         });
+        
         return bookings;
       })
     );

@@ -3,27 +3,23 @@ import Chip from "@mui/material/Chip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { Box } from "@mui/material";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 
 const ChipsWithCloseButton = ({
   chip,
   handleDeleteChip,
-  handleWarmupCheck,
-  players,
+  // players,
   ball,
   setParentBalls,
   setParentWarmups,
+  parentWarmups,
+  parentBalls,
 }) => {
   const [chips, setChips] = useState(chip);
-  const [balls, setBalls] = useState([]);
-  const [warmups, setWarmups] = useState([]);
+  const [balls, setBalls] = useState([false, false, false, false]);
+  const [warmups, setWarmups] = useState([false, false, false, false]);
 
   const handleChange = (event, index) => {
-    if (event.target.checked) {
-      handleWarmupCheck(true);
-    } else {
-      handleWarmupCheck(false);
-    }
 
     const newWarmups = [...warmups];
     newWarmups[index] = event.target.checked;
@@ -33,51 +29,23 @@ const ChipsWithCloseButton = ({
   };
 
   const handleBallChange = (event, index) => {
-    let value;
-
-    if (event.target.checked) {
-      value = true;
-    } else {
-      value = false;
-    }
 
     const newBalls = [...balls];
-    newBalls[index] = value;
+    newBalls[index] = event.target.checked;
 
     setBalls(newBalls);
-
-    if (ball) {
-      setParentBalls(newBalls);
-    }
+    setParentBalls(newBalls);
   };
 
   useEffect(() => {
     setChips(chip);
-    setBalls([]);
-    setWarmups([]);
-
-    if (ball) {
-      setParentBalls([]);
-    }
-
-    let temp = [],
-      tempWarmups = [];
-
-    chip.forEach((one) => {
-      const player = players.find((player) => player.name === one);
-      temp.push(player.ball);
-      // tempWarmups.push(player.warm_up);
-      tempWarmups.push(false)
-    });
-
-    setBalls(temp);
-    setWarmups(tempWarmups);
-
-    if (ball) {
-      setParentBalls(temp);
-    }
+    setWarmups(parentWarmups);
     // eslint-disable-next-line
-  }, [chip, players]);
+  }, [chip, parentWarmups]);
+
+  useEffect(() => {
+    setBalls(parentBalls);
+  }, [parentBalls]);
 
   const onDelete = (chipToDelete) => () => {
     handleDeleteChip(chipToDelete);
@@ -94,57 +62,29 @@ const ChipsWithCloseButton = ({
             variant="filled"
             style={{ margin: "7px" }}
           />
-          {/* {warmups[index] === true ? ( */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={(event) => {
+                  handleChange(event, index);
+                }}
+                checked={warmups[index]}
+              />
+            }
+            label="Warm Up"
+          />
+          {ball ? (
             <FormControlLabel
               control={
                 <Checkbox
                   onChange={(event) => {
-                    handleChange(event, index);
+                    handleBallChange(event, index);
                   }}
-                  checked={warmups[index]}
+                  checked={balls[index]}
                 />
               }
-              label="Warm Up"
+              label="Ball"
             />
-          {/* ) : ( */}
-            {/* <FormControlLabel
-              control={
-                <Checkbox
-                  onChange={(event) => {
-                    handleChange(event, index);
-                  }}
-                  checked={false}
-                />
-              }
-              label="Warm Up"
-            /> */}
-          {/* )} */}
-          {ball ? (
-            balls[index] === true ? (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    onChange={(event) => {
-                      handleBallChange(event, index);
-                    }}
-                    checked={true}
-                  />
-                }
-                label="Ball"
-              />
-            ) : (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    onChange={(event) => {
-                      handleBallChange(event, index);
-                    }}
-                    checked={false}
-                  />
-                }
-                label="Ball"
-              />
-            )
           ) : (
             <></>
           )}
@@ -154,8 +94,9 @@ const ChipsWithCloseButton = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  players: state.players.players,
-});
+// const mapStateToProps = (state) => ({
+//   players: state.players.players,
+// });
 
-export default connect(mapStateToProps)(ChipsWithCloseButton);
+// export default connect(mapStateToProps)(ChipsWithCloseButton);
+export default ChipsWithCloseButton;

@@ -76,8 +76,6 @@ const Court = (props) => {
   const [image, setImage] = useState("/images/players/Djokovic.jpg");
   const [rownum, setRownum] = useState(0);
   const [timeLength, setTimeLength] = useState(2);
-  const [reservation_type, setReservationType] = useState("Practice");
-  const [warmupCheckedCount, setWarmupCheckedCount] = useState(0);
   const [dataofEditDialog, setDataofEditDialog] = useState({});
   const [warmups, setWarmups] = useState([]);
   const [isBooking, setIsBooking] = useState(false);
@@ -201,18 +199,9 @@ const Court = (props) => {
     }
   }, [players]);
 
-  useEffect(() => {
-    if (warmupCheckedCount === 0) {
-      setReservationType("Practice");
-    } else {
-      setReservationType("Warm Up");
-    }
-  }, [warmupCheckedCount]);
-
   const closeDialog = () => {
     setSchdulingPlayers([]);
     setOpenDialog(false);
-    setWarmupCheckedCount(0);
   };
 
   const open_Dialog = (index) => {
@@ -245,14 +234,6 @@ const Court = (props) => {
     }, 2000);
   };
 
-  const handleWarmupCheck = (value) => {
-    if (value) {
-      setWarmupCheckedCount(warmupCheckedCount + 1);
-    } else {
-      setWarmupCheckedCount(warmupCheckedCount - 1);
-    }
-  };
-
   const onSchedule = () => {
     const initialDate = new Date(props.booking_date);
     const newDate = new Date(
@@ -271,6 +252,18 @@ const Court = (props) => {
     }
 
     const { displayedCourtNames } = currentPageToCourts(props.currentPage);
+    let balls = [];
+    let reservation_type = "Practice";
+
+    for (let index = 0; index < warmups.length; index++) {
+      balls.push(false);
+    }
+
+    const warmupsTrueCount = warmups.filter((one) => one === true).length;
+
+    if (warmupsTrueCount > 0) {
+      reservation_type = "Warm Up";
+    }
 
     const data = {
       court_name: name,
@@ -282,6 +275,7 @@ const Court = (props) => {
       court_names: displayedCourtNames,
       date: props.booking_date,
       warmups: warmups,
+      balls: balls,
       option: selectedOption,
     };
 
@@ -311,6 +305,7 @@ const Court = (props) => {
 
     if (!bFound) {
       setSchdulingPlayers([...schedulingPlayers, selectedPlayer.name]);
+      setWarmups([...warmups, false]);
     }
   };
 
@@ -319,6 +314,17 @@ const Court = (props) => {
   };
 
   const handleDeleteChip = (chipToDelete) => {
+    const chipIndex = schedulingPlayers.findIndex(
+      (one) => one === chipToDelete
+    );
+
+    setWarmups((warmups) => {
+      const newWarmups = [...warmups];
+      newWarmups.splice(chipIndex, 1);
+
+      return newWarmups;
+    });
+
     setSchdulingPlayers((schedulingPlayers) =>
       schedulingPlayers.filter((chip) => chip !== chipToDelete)
     );
@@ -472,18 +478,24 @@ const Court = (props) => {
                             variant="h6"
                             key={index}
                             // color={playerColors[index]}
-                            color='primary.main'
+                            color="primary.main"
                           >
                             {player}
+
+                            {dat[index].balls[index2] && <img src="/ball.png" width={15} alt="ball" style={{ marginLeft: 5 }}></img>}
                           </Typography>
                         </>
                         {/* )} */}
                       </Box>
                     ))}
                   </Box>
-                  <Box sx={{ bgcolor: "#999" }}>
-                    <Typography variant="h6" mb={3} py={1}>{dat[index].option}</Typography>
-                  </Box>
+                  {dat[index].option && (
+                    <Box sx={{ bgcolor: "#999" }}>
+                      <Typography variant="h6" mb={3} py={1}>
+                        {dat[index].option}
+                      </Typography>
+                    </Box>
+                  )}
                 </>
               ) : (
                 <>
@@ -517,6 +529,8 @@ const Court = (props) => {
                       style={{
                         background:
                           "linear-gradient(360deg, #0e0d0d, transparent)",
+                          padding: '20px 0px',
+                          margin: '20px 0px'
                       }}
                     >
                       Not Available
@@ -695,9 +709,9 @@ const Court = (props) => {
                 <ChipsWithCloseButton
                   chip={schedulingPlayers}
                   handleDeleteChip={handleDeleteChip}
-                  handleWarmupCheck={handleWarmupCheck}
                   ball={false}
                   setParentWarmups={setWarmups}
+                  parentWarmups={warmups}
                 />
               </Box>
               <div style={{ display: "flex", justifyContent: "space-between" }}>

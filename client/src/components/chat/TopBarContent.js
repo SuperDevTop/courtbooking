@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
   Box,
-  IconButton,
-  Tooltip,
+  // IconButton,
+  // Tooltip,
   Avatar,
   Accordion,
   AccordionSummary,
@@ -18,9 +18,9 @@ import {
   useTheme
 } from '@mui/material';
 import { formatDistance, subMinutes } from 'date-fns';
-import CallTwoToneIcon from '@mui/icons-material/CallTwoTone';
-import VideoCameraFrontTwoToneIcon from '@mui/icons-material/VideoCameraFrontTwoTone';
-import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+// import CallTwoToneIcon from '@mui/icons-material/CallTwoTone';
+// import VideoCameraFrontTwoToneIcon from '@mui/icons-material/VideoCameraFrontTwoTone';
+// import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
@@ -124,7 +124,7 @@ function TopBarContent() {
             display: { xs: 'none', lg: 'flex' }
           }}
         >
-          <Tooltip placement="bottom" title="Start a voice call">
+          {/* <Tooltip placement="bottom" title="Start a voice call">
             <IconButton color="primary">
               <CallTwoToneIcon />
             </IconButton>
@@ -138,7 +138,7 @@ function TopBarContent() {
             <IconButton color="primary" onClick={handleDrawerToggle}>
               <InfoTwoToneIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
         </Box>
       </RootWrapper>
       <Drawer

@@ -14,7 +14,6 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import { loginUser } from "../actions/authActions";
