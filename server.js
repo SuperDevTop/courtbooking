@@ -5,19 +5,11 @@ const cors = require("cors");
 const path = require("path");
 const http = require("http");
 
-// const http = require("http").createServer(app);
-// const io = require("socket.io")(http, {
-//   cors: {
-//     origins: "*",
-//   },
-// });
 const { Server } = require("socket.io");
-const { log } = require("console");
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    origin: "*"
   },
 });
 
