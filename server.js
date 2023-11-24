@@ -3,6 +3,23 @@ const mongoose = require("mongoose");
 const app = express();
 const cors = require("cors");
 const path = require("path");
+const http = require("http");
+
+// const http = require("http").createServer(app);
+// const io = require("socket.io")(http, {
+//   cors: {
+//     origins: "*",
+//   },
+// });
+const { Server } = require("socket.io");
+const { log } = require("console");
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
 
 require("dotenv").config();
 
@@ -49,6 +66,39 @@ if (process.env.NODE_ENV === "production") {
 }
 // Your code
 
+const users = {};
+
+io.on("connection", (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on("join", (data) => {
+    const { name } = data;
+    console.log(name + ' joined');
+    users[name] = socket.id;
+  });
+
+  socket.on("disconnect", () => {
+    // Clean up the users object on disconnect
+    const username = Object.keys(users).find((key) => users[key] === socket.id);
+
+    if (username) {
+      delete users[username];
+      console.log(`${username} disconnected`);
+    }
+  });
+
+  socket.on("privateMessage", (data) => {
+    const { receiver } = data;
+    const toSocketId = users[receiver];
+    if (toSocketId) {
+      io.to(toSocketId).emit("message", (data));
+    } else {
+      // Handle if the user is not found
+      console.log(`User ${receiver} not found`);
+    }
+  });
+});
+
 // Start the server
 const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+server.listen(port, () => console.log(`Server running on port ${port}`));

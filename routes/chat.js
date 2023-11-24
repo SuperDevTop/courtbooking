@@ -17,4 +17,22 @@ router.post("/getChatContents", async (req, res) => {
   }
 });
 
+router.post("/saveChatContent", async (req, res) => {
+  try {
+    const { sender, receiver, text } = req.body;
+
+    const newChat = new Chat({
+      sender: sender,
+      receiver: receiver,
+      text: text,
+    });
+
+    await newChat.save()
+
+    res.status(200).json({ message: "success" });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+});
+
 module.exports = router;

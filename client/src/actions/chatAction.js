@@ -1,4 +1,4 @@
-import { GET_USERS, GET_CHATCONTENTS, SET_SELECTEDUSERNAME } from "./types";
+import { GET_USERS, GET_CHATCONTENTS, SET_SELECTEDUSERNAME, SAVE_CHATCONTENT } from "./types";
 import { backendUrl } from "../config/url";
 import axios from "axios";
 
@@ -49,4 +49,23 @@ export const setSelectedUserName = (name) => async (dispatch) => {
     type: SET_SELECTEDUSERNAME,
     payload: { username },
   });
+};
+
+export const saveChatContent = (data) => async (dispatch) => {
+  console.log(data);
+  try {
+    axios
+      .post(backendUrl + "/api/chat/saveChatContent", data)
+      .then((res) => {
+        dispatch({
+          type: SAVE_CHATCONTENT,
+          payload: { data },
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (error) {
+    console.log(error);
+  }
 };

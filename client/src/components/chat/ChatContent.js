@@ -1,14 +1,16 @@
 import { Box, Avatar, Typography, Card, styled, Divider } from "@mui/material";
 
 import {
-  formatDistance,
+  // formatDistance,
   format,
   subDays,
-  subHours,
-  subMinutes,
+  // subHours,
+  // subMinutes,
 } from "date-fns";
-import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
+// import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
 import { connect } from "react-redux";
+
+
 
 const DividerWrapper = styled(Divider)(
   ({ theme }) => `
@@ -51,6 +53,8 @@ function ChatContent({ currentUser, selectedChatContents }) {
     name: currentUser.name,
     avatar: "/static/images/avatars/1.jpg",
   };
+
+
 
   return (
     <Box p={3}>
@@ -196,15 +200,15 @@ function ChatContent({ currentUser, selectedChatContents }) {
                       alignItems: "center",
                     }}
                   >
-                    <ScheduleTwoToneIcon
+                    {/* <ScheduleTwoToneIcon
                       sx={{
                         mr: 0.5,
                       }}
                       fontSize="small"
-                    />
-                    {formatDistance(subMinutes(new Date(), 6), new Date(), {
+                    /> */}
+                    {/* {formatDistance(subMinutes(new Date(), 6), new Date(), {
                       addSuffix: true,
-                    })}
+                    })} */}
                   </Typography>
                 </Box>
               </Box>
@@ -239,7 +243,7 @@ function ChatContent({ currentUser, selectedChatContents }) {
                       alignItems: "center",
                     }}
                   >
-                    <ScheduleTwoToneIcon
+                    {/* <ScheduleTwoToneIcon
                       sx={{
                         mr: 0.5,
                       }}
@@ -247,7 +251,7 @@ function ChatContent({ currentUser, selectedChatContents }) {
                     />
                     {formatDistance(subHours(new Date(), 60), new Date(), {
                       addSuffix: true,
-                    })}
+                    })} */}
                   </Typography>
                 </Box>
                 <Avatar

@@ -8,9 +8,13 @@ import {
   InputBase,
   useTheme,
 } from "@mui/material";
-import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
+// import AttachFileTwoToneIcon from "@mui/icons-material/AttachFileTwoTone";
 import SendTwoToneIcon from "@mui/icons-material/SendTwoTone";
 import { connect } from "react-redux";
+import { useEffect, useState } from "react";
+
+import { socket, sendMessage } from "../../utils/socketService";
+import { saveChatContent } from "../../actions/chatAction";
 
 const MessageInputWrapper = styled(InputBase)(
   ({ theme }) => `
@@ -26,11 +30,41 @@ const Input = styled("input")({
 
 function BottomBarContent(props) {
   const theme = useTheme();
-  const name = props.user.name
+  const name = props.user.name;
+  const [text, setText] = useState("");
+  const selectedUserName = props.selectedUserName;
+  const saveChatContent = props.saveChatContent;
 
   const user = {
     name: name,
     avatar: "/static/images/avatars/1.jpg",
+  };
+
+  useEffect(() => {
+    socket.on("message", (data) => {
+      console.log(data);
+      saveChatContent(data);
+    });
+
+    return () => {
+      socket.off("message");
+    };
+  }, [saveChatContent]);
+
+  const onSend = () => {
+    if (text === "") {
+      return;
+    }
+
+    const data = {
+      sender: user.name,
+      receiver: selectedUserName,
+      text: text,
+    };
+
+    saveChatContent(data);
+    sendMessage(data);
+    setText("");
   };
 
   return (
@@ -52,6 +86,8 @@ function BottomBarContent(props) {
           autoFocus
           placeholder="Write your message here..."
           fullWidth
+          onChange={(event) => setText(event.target.value)}
+          value={text}
         />
       </Box>
       <Box>
@@ -64,14 +100,18 @@ function BottomBarContent(props) {
           </IconButton>
         </Tooltip>
         <Input accept="image/*" id="messenger-upload-file" type="file" />
-        <Tooltip arrow placement="top" title="Attach a file">
+        {/* <Tooltip arrow placement="top" title="Attach a file">
           <label htmlFor="messenger-upload-file">
             <IconButton sx={{ mx: 1 }} color="primary" component="span">
               <AttachFileTwoToneIcon fontSize="small" />
             </IconButton>
           </label>
-        </Tooltip>
-        <Button startIcon={<SendTwoToneIcon />} variant="contained">
+        </Tooltip> */}
+        <Button
+          startIcon={<SendTwoToneIcon />}
+          variant="contained"
+          onClick={onSend}
+        >
           Send
         </Button>
       </Box>
@@ -81,6 +121,11 @@ function BottomBarContent(props) {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
+  selectedUserName: state.chat.selectedUserName,
 });
 
-export default connect(mapStateToProps)(BottomBarContent);
+const mapDispatchToProps = (dispatch) => ({
+  saveChatContent: (data) => dispatch(saveChatContent(data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BottomBarContent);
