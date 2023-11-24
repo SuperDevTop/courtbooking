@@ -13,7 +13,7 @@ import SendTwoToneIcon from "@mui/icons-material/SendTwoTone";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 
-import { socket, sendMessage } from "../../utils/socketService";
+// import { socket, sendMessage } from "../../utils/socketService";
 import { saveChatContent } from "../../actions/chatAction";
 
 const MessageInputWrapper = styled(InputBase)(
@@ -32,39 +32,39 @@ function BottomBarContent(props) {
   const theme = useTheme();
   const name = props.user.name;
   const [text, setText] = useState("");
-  const selectedUserName = props.selectedUserName;
-  const saveChatContent = props.saveChatContent;
+  // const selectedUserName = props.selectedUserName;
+  // const saveChatContent = props.saveChatContent;
 
   const user = {
     name: name,
     avatar: "/static/images/avatars/1.jpg",
   };
 
-  useEffect(() => {
-    socket.on("message", (data) => {
-      console.log(data);
-      saveChatContent(data);
-    });
+  // useEffect(() => {
+  //   socket.on("message", (data) => {
+  //     console.log(data);
+  //     saveChatContent(data);
+  //   });
 
-    return () => {
-      socket.off("message");
-    };
-  }, [saveChatContent]);
+  //   return () => {
+  //     socket.off("message");
+  //   };
+  // }, [saveChatContent]);
 
   const onSend = () => {
-    if (text === "") {
-      return;
-    }
+    // if (text === "") {
+    //   return;
+    // }
 
-    const data = {
-      sender: user.name,
-      receiver: selectedUserName,
-      text: text,
-    };
+    // const data = {
+    //   sender: user.name,
+    //   receiver: selectedUserName,
+    //   text: text,
+    // };
 
-    saveChatContent(data);
-    sendMessage(data);
-    setText("");
+    // saveChatContent(data);
+    // sendMessage(data);
+    // setText("");
   };
 
   return (

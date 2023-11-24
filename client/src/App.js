@@ -25,7 +25,7 @@ import { logOut } from "./actions/authActions";
 import ThemeProvider from "./theme/ThemeProvider";
 import ApplicationsMessenger from "./components/chat";
 // import { initiateSocketConnection } from "./socketio.service";
-import { initiateSocketConnection } from "./utils/socketService";
+// import { initiateSocketConnection } from "./utils/socketService";
 // import { disconnectSocket } from "./utils/socketService";
 
 // const theme = createTheme({
@@ -65,7 +65,7 @@ const App = () => {
 
   useEffect(() => {
     // disconnectSocket()
-    initiateSocketConnection();
+    // initiateSocketConnection();
   }, []);
 
   return (
