@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 
-let backendUrl = "http://localhost:5000";
+// let backendUrl = "http://localhost:5000";
+let backendUrl = "https://courtbooking.vercel.app";
 const socket = io(backendUrl);
 const user = JSON.parse(localStorage.getItem("user"));
 
