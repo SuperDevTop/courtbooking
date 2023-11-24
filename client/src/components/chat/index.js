@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet";
+import { connect } from "react-redux";
 
-import TopBarContent from './TopBarContent';
-import BottomBarContent from './BottomBarContent';
-import SidebarContent from './SidebarContent';
-import ChatContent from './ChatContent';
-import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
+import TopBarContent from "./TopBarContent";
+import BottomBarContent from "./BottomBarContent";
+import SidebarContent from "./SidebarContent";
+import ChatContent from "./ChatContent";
+import MenuTwoToneIcon from "@mui/icons-material/MenuTwoTone";
 
-// import Scrollbar from 'src/components/Scrollbar';
-import Scrollbar from '../Scrollbar'
+import Scrollbar from "../Scrollbar";
+import { getUsers, getChatContents } from "../../actions/chatAction";
 
 import {
   Box,
@@ -17,8 +18,8 @@ import {
   Divider,
   Drawer,
   IconButton,
-  useTheme
-} from '@mui/material';
+  useTheme,
+} from "@mui/material";
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `
@@ -74,13 +75,24 @@ const DrawerWrapperMobile = styled(Drawer)(
 `
 );
 
-function ApplicationsMessenger() {
+function ApplicationsMessenger({ user, getUsers, getChatContents }) {
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  useEffect(() => {
+    getUsers();
+    if (user) {
+      const data = {
+        username: user.name
+      }
+
+      getChatContents(data)
+    }
+  }, [getUsers, getChatContents, user]);
 
   return (
     <>
@@ -91,10 +103,10 @@ function ApplicationsMessenger() {
       <RootWrapper className="Mui-FixedWrapper">
         <DrawerWrapperMobile
           sx={{
-            display: { lg: 'none', xs: 'inline-block' }
+            display: { lg: "none", xs: "inline-block" },
           }}
           variant="temporary"
-          anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+          anchor={theme.direction === "rtl" ? "right" : "left"}
           open={mobileOpen}
           onClose={handleDrawerToggle}
         >
@@ -104,7 +116,7 @@ function ApplicationsMessenger() {
         </DrawerWrapperMobile>
         <Sidebar
           sx={{
-            display: { xs: 'none', lg: 'inline-block' }
+            display: { xs: "none", lg: "inline-block" },
           }}
         >
           <Scrollbar>
@@ -114,13 +126,13 @@ function ApplicationsMessenger() {
         <ChatWindow>
           <ChatTopBar
             sx={{
-              display: { xs: 'flex', lg: 'inline-block' }
+              display: { xs: "flex", lg: "inline-block" },
             }}
           >
             <IconButtonToggle
               sx={{
-                display: { lg: 'none', xs: 'flex' },
-                mr: 2
+                display: { lg: "none", xs: "flex" },
+                mr: 2,
               }}
               color="primary"
               onClick={handleDrawerToggle}
@@ -143,4 +155,16 @@ function ApplicationsMessenger() {
   );
 }
 
-export default ApplicationsMessenger;
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getUsers: () => dispatch(getUsers()),
+  getChatContents: (username) => dispatch(getChatContents(username)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ApplicationsMessenger);

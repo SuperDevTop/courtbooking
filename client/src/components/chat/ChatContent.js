@@ -46,10 +46,9 @@ const CardWrapperSecondary = styled(Card)(
 `
 );
 
-function ChatContent(props) {
-  const name = props.user.name
+function ChatContent({ currentUser, selectedChatContents }) {
   const user = {
-    name: name,
+    name: currentUser.name,
     avatar: "/static/images/avatars/1.jpg",
   };
 
@@ -59,7 +58,7 @@ function ChatContent(props) {
         {format(subDays(new Date(), 3), "MMMM dd yyyy")}
       </DividerWrapper>
 
-      <Box
+      {/* <Box
         display="flex"
         alignItems="flex-start"
         justifyContent="flex-start"
@@ -150,12 +149,122 @@ function ChatContent(props) {
           alt={user.name}
           src={user.avatar}
         />
-      </Box>
+      </Box> */}
       <DividerWrapper>
         {format(subDays(new Date(), 5), "MMMM dd yyyy")}
       </DividerWrapper>
+      {selectedChatContents &&
+        selectedChatContents.map((content, index) => (
+          <div key={index}>
+            {content.receiver === user.name ? (
+              <Box
+                display="flex"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                py={3}
+              >
+                <Avatar
+                  variant="rounded"
+                  sx={{
+                    width: 50,
+                    height: 50,
+                  }}
+                  alt="Zain Baptista"
+                  src="/static/images/avatars/2.jpg"
+                />
+                <Box
+                  display="flex"
+                  alignItems="flex-start"
+                  flexDirection="column"
+                  justifyContent="flex-start"
+                  ml={2}
+                >
+                  {/* <CardWrapperSecondary>Hey there!</CardWrapperSecondary>
+                  <CardWrapperSecondary
+                    sx={{
+                      mt: 1,
+                    }}
+                  >
+                    How are you? Is it ok if I call you?
+                  </CardWrapperSecondary> */}
+                  <CardWrapperSecondary>{content.text}</CardWrapperSecondary>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      pt: 1,
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ScheduleTwoToneIcon
+                      sx={{
+                        mr: 0.5,
+                      }}
+                      fontSize="small"
+                    />
+                    {formatDistance(subMinutes(new Date(), 6), new Date(), {
+                      addSuffix: true,
+                    })}
+                  </Typography>
+                </Box>
+              </Box>
+            ) : (
+              <Box
+                display="flex"
+                alignItems="flex-start"
+                justifyContent="flex-end"
+                py={3}
+              >
+                <Box
+                  display="flex"
+                  alignItems="flex-end"
+                  flexDirection="column"
+                  justifyContent="flex-end"
+                  mr={2}
+                >
+                  {/* <CardWrapperPrimary>Hey! Are you there?</CardWrapperPrimary>
+                  <CardWrapperPrimary
+                    sx={{
+                      mt: 2,
+                    }}
+                  >
+                    Heeeelloooo????
+                  </CardWrapperPrimary> */}
+                  <CardWrapperPrimary>{content.text}</CardWrapperPrimary>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      pt: 1,
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ScheduleTwoToneIcon
+                      sx={{
+                        mr: 0.5,
+                      }}
+                      fontSize="small"
+                    />
+                    {formatDistance(subHours(new Date(), 60), new Date(), {
+                      addSuffix: true,
+                    })}
+                  </Typography>
+                </Box>
+                <Avatar
+                  variant="rounded"
+                  sx={{
+                    width: 50,
+                    height: 50,
+                  }}
+                  alt={user.name}
+                  src={user.avatar}
+                />
+              </Box>
+            )}
+          </div>
+        ))}
 
-      <Box
+      {/* <Box
         display="flex"
         alignItems="flex-start"
         justifyContent="flex-end"
@@ -308,13 +417,14 @@ function ChatContent(props) {
           alt={user.name}
           src={user.avatar}
         />
-      </Box>
+      </Box> */}
     </Box>
   );
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user,
+  currentUser: state.auth.user,
+  selectedChatContents: state.chat.selectedChatContents,
 });
 
 export default connect(mapStateToProps)(ChatContent);

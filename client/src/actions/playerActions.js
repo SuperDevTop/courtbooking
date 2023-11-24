@@ -2,7 +2,6 @@ import axios from "axios";
 import { GETPLAYERS_SUCCESS } from "./types";
 import { backendUrl } from "../config/url";
 
-
 export const getPlayersData = () => (dispatch) => {
     try {
         axios.get(backendUrl + '/api/player/getPlayersData')
