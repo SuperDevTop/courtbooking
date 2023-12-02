@@ -6,7 +6,7 @@ if (process.env.NODE_ENV === "development") {
 } else {
   console.log("production env");
   // backendUrl = "https://courtbooking.vercel.app";
-  backendUrl = "http://localhost:5000";
+  backendUrl = "";
 }
 
 export { backendUrl };
