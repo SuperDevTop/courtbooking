@@ -7,7 +7,7 @@ const path = require("path");
 const router = express.Router();
 
 const User = require("../models/user");
-const backendUrl = require("../config/url");
+const backendUrl = '/';
 
 router.post("/register", async (req, res) => {
   try {
