@@ -43,7 +43,6 @@ app.use("/api/chat", require("./routes/chat"));
 
 // Your code
 // if (process.env.NODE_ENV === "production") {
-  const path = require("path");
   app.use(express.static(path.resolve(__dirname, "client", "build")));
   app.get("*", (req, res) => {
     res.sendFile(
