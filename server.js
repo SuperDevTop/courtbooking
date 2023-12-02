@@ -39,10 +39,10 @@ app.use("/api/admin", require("./routes/admin"));
 app.use("/api/court", require("./routes/court"));
 app.use("/api/chat", require("./routes/chat"));
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+// app.use("/images", express.static(path.join(__dirname, "images")));
 
 // Your code
-if (process.env.NODE_ENV === "production") {
+// if (process.env.NODE_ENV === "production") {
   const path = require("path");
   app.use(express.static(path.resolve(__dirname, "client", "build")));
   app.get("*", (req, res) => {
@@ -55,7 +55,7 @@ if (process.env.NODE_ENV === "production") {
       }
     );
   });
-}
+// }
 // Your code
 
 const users = {};
