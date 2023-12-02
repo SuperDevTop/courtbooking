@@ -5,13 +5,13 @@ const cors = require("cors");
 const path = require("path");
 const http = require("http");
 
-// const { Server } = require("socket.io");
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//   cors: {
-//     origin: "*"
-//   },
-// });
+const { Server } = require("socket.io");
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 require("dotenv").config();
 
@@ -58,40 +58,47 @@ if (process.env.NODE_ENV === "production") {
 }
 // Your code
 
-// const users = {};
+const users = {};
 
-// io.on("connection", (socket) => {
-//   console.log(`User connected: ${socket.id}`);
+io.on("connection", (socket) => {
+  // console.log(`User connected: ${socket.id}`);
 
-//   socket.on("join", (data) => {
-//     const { name } = data;
-//     console.log(name + ' joined');
-//     users[name] = socket.id;
-//   });
+  socket.on("join", (data) => {
+    const { name } = data;
+    // console.log(name + " joined");
+    users[name] = socket.id;
+  });
 
-//   socket.on("disconnect", () => {
-//     // Clean up the users object on disconnect
-//     const username = Object.keys(users).find((key) => users[key] === socket.id);
+  // receive notification
+  socket.on("book_created", (data) => {
+    const { name } = data;
 
-//     if (username) {
-//       delete users[username];
-//       console.log(`${username} disconnected`);
-//     }
-//   });
+    socket.broadcast.emit("book_created");
+  });
 
-//   socket.on("privateMessage", (data) => {
-//     const { receiver } = data;
-//     const toSocketId = users[receiver];
-//     if (toSocketId) {
-//       io.to(toSocketId).emit("message", (data));
-//     } else {
-//       // Handle if the user is not found
-//       console.log(`User ${receiver} not found`);
-//     }
-//   });
-// });
+  socket.on("disconnect", () => {
+    // Clean up the users object on disconnect
+    const username = Object.keys(users).find((key) => users[key] === socket.id);
+
+    if (username) {
+      delete users[username];
+      console.log(`${username} disconnected`);
+    }
+  });
+
+  socket.on("privateMessage", (data) => {
+    const { receiver } = data;
+    const toSocketId = users[receiver];
+    if (toSocketId) {
+      io.to(toSocketId).emit("message", data);
+    } else {
+      // Handle if the user is not found
+      console.log(`User ${receiver} not found`);
+    }
+  });
+});
 
 // Start the server
 const port = process.env.PORT || 5000;
-// server.listen(port, () => console.log(`Server running on port ${port}`));
-app.listen(port, () => console.log(`Server running on port ${port}`));
+server.listen(port, () => console.log(`Server running on port ${port}`));
+console.log(process.env.NODE_ENV);
