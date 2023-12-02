@@ -7,10 +7,16 @@ import {
 } from "./types";
 import axios from "axios";
 
+import { socket } from "../utils/socketService";
+
 export const createBook = (data, callback) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/createBook", data)
     .then((res) => {
+      // send notification
+      const user = JSON.parse(localStorage.getItem("user"));
+      socket.emit("book_created", { name: user.name });
+      //
       const { booking_data, players } = res.data;
 
       dispatch({

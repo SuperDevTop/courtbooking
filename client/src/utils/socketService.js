@@ -1,7 +1,11 @@
 import { io } from "socket.io-client";
 
-// let backendUrl = "http://localhost:5000";
-let backendUrl = "https://courtbooking.vercel.app";
+let backendUrl = "http://localhost:5000";
+
+if (process.env.NODE_ENV !== "development") {
+  backendUrl = "/";
+}
+// let backendUrl = "https://courtbooking.vercel.app";
 const socket = io(backendUrl);
 const user = JSON.parse(localStorage.getItem("user"));
 
@@ -18,6 +22,7 @@ export const initiateSocketConnection = () => {
   })
 
   socket.emit("join", { name: user.name });
+  console.log('joining...');
 
 };
 

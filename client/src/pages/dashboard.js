@@ -15,6 +15,7 @@ import Topbar from "../components/layout/Topbar";
 // import { courtNames } from "../utils/courtNames";
 import { getBookingData } from "../actions/bookingAction";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
+import { socket } from "../utils/socketService";
 
 const Dashboard = ({
   getPlayersData,
@@ -56,8 +57,17 @@ const Dashboard = ({
   useEffect(() => {
     const { displayedCourtNumbers, displayedCourtNames } =
       currentPageToCourts(currentPage);
-
     setdisplayedCourts(displayedCourtNumbers);
+
+    socket.on("book_created", (data) => {
+      console.log(data);
+      if (displayedCourtNames.length !== 0 && booking_date !== "") {
+        getBookingData({
+          court_names: displayedCourtNames,
+          date: booking_date,
+        });
+      }
+    });
 
     if (displayedCourtNames.length !== 0 && booking_date !== "") {
       getBookingData({ court_names: displayedCourtNames, date: booking_date });

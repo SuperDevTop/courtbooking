@@ -54,8 +54,6 @@ function ChatContent({ currentUser, selectedChatContents }) {
     avatar: "/static/images/avatars/1.jpg",
   };
 
-
-
   return (
     <Box p={3}>
       <DividerWrapper>

@@ -24,9 +24,7 @@ import PrivateRoute from "./components/routes/PrivateRoute";
 import { logOut } from "./actions/authActions";
 import ThemeProvider from "./theme/ThemeProvider";
 import ApplicationsMessenger from "./components/chat";
-// import { initiateSocketConnection } from "./socketio.service";
-// import { initiateSocketConnection } from "./utils/socketService";
-// import { disconnectSocket } from "./utils/socketService";
+import { initiateSocketConnection } from "./utils/socketService";
 
 // const theme = createTheme({
 //   palette: {
@@ -64,8 +62,9 @@ const App = () => {
   }
 
   useEffect(() => {
-    // disconnectSocket()
-    // initiateSocketConnection();
+    if (localStorage.getItem('user')) {
+      initiateSocketConnection();
+    }
   }, []);
 
   return (
