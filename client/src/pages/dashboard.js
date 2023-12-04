@@ -16,6 +16,7 @@ import Topbar from "../components/layout/Topbar";
 import { getBookingData } from "../actions/bookingAction";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import { socket } from "../utils/socketService";
+import CustomAlert from "../components/CustomAlert";
 
 const Dashboard = ({
   getPlayersData,
@@ -53,25 +54,41 @@ const Dashboard = ({
   const colors = ["green", "red", "yellow", "blue", "pink"];
   const [displayedCourts, setdisplayedCourts] = useState([]);
   const [titles, setTitles] = useState([]);
+  const [openAlert, setOpenAlert] = useState(false);
 
-  useEffect(() => {
+  const bookupdate = () => {
     const { displayedCourtNumbers, displayedCourtNames } =
       currentPageToCourts(currentPage);
     setdisplayedCourts(displayedCourtNumbers);
 
-    socket.on("book_created", (data) => {
-      console.log(data);
-      if (displayedCourtNames.length !== 0 && booking_date !== "") {
-        getBookingData({
-          court_names: displayedCourtNames,
-          date: booking_date,
-        });
-      }
-    });
+    if (displayedCourtNames.length !== 0 && booking_date !== "") {
+      getBookingData({
+        court_names: displayedCourtNames,
+        date: booking_date,
+      });
+
+      setOpenAlert(false);
+
+      setTimeout(() => {
+        setOpenAlert(true);
+      }, 200);
+    }
+  };
+
+  useEffect(() => {
+    const { displayedCourtNumbers, displayedCourtNames } = currentPageToCourts(currentPage);
+    setdisplayedCourts(displayedCourtNumbers);
+
+    socket.on("book_created", bookupdate);
+
+    socket.on("book_updated", bookupdate);
+
+    socket.on("book_deleted", bookupdate);
 
     if (displayedCourtNames.length !== 0 && booking_date !== "") {
       getBookingData({ court_names: displayedCourtNames, date: booking_date });
     }
+    // eslint-disable-next-line
   }, [currentPage, getBookingData, booking_date]);
 
   useEffect(() => {
@@ -82,6 +99,11 @@ const Dashboard = ({
 
   return (
     <>
+      <CustomAlert
+        openState={openAlert}
+        text="The grid has been updated!"
+        severity="success"
+      />
       <Topbar />
       <Box>
         <Grid container>

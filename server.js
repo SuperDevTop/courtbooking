@@ -43,17 +43,17 @@ app.use("/api/chat", require("./routes/chat"));
 
 // Your code
 // if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.resolve(__dirname, "client", "build")));
-  app.get("*", (req, res) => {
-    res.sendFile(
-      path.resolve(__dirname, "client", "build", "index.html"),
-      function (err) {
-        if (err) {
-          res.status(500).send(err);
-        }
+app.use(express.static(path.resolve(__dirname, "client", "build")));
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.resolve(__dirname, "client", "build", "index.html"),
+    function (err) {
+      if (err) {
+        res.status(500).send(err);
       }
-    );
-  });
+    }
+  );
+});
 // }
 // Your code
 
@@ -64,15 +64,20 @@ io.on("connection", (socket) => {
 
   socket.on("join", (data) => {
     const { name } = data;
-    // console.log(name + " joined");
     users[name] = socket.id;
   });
 
   // receive notification
-  socket.on("book_created", (data) => {
-    const { name } = data;
-
+  socket.on("book_created", () => {
     socket.broadcast.emit("book_created");
+  });
+
+  socket.on("book_deleted", () => {
+    socket.broadcast.emit("book_deleted");
+  });
+
+  socket.on("book_updated", () => {
+    socket.broadcast.emit("book_updated");
   });
 
   socket.on("disconnect", () => {

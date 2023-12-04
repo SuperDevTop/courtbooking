@@ -44,6 +44,7 @@ export const updateBook = (data, callback) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/updateBook", data)
     .then((res) => {
+      socket.emit("book_updated");
       const { booking_data } = res.data;
 
       dispatch({
@@ -86,6 +87,7 @@ export const deleteBooking = (data, callback) => (dispatch) => {
     .post(backendUrl + "/api/booking/deleteBooking", data)
     .then((res) => {
       const { booking_data } = res.data;
+      socket.emit("book_deleted");
 
       dispatch({
         type: GET_BOOKING_DATA,
