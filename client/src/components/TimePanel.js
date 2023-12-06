@@ -33,6 +33,7 @@ const TimePanel = () => {
           // color: `${theme.palette.secondary.main}`,
           // border: "1px solid #a0a0a0",
           border: `1px solid ${theme.palette.primary.light}`,
+          borderLeft: '0px'
         }}
       >
         <Box
