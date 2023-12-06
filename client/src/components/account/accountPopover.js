@@ -32,14 +32,14 @@ const AccountPopover = (props) => {
         horizontal: "left",
       }}
     >
-      <Box sx={{ py: 1, px: 1 }}>
+      <Box p={1} textAlign='center'>
         <Typography variant="h6" fontWeight={500}>
           {user ? user.name : ""}
         </Typography>
       </Box>
       <Divider />
       <MenuList>
-        <MenuItem onClick={onLogout} sx={{ fontSize: 13 }}>Log out</MenuItem>
+        <MenuItem onClick={onLogout} sx={{ fontSize: 13, justifyContent: 'center', padding: 0 }}>Log out</MenuItem>
       </MenuList>
     </Popover>
   );

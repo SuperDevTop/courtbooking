@@ -35,9 +35,12 @@ const chatReducer = (state = initialState, action) => {
       const { data } = action.payload;
       const newChatContents = [...state.chatContents, data]
 
+      const newSelectedChatContent = [...state.selectedChatContents, data]
+
       return {
         ...state,
         chatContents: newChatContents,
+        selectedChatContents: newSelectedChatContent
       };
 
     case SET_SELECTEDUSERNAME:

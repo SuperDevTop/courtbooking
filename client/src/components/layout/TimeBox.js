@@ -11,6 +11,7 @@ const TimeBox = ({ text }) => {
             // borderBottom: '1px solid #a0a0a0',
             // borderTop: '1px solid #a0a0a0',
             border: `1px solid ${theme.palette.primary.light}`,
+            borderLeft: '0px !important',
             height: 280,
             alignItems: 'center',
             display: 'flex',

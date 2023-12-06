@@ -132,7 +132,8 @@ function SidebarContent({ currentUser, users, setSelectedUserName, chatContents 
     if (users.length > 0) {
       setSelectedUserName(users[selectedIndex].name);
     }
-  }, [setSelectedUserName, users, chatContents, selectedIndex]);
+  // }, [setSelectedUserName, users, chatContents, selectedIndex]);
+  }, [setSelectedUserName, users, selectedIndex]);
 
   return (
     <RootWrapper>

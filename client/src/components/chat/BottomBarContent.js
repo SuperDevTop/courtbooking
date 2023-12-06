@@ -40,8 +40,11 @@ function BottomBarContent(props) {
     avatar: "/static/images/avatars/1.jpg",
   };
 
+  let isSending = false;
+
   const handleEnterKeyPress = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !isSending) {
+      isSending = true;
       // Call your function here or perform any action
       onSend();
     }
@@ -72,6 +75,7 @@ function BottomBarContent(props) {
     saveChatContent(data);
     sendMessage(data);
     setText("");
+    isSending = false
   };
 
   return (

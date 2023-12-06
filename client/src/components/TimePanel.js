@@ -18,6 +18,7 @@ const TimePanel = () => {
           top: 0,
           zIndex: 1,
           border: `${theme.palette.primary.light} solid 1px`,
+          borderLeft: '0px'
         }}
         padding={2}
       >
@@ -31,7 +32,7 @@ const TimePanel = () => {
           color: "secondary",
           // color: `${theme.palette.secondary.main}`,
           // border: "1px solid #a0a0a0",
-          border: `1px solid ${theme.palette.primary.light}`
+          border: `1px solid ${theme.palette.primary.light}`,
         }}
       >
         <Box

@@ -10,8 +10,6 @@ import {
 // import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
 import { connect } from "react-redux";
 
-
-
 const DividerWrapper = styled(Divider)(
   ({ theme }) => `
       .MuiDivider-wrapper {
@@ -163,7 +161,7 @@ function ChatContent({ currentUser, selectedChatContents }) {
                 display="flex"
                 alignItems="flex-start"
                 justifyContent="flex-start"
-                py={3}
+                py={0}
               >
                 <Avatar
                   variant="rounded"
@@ -215,7 +213,7 @@ function ChatContent({ currentUser, selectedChatContents }) {
                 display="flex"
                 alignItems="flex-start"
                 justifyContent="flex-end"
-                py={3}
+                py={0}
               >
                 <Box
                   display="flex"

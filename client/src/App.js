@@ -51,7 +51,7 @@ const App = () => {
     const decoded = jwtDecode(localStorage.token);
     const currentTime = Date.now() / 1000;
 
-    if (decoded.exp < currentTime) {
+    if (decoded.exp < currentTime) {  // auto logout
       localStorage.removeItem("token");
       setAuthToken(false);
       dispatch(logOut);
