@@ -17,11 +17,11 @@ export const createBook = (data, callback) => (dispatch) => {
       const user = JSON.parse(localStorage.getItem("user"));
       socket.emit("book_created", { name: user.name });
       //
-      const { booking_data, players } = res.data;
+      const { booking_data, players, total_booking_data } = res.data;
 
       dispatch({
         type: GET_BOOKING_DATA,
-        payload: { booking_data },
+        payload: { booking_data, total_booking_data },
       });
 
       dispatch({
@@ -45,11 +45,11 @@ export const updateBook = (data, callback) => (dispatch) => {
     .post(backendUrl + "/api/booking/updateBook", data)
     .then((res) => {
       socket.emit("book_updated");
-      const { booking_data } = res.data;
+      const { booking_data, total_booking_data } = res.data;
 
       dispatch({
         type: GET_BOOKING_DATA,
-        payload: { booking_data },
+        payload: { booking_data, total_booking_data },
       });
 
       callback && callback();
@@ -70,11 +70,11 @@ export const getBookingData = (data) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/getBookingData", data)
     .then((res) => {
-      const { booking_data, courts } = res.data;
+      const { booking_data, courts, total_booking_data } = res.data;
 
       dispatch({
         type: GET_BOOKING_DATA,
-        payload: { booking_data, courts },
+        payload: { booking_data, total_booking_data, courts },
       });
     })
     .catch((err) => {
@@ -86,12 +86,12 @@ export const deleteBooking = (data, callback) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/deleteBooking", data)
     .then((res) => {
-      const { booking_data } = res.data;
+      const { booking_data, total_booking_data } = res.data;
       socket.emit("book_deleted");
 
       dispatch({
         type: GET_BOOKING_DATA,
-        payload: { booking_data },
+        payload: { booking_data, total_booking_data },
       });
 
       callback && callback();

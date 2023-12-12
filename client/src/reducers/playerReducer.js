@@ -1,21 +1,30 @@
-import { GETPLAYERS_SUCCESS } from "../actions/types";
+import { GETPLAYERS_SUCCESS, UPDATE_SEARCHINGPLAYER } from "../actions/types";
 
 const initialState = {
-    players: []
+  players: [],
+  searchingPlayer: "",
 };
 
 const playerReducer = (state = initialState, action) => {
-    switch(action.type)
-    {
-        case GETPLAYERS_SUCCESS:
-            return {
-                ...state,
-                players: action.payload.players
-            }
+  switch (action.type) {
+    case GETPLAYERS_SUCCESS:
+      return {
+        ...state,
+        players: action.payload.players,
+      };
 
-        default:
-            return state;
-    }
-}
+    case UPDATE_SEARCHINGPLAYER:
+      const { name } = action.payload;
+      console.log(name);
+
+      return {
+        ...state,
+        searchingPlayer: name
+      }
+
+    default:
+      return state;
+  }
+};
 
 export default playerReducer;

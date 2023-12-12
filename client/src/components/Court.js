@@ -39,6 +39,7 @@ import LoadingOverlay from "./layout/LoadingOverlay";
 import ConfirmationDialog from "./reservation/ConfirmDialog";
 import { bookingOptionTexts } from "../utils/texts";
 import { useTheme } from "@emotion/react";
+import Avatar from "@mui/material/Avatar";
 
 // const theme = createTheme({
 //     components: {
@@ -376,6 +377,11 @@ const Court = (props) => {
     setSelectedOption(option);
   };
 
+  const avatarUrlFromName = (name) => {
+    const lastname = name.split(" ");
+    return "/images/players/" + lastname[lastname.length - 1] + ".jpg";
+  };
+
   return (
     <>
       {isBooking && <LoadingOverlay text={"Booking..."} color="success" />}
@@ -473,7 +479,16 @@ const Court = (props) => {
                             </Typography>
                           </>
                         ) : ( */}
-                        <>
+                        <Box
+                          display={"flex"}
+                          flexDirection={"column"}
+                          alignItems={"center"}
+                          py={1}
+                        >
+                          <Avatar
+                            alt={player}
+                            src={avatarUrlFromName(player)}
+                          />
                           <Typography
                             variant="h6"
                             key={index}
@@ -481,10 +496,16 @@ const Court = (props) => {
                             color="primary.main"
                           >
                             {player}
-
-                            {dat[index].balls[index2] && <img src="/images/ball.png" width={15} alt="ball" style={{ marginLeft: 5 }}></img>}
                           </Typography>
-                        </>
+                          {dat[index].balls[index2] && (
+                            <img
+                              src="/images/ball.png"
+                              width={30}
+                              alt="ball"
+                              style={{ marginLeft: 5 }}
+                            ></img>
+                          )}
+                        </Box>
                         {/* )} */}
                       </Box>
                     ))}
@@ -529,8 +550,8 @@ const Court = (props) => {
                       style={{
                         background:
                           "linear-gradient(360deg, #0e0d0d, transparent)",
-                          padding: '20px 0px',
-                          margin: '20px 0px'
+                        padding: "20px 0px",
+                        margin: "20px 0px",
                       }}
                     >
                       Not Available

@@ -4,6 +4,7 @@ const router = express.Router();
 const Booking = require("../models/booking");
 const Player = require("../models/players");
 const Court = require("../models/court");
+const booking = require("../models/booking");
 
 router.post("/createBook", async (req, res) => {
   try {
@@ -52,10 +53,13 @@ router.post("/createBook", async (req, res) => {
       })
     );
 
+    const total_booking_data = await booking.find({});
+
     res.status(200).json({
       message: "A book created successfully!",
       booking_data: booking_data,
       players: updatedPlayers,
+      total_booking_data: total_booking_data,
     });
   } catch (error) {
     console.log(error);
@@ -108,9 +112,12 @@ router.post("/updateBook", async (req, res) => {
       })
     );
 
+    const total_booking_data = await booking.find({});
+
     res.status(200).json({
       message: "The reservation was updated successfully!",
       booking_data: booking_data,
+      total_booking_data: total_booking_data,
     });
   } catch (error) {
     console.log(error);
@@ -139,8 +146,11 @@ router.post("/getBookingdata", async (req, res) => {
     );
 
     const courts = await Court.find({});
+    const total_booking_data = await Booking.find({});
 
-    res.status(200).json({ booking_data: booking_data, courts });
+    res
+      .status(200)
+      .json({ booking_data: booking_data, courts, total_booking_data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error });
@@ -168,12 +178,14 @@ router.post("/deleteBooking", async (req, res) => {
           court_name: court,
           start_time: { $gte: realDate, $lt: nextDay },
         });
-        
+
         return bookings;
       })
     );
 
-    res.status(200).json({ booking_data: booking_data });
+    const total_booking_data = await booking.find({});
+
+    res.status(200).json({ booking_data: booking_data, total_booking_data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error });
