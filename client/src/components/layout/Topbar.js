@@ -17,6 +17,11 @@ import { setBookingDate } from "../../actions/bookingAction";
 const Topbar = ({ changeCurrentPage, currentPage, setBookingDate }) => {
   const handlePageChange = (event, page) => {
     changeCurrentPage(page);
+    const baseUrl = window.location.href.split("?")[0];
+    // Append the new page query parameter
+    const newUrl = `${baseUrl}?page=${page}`;
+    // Redirect to the new URL
+    window.history.pushState({ path: newUrl }, '', newUrl);
   };
 
   const [date, setDate] = useState(dayjs());

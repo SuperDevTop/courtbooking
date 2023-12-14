@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { Grid } from "@mui/material";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import { connect } from "react-redux";
+
 import EditDialog from "../reservation/EditDialog";
 
 const GlobalSearchbarResultItem = ({ data, index, players }) => {
@@ -26,11 +27,10 @@ const GlobalSearchbarResultItem = ({ data, index, players }) => {
       <Box
         onClick={() => handleClick(data)}
         fontSize={18}
-        // borderBottom="solid 1px white"
         sx={{
           "&:hover": {
             cursor: "pointer",
-            background: 'grey'
+            background: "grey",
           },
         }}
       >
@@ -48,7 +48,7 @@ const GlobalSearchbarResultItem = ({ data, index, players }) => {
           <Grid item xs={3}>
             {data.start_time.substring(0, 10)}
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={4} textAlign={"start"} pl={2}>
             {data.players.map((one, index2) => (
               <Typography key={index2}>{one}</Typography>
             ))}

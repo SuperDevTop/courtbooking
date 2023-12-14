@@ -39,7 +39,7 @@ const AccountPopover = (props) => {
       </Box>
       <Divider />
       <MenuList>
-        <MenuItem onClick={onLogout} sx={{ fontSize: 13, justifyContent: 'center', padding: 0 }}>Log out</MenuItem>
+        <MenuItem onClick={onLogout} sx={{ fontSize: 13, justifyContent: 'center', padding: 1 }}>Log out</MenuItem>
       </MenuList>
     </Popover>
   );

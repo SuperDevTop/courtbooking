@@ -4,7 +4,7 @@ import { Box, Grid } from "@mui/material";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import jwtDecode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { logOut } from "../actions/authActions";
 import TimePanel from "../components/TimePanel";
@@ -17,6 +17,7 @@ import { getBookingData } from "../actions/bookingAction";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import { socket } from "../utils/socketService";
 import CustomAlert from "../components/CustomAlert";
+import { changeCurrentPage } from "../actions/pageAction";
 
 const Dashboard = ({
   getPlayersData,
@@ -26,9 +27,19 @@ const Dashboard = ({
   booking_data,
   booking_date,
   courts,
+  changeCurrentPage,
 }) => {
   const dispatch = useDispatch();
   const history = useNavigate();
+  const location = useLocation();
+   //eslint-disable-next-line
+  const [page, setPage] = useState(new URLSearchParams(location.search).get("page"));
+
+  useEffect(() => {
+    if (page) {
+      changeCurrentPage(Number(page))
+    }
+  }, [page, changeCurrentPage])
 
   // Auto Log Out
   useEffect(() => {
@@ -76,7 +87,8 @@ const Dashboard = ({
   };
 
   useEffect(() => {
-    const { displayedCourtNumbers, displayedCourtNames } = currentPageToCourts(currentPage);
+    const { displayedCourtNumbers, displayedCourtNames } =
+      currentPageToCourts(currentPage);
     setdisplayedCourts(displayedCourtNumbers);
 
     socket.on("book_created", bookupdate);
@@ -131,6 +143,7 @@ const mapDispatchToProps = (dispatch) => ({
   getPlayersData: () => dispatch(getPlayersData()),
   getBookingData: (court_names, date) =>
     dispatch(getBookingData(court_names, date)),
+  changeCurrentPage: (page) => dispatch(changeCurrentPage(page)),
 });
 
 const mapStateToProps = (state) => ({

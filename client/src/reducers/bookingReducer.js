@@ -36,6 +36,7 @@ const bookingReducer = (state = initialState, action) => {
         return {
           ...state,
           booking_data: action.payload.booking_data,
+          total_booking_data: action.payload.total_booking_data,
         };
       }
     default:

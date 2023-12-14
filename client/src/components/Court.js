@@ -31,27 +31,13 @@ import CustomAlert from "./CustomAlert";
 import ChipsWithCloseButton from "./ChipsWithCloseButton";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { colorScale } from "../utils/gradientColor";
-// import { courtActiveBackground } from "../utils/gradientColor";
 import EditDialog from "./reservation/EditDialog";
-// import { playerColors } from "../utils/playerColors";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import LoadingOverlay from "./layout/LoadingOverlay";
 import ConfirmationDialog from "./reservation/ConfirmDialog";
 import { bookingOptionTexts } from "../utils/texts";
 import { useTheme } from "@emotion/react";
-import Avatar from "@mui/material/Avatar";
-
-// const theme = createTheme({
-//     components: {
-//         MuiButton: {
-//             styleOverrides: {
-//                 root: {
-//                     backgroundColor: '#0ef05d'
-//                 }
-//             }
-//         }
-//     }
-// });
+// import Avatar from "@mui/material/Avatar";
 
 const withCommonIconStyle = (WrappedComponent) => (props) =>
   (
@@ -83,14 +69,12 @@ const Court = (props) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [indexToBeDeleted, setIndexToBeDeleted] = useState(0);
-  // const headerColor = props.headerColor;
   const name = props.name;
   const bookedTimeIndexes = [];
   const [selectedOption, setSelectedOption] = useState("");
   const { court } = props;
   const theme = useTheme();
 
-  // 10/6
   const booking_data = props.booking_data;
 
   let timeTexts = [
@@ -159,19 +143,6 @@ const Court = (props) => {
     bookedTimeIndexes.push(ind);
     dat[ind] = booking_data[index];
     dat[ind]["seeded"] = new Array(dat[ind].players.length);
-
-    // if (dat[ind]) {
-    //   // eslint-disable-next-line
-    //   dat[ind].players.map((player, index) => {
-    //     const match = players.find((one) => one.name === player);
-
-    //     if (match.tournament_seed !== 0) {
-    //       dat[ind]["seeded"][index] = true;
-    //     } else {
-    //       dat[ind]["seeded"][index] = false;
-    //     }
-    //   });
-    // }
 
     // for expansion of panel
     const time_slot = booking_data[index].time_slot;
@@ -377,10 +348,10 @@ const Court = (props) => {
     setSelectedOption(option);
   };
 
-  const avatarUrlFromName = (name) => {
-    const lastname = name.split(" ");
-    return "/images/players/" + lastname[lastname.length - 1] + ".jpg";
-  };
+  // const avatarUrlFromName = (name) => {
+  //   const lastname = name.split(" ");
+  //   return "/images/players/" + lastname[lastname.length - 1] + ".jpg";
+  // };
 
   return (
     <>
@@ -433,9 +404,7 @@ const Court = (props) => {
         {timeTexts.map((time, index) => (
           <Box
             sx={{
-              // backgroundColor: `${courtActiveBackground[index % 5]}`,
               backgroundColor: `${theme.header.background}`,
-              // border: "solid 1px #a0a0a0",
               border: `solid 1px ${theme.palette.primary.light}`,
               color: "white",
               height: bookedTimeIndexes.includes(index)
@@ -443,9 +412,9 @@ const Court = (props) => {
                 : 280,
             }}
             key={index}
-            display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"center"}
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
           >
             <Typography variant="h5" textAlign="center">
               {bookedTimeIndexes.includes(index) ? (
@@ -462,51 +431,37 @@ const Court = (props) => {
                       sx={{ verticalAlign: "text-bottom", color: "white" }}
                     />
                   </IconButton>{" "}
-                  <Box my={3.5} textAlign="center">
+                  <Box my={1.5} textAlign="center">
                     {dat[index].players.map((player, index2) => (
-                      <Box key={index2}>
-                        {/* {dat[index].seeded[index2] ? (
-                          <>
-                            <Typography
-                              variant="h6"
-                              key={index}
-                              color={playerColors[index]}
-                              sx={{
-                                backgroundColor: "black",
-                              }}
-                            >
-                              {player}
-                            </Typography>
-                          </>
-                        ) : ( */}
-                        <Box
-                          display={"flex"}
-                          flexDirection={"column"}
-                          alignItems={"center"}
-                          py={1}
-                        >
+                      <Box
+                        key={index2}
+                        display="flex"
+                        // flexDirection={"column"}
+                        justifyContent="center"
+                        py={0.5}
+                      >
+                        {/* {dat[index].time_slot !== 1 && (
                           <Avatar
                             alt={player}
                             src={avatarUrlFromName(player)}
                           />
-                          <Typography
-                            variant="h6"
-                            key={index}
-                            // color={playerColors[index]}
-                            color="primary.main"
-                          >
-                            {player}
-                          </Typography>
-                          {dat[index].balls[index2] && (
-                            <img
-                              src="/images/ball.png"
-                              width={30}
-                              alt="ball"
-                              style={{ marginLeft: 5 }}
-                            ></img>
-                          )}
-                        </Box>
-                        {/* )} */}
+                        )} */}
+
+                        <Typography
+                          variant="h6"
+                          key={index}
+                          color="primary.main"
+                        >
+                          {player}
+                        </Typography>
+                        {dat[index].balls[index2] && (
+                          <img
+                            src="/images/ball.png"
+                            width={30}
+                            alt="ball"
+                            style={{ marginLeft: 5 }}
+                          ></img>
+                        )}
                       </Box>
                     ))}
                   </Box>
@@ -598,7 +553,6 @@ const Court = (props) => {
         fullWidth
         PaperProps={{
           style: {
-            // backgroundColor: "#f0f0f0",
             maxWidth: "800px",
           },
         }}
@@ -608,7 +562,6 @@ const Court = (props) => {
           variant="h6"
           marginTop={2}
           textAlign="center"
-          // color="black"
         >
           <CalendarMonthIcon
             sx={{ verticalAlign: "text-bottom", marginRight: 1 }}
@@ -748,7 +701,6 @@ const Court = (props) => {
                 <Stack spacing={1} sx={{ width: "50%" }}>
                   <Autocomplete
                     {...flatOptionProps}
-                    id="controlled-demo"
                     value={selectedOption}
                     onChange={onOptionChange}
                     renderInput={(params) => (
