@@ -46,6 +46,7 @@ const GlobalSearchbarResultItem = ({ data, index, players }) => {
             {index + 1}
           </Grid>
           <Grid item xs={3}>
+            {data.start_time.substring(11, 16)} (GMT)<br />
             {data.start_time.substring(0, 10)}
           </Grid>
           <Grid item xs={4} textAlign={"start"} pl={2}>

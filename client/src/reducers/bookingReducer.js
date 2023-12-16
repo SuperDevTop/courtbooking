@@ -2,6 +2,8 @@ import {
   BOOKING_SUCCESS,
   SET_BOOKING_DATE,
   GET_BOOKING_DATA,
+  ADD_COMMENT_SUCCESS,
+  GET_COMMENT,
 } from "../actions/types";
 
 const initialState = {
@@ -9,6 +11,7 @@ const initialState = {
   booking_data: [[], [], [], [], []],
   courts: [],
   total_booking_data: [],
+  comments: [],
 };
 
 const bookingReducer = (state = initialState, action) => {
@@ -39,6 +42,22 @@ const bookingReducer = (state = initialState, action) => {
           total_booking_data: action.payload.total_booking_data,
         };
       }
+
+    case ADD_COMMENT_SUCCESS:
+      const { updatedComments } = action.payload;
+
+      return {
+        ...state,
+        comments: updatedComments,
+      };
+
+    case GET_COMMENT:
+      const { comments } = action.payload;
+      return {
+        ...state,
+        comments: comments,
+      };
+
     default:
       return state;
   }

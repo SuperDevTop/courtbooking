@@ -4,6 +4,8 @@ import {
   SET_BOOKING_DATE,
   GET_BOOKING_DATA,
   GETPLAYERS_SUCCESS,
+  ADD_COMMENT_SUCCESS,
+  GET_COMMENT,
 } from "./types";
 import axios from "axios";
 
@@ -95,6 +97,37 @@ export const deleteBooking = (data, callback) => (dispatch) => {
       });
 
       callback && callback();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const addComment = (data) => (dispatch) => {
+  axios
+    .post(backendUrl + "/api/booking/addComment", data)
+    .then((res) => {
+      const { comments } = res.data;
+      dispatch({
+        type: ADD_COMMENT_SUCCESS,
+        payload: { updatedComments: comments },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const getComment = (data) => (dispatch) => {
+  axios
+    .post(backendUrl + "/api/booking/getComment", data)
+    .then((res) => {
+      const { comments } = res.data;
+
+      dispatch({
+        type: GET_COMMENT,
+        payload: { comments },
+      });
     })
     .catch((err) => {
       console.log(err);

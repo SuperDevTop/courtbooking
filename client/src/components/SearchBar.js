@@ -26,7 +26,7 @@ const SearchBar = ({ updateSearchingPlayer, total_booking_data }) => {
           player.toLowerCase().includes(searchTerm.toLowerCase())
         )
       );
-      setFilteredData(filteredArray);
+      setFilteredData(filteredArray.reverse());
     }
   }, [total_booking_data, searchTerm]);
 

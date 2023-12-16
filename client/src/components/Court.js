@@ -4,7 +4,6 @@ import StadiumIcon from "@mui/icons-material/Stadium";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import {
   Dialog,
   DialogActions,
@@ -23,20 +22,22 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useTheme } from "@emotion/react";
 
 import ImageCard from "../components/ImageCard";
 import { createBook, deleteBooking } from "../actions/bookingAction";
 import { alpha3ToAlph2 } from "../utils/countryCode";
 import CustomAlert from "./CustomAlert";
 import ChipsWithCloseButton from "./ChipsWithCloseButton";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { colorScale } from "../utils/gradientColor";
 import EditDialog from "./reservation/EditDialog";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import LoadingOverlay from "./layout/LoadingOverlay";
 import ConfirmationDialog from "./reservation/ConfirmDialog";
 import { bookingOptionTexts } from "../utils/texts";
-import { useTheme } from "@emotion/react";
+import CommentsDialog from "./dialog/commentsDialog";
+import { getComment } from "../actions/bookingAction";
 // import Avatar from "@mui/material/Avatar";
 
 const withCommonIconStyle = (WrappedComponent) => (props) =>
@@ -69,10 +70,14 @@ const Court = (props) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [indexToBeDeleted, setIndexToBeDeleted] = useState(0);
+  const [openCommentDialog, setOpenCommentDialog] = useState(false);
+  const [commentPlayers, setCommentPlayers] = useState([]);
   const name = props.name;
   const bookedTimeIndexes = [];
   const [selectedOption, setSelectedOption] = useState("");
+  const [bookingId, setBookingId] = useState(null);
   const { court } = props;
+
   const theme = useTheme();
 
   const booking_data = props.booking_data;
@@ -302,6 +307,23 @@ const Court = (props) => {
     );
   };
 
+  const handleComments = (commentIds, players, id) => {
+    setOpenCommentDialog(true);
+    setCommentPlayers(players);
+    setBookingId(id);
+    console.log(commentIds);
+
+    const data = {
+      commentIds: commentIds,
+    };
+
+    props.getComment(data);
+  };
+
+  const onCommentDialogClose = () => {
+    setOpenCommentDialog(false);
+  };
+
   const onEdit = (index) => {
     setEditDialog(true);
     setDataofEditDialog(dat[index]);
@@ -383,6 +405,12 @@ const Court = (props) => {
           onClose={onCloseConfirm}
           onConfirm={onConfirm}
         />
+        <CommentsDialog
+          open={openCommentDialog}
+          onClose={onCommentDialogClose}
+          players={commentPlayers}
+          bookingId={bookingId}
+        />
         <Box
           backgroundColor={theme.header.background}
           border={theme.palette.primary.light}
@@ -436,7 +464,6 @@ const Court = (props) => {
                       <Box
                         key={index2}
                         display="flex"
-                        // flexDirection={"column"}
                         justifyContent="center"
                         py={0.5}
                       >
@@ -518,9 +545,29 @@ const Court = (props) => {
 
             <Typography variant="h6" color="white">
               <Grid container alignItems="center" justifyContent="space-around">
-                <Grid item>
+                <Grid
+                  item
+                  sx={{
+                    "&:hover": {
+                      cursor: "pointer",
+                    },
+                  }}
+                >
                   {bookedTimeIndexes.includes(index) ? (
-                    <span style={{ color: "white" }}>comments</span>
+                    <span
+                      style={{
+                        color: "white",
+                      }}
+                      onClick={() =>
+                        handleComments(
+                          dat[index].comments,
+                          dat[index].players,
+                          dat[index]._id
+                        )
+                      }
+                    >
+                      comments
+                    </span>
                   ) : (
                     <span style={{ color: "#a9a9a9" }}>comments</span>
                   )}
@@ -577,7 +624,6 @@ const Court = (props) => {
               <Stack spacing={1}>
                 <Autocomplete
                   {...flatProps}
-                  id="controlled-demo"
                   value={selectedPlayer.name}
                   onChange={onChangePlayer}
                   renderInput={(params) => (
@@ -741,6 +787,7 @@ const Court = (props) => {
 const mapDispatchToProps = (dispatch) => ({
   createBook: (data, callback) => dispatch(createBook(data, callback)),
   deleteBooking: (data, callback) => dispatch(deleteBooking(data, callback)),
+  getComment: (data) => dispatch(getComment(data)),
 });
 
 const mapStateToProps = (state) => ({

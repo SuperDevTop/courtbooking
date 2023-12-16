@@ -12,7 +12,6 @@ const Scrollbar = ({ className, children, selectedUserName, chatContents, ...res
     // Scroll to the bottom when children or content changes
     if (scrollbarsRef.current !== null) {
       setTimeout(() => {
-        console.log("scroll");
         scrollbarsRef.current && scrollbarsRef.current.scrollToBottom();
       }, 1000);
     }

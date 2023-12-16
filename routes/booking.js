@@ -4,7 +4,8 @@ const router = express.Router();
 const Booking = require("../models/booking");
 const Player = require("../models/players");
 const Court = require("../models/court");
-const booking = require("../models/booking");
+const Comment = require("../models/comment");
+const { default: mongoose } = require("mongoose");
 
 router.post("/createBook", async (req, res) => {
   try {
@@ -53,7 +54,7 @@ router.post("/createBook", async (req, res) => {
       })
     );
 
-    const total_booking_data = await booking.find({});
+    const total_booking_data = await Booking.find({});
 
     res.status(200).json({
       message: "A book created successfully!",
@@ -64,6 +65,48 @@ router.post("/createBook", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/addComment", async (req, res) => {
+  try {
+    const { id, booker, player, content, type } = req.body;
+
+    const receivedCommentData = {
+      booker: booker,
+      player: player,
+      isPermanent: type, // Replace with actual value
+      content: content,
+    };
+
+    const objectId = new mongoose.Types.ObjectId(id);
+    const booking = await Booking.findById(objectId);
+    if (!booking) {
+      console.log("Booking not found");
+      res.status(500).json({ message: "Booking not found!" });
+      // Handle scenario where booking is not found
+    } else {
+      // Create a new comment instance
+      const newComment = new Comment(receivedCommentData);
+      const savedComment = await newComment.save();
+      booking.comments.push(savedComment);
+      await booking.save();
+
+      const commentIds = booking.comments;
+      const comments = await Promise.all(
+        commentIds.map(async (one) => {
+          const commentId = new mongoose.Types.ObjectId(one);
+          const comment = await Comment.findById(commentId);
+
+          return comment;
+        })
+      );
+
+      res.status(200).json({ comments });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
   }
 });
 
@@ -112,7 +155,7 @@ router.post("/updateBook", async (req, res) => {
       })
     );
 
-    const total_booking_data = await booking.find({});
+    const total_booking_data = await Booking.find({});
 
     res.status(200).json({
       message: "The reservation was updated successfully!",
@@ -183,9 +226,28 @@ router.post("/deleteBooking", async (req, res) => {
       })
     );
 
-    const total_booking_data = await booking.find({});
+    const total_booking_data = await Booking.find({});
 
     res.status(200).json({ booking_data: booking_data, total_booking_data });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
+  }
+});
+
+router.post("/getComment", async (req, res) => {
+  try {
+    const { commentIds } = req.body;
+    const comments = await Promise.all(
+      commentIds.map(async (one) => {
+        const commentId = new mongoose.Types.ObjectId(one);
+        const comment = await Comment.findById(commentId);
+
+        return comment;
+      })
+    );
+
+    res.status(200).json({ comments });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error });
