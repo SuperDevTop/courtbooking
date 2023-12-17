@@ -311,7 +311,6 @@ const Court = (props) => {
     setOpenCommentDialog(true);
     setCommentPlayers(players);
     setBookingId(id);
-    console.log(commentIds);
 
     const data = {
       commentIds: commentIds,

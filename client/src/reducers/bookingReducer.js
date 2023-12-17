@@ -44,12 +44,34 @@ const bookingReducer = (state = initialState, action) => {
       }
 
     case ADD_COMMENT_SUCCESS:
-      const { updatedComments } = action.payload;
+      const { updatedComments, updatedBooking } = action.payload;
+      const { indexToUpdate1, indexToUpdate2 } = state.booking_data.reduce(
+        (accumulator, data, ind) => {
+          const innerIndex = data.findIndex((one) => one._id === updatedBooking._id);
+          if (innerIndex !== -1) {
+            accumulator.indexToUpdate1 = ind;
+            accumulator.indexToUpdate2 = innerIndex;
+          }
+          return accumulator;
+        },
+        { indexToUpdate1: -1, indexToUpdate2: -1 }
+      );
+      
+      if (indexToUpdate2 !== -1) {
+        const updatedBookingData = [...state.booking_data];
+        updatedBookingData[indexToUpdate1][indexToUpdate2] = updatedBooking;
 
-      return {
-        ...state,
-        comments: updatedComments,
-      };
+        return {
+          ...state,
+          comments: updatedComments,
+          booking_data: updatedBookingData,
+        };
+      } else {
+        return {
+          ...state,
+          comments: updatedComments,
+        };
+      }
 
     case GET_COMMENT:
       const { comments } = action.payload;

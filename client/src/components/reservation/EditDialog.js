@@ -408,6 +408,7 @@ const EditDialog = ({
                     id="controlled-options"
                     value={selectedOption}
                     onChange={onOptionChange}
+                    isOptionEqualToValue={(option, value) => {return option.value === value.value}}
                     renderInput={(params) => (
                       <TextField
                         {...params}

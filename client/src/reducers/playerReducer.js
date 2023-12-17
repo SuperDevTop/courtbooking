@@ -15,7 +15,6 @@ const playerReducer = (state = initialState, action) => {
 
     case UPDATE_SEARCHINGPLAYER:
       const { name } = action.payload;
-      console.log(name);
 
       return {
         ...state,

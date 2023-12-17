@@ -15,7 +15,9 @@ const io = new Server(server, {
 
 require("dotenv").config();
 
-// mongoose.connect('mongodb://127.0.0.1:27017/tennis_court_booking', 
+// mongoose
+// .connect(
+//   'mongodb://127.0.0.1:27017/tennis_court_booking', 
 mongoose
   .connect(
     "mongodb+srv://ctori0816:QwBaTtsIJcRJLTOM@cluster0.psaminp.mongodb.net/tennis_court_booking",
@@ -42,7 +44,7 @@ app.use("/api/chat", require("./routes/chat"));
 // app.use("/images", express.static(path.join(__dirname, "images")));
 
 // Your code
-// if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
 app.use(express.static(path.resolve(__dirname, "client", "build")));
 app.get("*", (req, res) => {
   res.sendFile(
@@ -54,7 +56,7 @@ app.get("*", (req, res) => {
     }
   );
 });
-// }
+}
 // Your code
 
 const users = {};

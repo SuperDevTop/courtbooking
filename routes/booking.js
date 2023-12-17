@@ -89,8 +89,8 @@ router.post("/addComment", async (req, res) => {
       // Create a new comment instance
       const newComment = new Comment(receivedCommentData);
       const savedComment = await newComment.save();
-      booking.comments.push(savedComment);
-      await booking.save();
+      booking.comments.push(savedComment._id);
+      const updatedBooking = await booking.save();
 
       const commentIds = booking.comments;
       const comments = await Promise.all(
@@ -102,7 +102,7 @@ router.post("/addComment", async (req, res) => {
         })
       );
 
-      res.status(200).json({ comments });
+      res.status(200).json({ comments, updatedBooking });
     }
   } catch (error) {
     console.log(error);

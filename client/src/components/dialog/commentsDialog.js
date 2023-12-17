@@ -42,6 +42,7 @@ const CommentsDialog = ({
   const [commentData, setCommentData] = useState([]);
   const [content, setContent] = useState("");
   const [openCustomalert, setOpenCustomalert] = useState(false);
+  const [openWarningAlert, setOpenWarningAlert] = useState(false);
   const flatOptionProps = {
     options: flatoptions,
   };
@@ -64,7 +65,19 @@ const CommentsDialog = ({
     setType(value);
   };
 
+  const isOptionEqualToValue = (option, value) => {
+    return option.value === value.value;
+  };
+
   const onSave = async () => {
+    if (selectedPlayer === "" || content === "") {
+      setOpenWarningAlert(true);
+
+      setTimeout(() => {
+        setOpenWarningAlert(false);
+      }, 2000);
+      return;
+    }
     const data = {
       booker: user.name,
       player: selectedPlayer,
@@ -91,10 +104,7 @@ const CommentsDialog = ({
                 {...flatOptionProps}
                 value={selectedPlayer}
                 onChange={onPlayerChange}
-                isOptionEqualToValue={(option, value) =>
-                  value === undefined ||
-                  option?.id?.toString() === (value?.id ?? value)?.toString()
-                }
+                isOptionEqualToValue={isOptionEqualToValue}
                 renderInput={(params) => (
                   <TextField {...params} label="Players" variant="standard" />
                 )}
@@ -130,6 +140,7 @@ const CommentsDialog = ({
               rows={5}
               fullWidth
               value={content}
+              required
               onChange={(event) => {
                 setContent(event.target.value);
               }}
@@ -191,7 +202,7 @@ const CommentsDialog = ({
           onClick={onClose}
           color="primary"
           variant="outlined"
-          sx={{ textTransform: "none", margin: 1 }}
+          sx={{ textTransform: "none", margin: 1.5 }}
         >
           Close
         </Button>
@@ -200,6 +211,11 @@ const CommentsDialog = ({
         openState={openCustomalert}
         text="The comment has been added successfully!"
         severity="success"
+      />
+      <CustomAlert
+        openState={openWarningAlert}
+        text="Please fill out all fields correctly!"
+        severity="warning"
       />
     </Dialog>
   );

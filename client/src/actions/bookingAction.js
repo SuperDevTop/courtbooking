@@ -107,10 +107,10 @@ export const addComment = (data) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/addComment", data)
     .then((res) => {
-      const { comments } = res.data;
+      const { comments, updatedBooking } = res.data;
       dispatch({
         type: ADD_COMMENT_SUCCESS,
-        payload: { updatedComments: comments },
+        payload: { updatedComments: comments, updatedBooking },
       });
     })
     .catch((err) => {
