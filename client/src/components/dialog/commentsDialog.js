@@ -23,7 +23,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+// import EditIcon from "@mui/icons-material/Edit";
 import { connect } from "react-redux";
 
 import { addComment, deleteComment } from "../../actions/bookingAction";
@@ -116,7 +116,6 @@ const CommentsDialog = ({
     setOpenConfirmDialog(false);
     await deleteComment(dataToBeDeleted);
     setIsDeleting(false);
-    console.log(isDeleting);
     setOpenCommentDeleteAlert(true);
 
     setTimeout(() => {
@@ -210,12 +209,16 @@ const CommentsDialog = ({
                       </TableCell>
                       <TableCell align="right">
                         <DeleteIcon
-                          sx={{ color: "red" }}
+                          sx={{ color: "red",
+                          '& :hover' :{
+                            cursor: "pointer"
+                          }
+                        }}
                           onClick={() => {
                             onDelete(row);
                           }}
                         />
-                        <EditIcon sx={{ color: "greenyellow" }} />
+                        {/* <EditIcon sx={{ color: "greenyellow" }} /> */}
                       </TableCell>
                     </TableRow>
                   ))}
