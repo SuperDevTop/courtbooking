@@ -9,7 +9,7 @@ import SidebarContent from "./SidebarContent";
 import ChatContent from "./ChatContent";
 import MenuTwoToneIcon from "@mui/icons-material/MenuTwoTone";
 
-import Scrollbar from "../Scrollbar";
+import Scrollbar from "../scrollbar";
 import { getUsers, getChatContents } from "../../actions/chatAction";
 
 import {

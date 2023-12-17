@@ -8,10 +8,10 @@ import {
 } from "react-router-dom";
 import { Container } from "@mui/material";
 
-import Register from "./pages/Register";
-import Login from "./pages/Login";
+import Register from "./pages/register";
+import Login from "./pages/login";
 import DrawerAppBar from "./components/layout/Navbar";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/dashboard";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Footer from "./components/layout/Footer";
@@ -19,7 +19,7 @@ import setAuthToken from "./utils/setAuthToken";
 import { useDispatch } from "react-redux";
 import { loadUser } from "./actions/authActions";
 import jwtDecode from "jwt-decode";
-import PrivateRoute from "./components/routes/PrivateRoute";
+import PrivateRoute from "./components/routes/privateRoute";
 // import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { logOut } from "./actions/authActions";
 import ThemeProvider from "./theme/ThemeProvider";

@@ -26,8 +26,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { connect } from "react-redux";
 
-import { addComment } from "../../actions/bookingAction";
+import { addComment, deleteComment } from "../../actions/bookingAction";
 import CustomAlert from "../CustomAlert";
+import ConfirmDialog from "../reservation/confirmDialog";
+import LoadingOverlay from "../layout/LoadingOverlay";
 
 const CommentsDialog = ({
   open,
@@ -37,12 +39,20 @@ const CommentsDialog = ({
   addComment,
   bookingId,
   comments,
+  deleteComment,
 }) => {
   const [flatoptions, setFlatoptions] = useState([]);
   const [commentData, setCommentData] = useState([]);
   const [content, setContent] = useState("");
   const [openCustomalert, setOpenCustomalert] = useState(false);
   const [openWarningAlert, setOpenWarningAlert] = useState(false);
+  const [openCommentDeleteAlert, setOpenCommentDeleteAlert] = useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [dataToBeDeleted, setDataToBeDeleted] = useState({
+    commentId: "",
+    bookingId: "",
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
   const flatOptionProps = {
     options: flatoptions,
   };
@@ -70,12 +80,13 @@ const CommentsDialog = ({
   };
 
   const onSave = async () => {
-    if (selectedPlayer === "" || content === "") {
+    if (content === "") {
       setOpenWarningAlert(true);
 
       setTimeout(() => {
         setOpenWarningAlert(false);
       }, 2000);
+
       return;
     }
     const data = {
@@ -89,7 +100,27 @@ const CommentsDialog = ({
     setOpenCustomalert(true);
 
     setTimeout(() => {
+      onClose();
       setOpenCustomalert(false);
+    }, 2000);
+  };
+
+  const onDelete = async (row) => {
+    const data = { commentId: row._id, bookingId: bookingId };
+    setDataToBeDeleted(data);
+    setOpenConfirmDialog(true);
+  };
+
+  const onDeleteConfirm = async () => {
+    setIsDeleting(true);
+    setOpenConfirmDialog(false);
+    await deleteComment(dataToBeDeleted);
+    setIsDeleting(false);
+    console.log(isDeleting);
+    setOpenCommentDeleteAlert(true);
+
+    setTimeout(() => {
+      setOpenCommentDeleteAlert(false);
     }, 2000);
   };
 
@@ -178,7 +209,12 @@ const CommentsDialog = ({
                         {row.isPermanent ? "Permanent" : "Reservation"}
                       </TableCell>
                       <TableCell align="right">
-                        <DeleteIcon sx={{ color: "red" }} />
+                        <DeleteIcon
+                          sx={{ color: "red" }}
+                          onClick={() => {
+                            onDelete(row);
+                          }}
+                        />
                         <EditIcon sx={{ color: "greenyellow" }} />
                       </TableCell>
                     </TableRow>
@@ -217,12 +253,28 @@ const CommentsDialog = ({
         text="Please fill out all fields correctly!"
         severity="warning"
       />
+      <CustomAlert
+        openState={openCommentDeleteAlert}
+        text="The comment has been removed successfully!"
+        severity="success"
+      />
+      <ConfirmDialog
+        open={openConfirmDialog}
+        onClose={() => {
+          setOpenConfirmDialog(false);
+        }}
+        onConfirm={onDeleteConfirm}
+        title="Delete comment"
+        text="Are you sure you want to delete this comment?"
+      />
+      {isDeleting && <LoadingOverlay text="Deleting..." color="success" />}
     </Dialog>
   );
 };
 
 const mapDispatchToProps = (dispatch) => ({
   addComment: (data) => dispatch(addComment(data)),
+  deleteComment: (data) => dispatch(deleteComment(data)),
 });
 
 const mapStateToProps = (state) => ({

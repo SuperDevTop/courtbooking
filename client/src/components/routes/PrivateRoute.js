@@ -1,5 +1,4 @@
 import React from 'react';
-// import Spinner from '../layout/Spinner';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -10,8 +9,7 @@ const PrivateRoute = ({
     auth: { isAuthenticated, loading }
 }) => {
     if (isAuthenticated && loading) {
-        // return <Spinner />
-        return <LoadingOverlay text='loading' color='success'/>
+        return <LoadingOverlay text='loading...' color='success'/>
     }
 
     if (isAuthenticated) {

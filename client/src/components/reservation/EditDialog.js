@@ -357,23 +357,16 @@ const EditDialog = ({
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={7}>
+          <Grid item xs={6} marginLeft={8}>
             <Box
               sx={{
-                marginRight: 2,
                 borderRadius: 1.5,
-                marginLeft: 2,
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
+                alignItems: "stretch",
               }}
             >
-              <Typography
-                // color="black"
-                variant="h6"
-                textAlign="center"
-                marginBottom={2}
-              >
+              <Typography variant="h6" textAlign="center" marginBottom={2}>
                 Selected Players:
               </Typography>
 
@@ -387,48 +380,46 @@ const EditDialog = ({
                 parentWarmups={warmups}
                 parentBalls={balls}
               />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "85%",
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  onClick={addPlayer}
-                  sx={{ marginTop: 2, marginBottom: 2 }}
-                >
-                  <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
-                  Add Player
-                </Button>
-                <Stack spacing={1} sx={{ width: "55%" }}>
-                  <Autocomplete
-                    {...flatOptionProps}
-                    id="controlled-options"
-                    value={selectedOption}
-                    onChange={onOptionChange}
-                    isOptionEqualToValue={(option, value) => {return option.value === value.value}}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Options"
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Stack>
-              </div>
-              <ImageCard
-                image_Url={image}
-                title={selectedPlayer}
-                style={{ width: "20vw", marginTop: 1 }}
-              />
             </Box>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={addPlayer}
+                sx={{ marginTop: 2, marginBottom: 2, width: '43%' }}
+              >
+                <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
+                Add Player
+              </Button>
+              <Stack spacing={1} sx={{ width: "50%" }}>
+                <Autocomplete
+                  {...flatOptionProps}
+                  id="controlled-options"
+                  value={selectedOption}
+                  onChange={onOptionChange}
+                  isOptionEqualToValue={(option, value) => {
+                    return option.value === value.value;
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Options" variant="standard" />
+                  )}
+                />
+              </Stack>
+            </div>
+            <ImageCard
+              image_Url={image}
+              title={selectedPlayer}
+              style={{ marginTop: 1 }}
+            />
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ paddingRight: 3, paddingBottom: 3 }}>
+      <DialogActions sx={{ paddingRight: 5, paddingBottom: 3 }}>
         <Button onClick={onClose} variant="outlined">
           Close
         </Button>

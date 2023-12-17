@@ -7,8 +7,8 @@ import jwtDecode from "jwt-decode";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { logOut } from "../actions/authActions";
-import TimePanel from "../components/TimePanel";
-import Court from "../components/Court";
+import TimePanel from "../components/timePanel";
+import Court from "../components/court";
 import { getPlayersData } from "../actions/playerActions";
 import setAuthToken from "../utils/setAuthToken";
 import Topbar from "../components/layout/Topbar";
@@ -32,14 +32,16 @@ const Dashboard = ({
   const dispatch = useDispatch();
   const history = useNavigate();
   const location = useLocation();
-   //eslint-disable-next-line
-  const [page, setPage] = useState(new URLSearchParams(location.search).get("page"));
+  //eslint-disable-next-line
+  const [page, setPage] = useState(
+    new URLSearchParams(location.search).get("page")
+  );
 
   useEffect(() => {
     if (page) {
-      changeCurrentPage(Number(page))
+      changeCurrentPage(Number(page));
     }
-  }, [page, changeCurrentPage])
+  }, [page, changeCurrentPage]);
 
   // Auto Log Out
   useEffect(() => {

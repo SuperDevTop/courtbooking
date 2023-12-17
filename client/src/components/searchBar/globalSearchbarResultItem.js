@@ -4,7 +4,7 @@ import { Grid } from "@mui/material";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import { connect } from "react-redux";
 
-import EditDialog from "../reservation/EditDialog";
+import EditDialog from "../reservation/editDialog";
 
 const GlobalSearchbarResultItem = ({ data, index, players }) => {
   const [openDialog, setOpenDialog] = useState(false);

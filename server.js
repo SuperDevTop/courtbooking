@@ -16,11 +16,11 @@ const io = new Server(server, {
 require("dotenv").config();
 
 // mongoose
-// .connect(
-//   'mongodb://127.0.0.1:27017/tennis_court_booking', 
-mongoose
-  .connect(
-    "mongodb+srv://ctori0816:QwBaTtsIJcRJLTOM@cluster0.psaminp.mongodb.net/tennis_court_booking",
+//   .connect(
+//     "mongodb://127.0.0.1:27017/tennis_court_booking",
+    mongoose
+      .connect(
+        "mongodb+srv://ctori0816:QwBaTtsIJcRJLTOM@cluster0.psaminp.mongodb.net/tennis_court_booking",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -45,17 +45,17 @@ app.use("/api/chat", require("./routes/chat"));
 
 // Your code
 if (process.env.NODE_ENV === "production") {
-app.use(express.static(path.resolve(__dirname, "client", "build")));
-app.get("*", (req, res) => {
-  res.sendFile(
-    path.resolve(__dirname, "client", "build", "index.html"),
-    function (err) {
-      if (err) {
-        res.status(500).send(err);
+  app.use(express.static(path.resolve(__dirname, "client", "build")));
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "client", "build", "index.html"),
+      function (err) {
+        if (err) {
+          res.status(500).send(err);
+        }
       }
-    }
-  );
-});
+    );
+  });
 }
 // Your code
 

@@ -6,6 +6,7 @@ import {
   GETPLAYERS_SUCCESS,
   ADD_COMMENT_SUCCESS,
   GET_COMMENT,
+  DELETE_COMMENT,
 } from "./types";
 import axios from "axios";
 
@@ -127,6 +128,21 @@ export const getComment = (data) => (dispatch) => {
       dispatch({
         type: GET_COMMENT,
         payload: { comments },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const deleteComment = (data) => (dispatch) => {
+  axios
+    .delete(backendUrl + "/api/booking/deleteComment/" + data.bookingId + "/" + data.commentId)
+    .then((res) => {
+      const { comments, updatedBooking } = res.data;
+      dispatch({
+        type: DELETE_COMMENT,
+        payload: { commentsUpdated: comments, bookingUpdated: updatedBooking },
       });
     })
     .catch((err) => {

@@ -25,16 +25,16 @@ import IconButton from "@mui/material/IconButton";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useTheme } from "@emotion/react";
 
-import ImageCard from "../components/ImageCard";
+import ImageCard from "./ImageCard";
 import { createBook, deleteBooking } from "../actions/bookingAction";
 import { alpha3ToAlph2 } from "../utils/countryCode";
 import CustomAlert from "./CustomAlert";
 import ChipsWithCloseButton from "./ChipsWithCloseButton";
 import { colorScale } from "../utils/gradientColor";
-import EditDialog from "./reservation/EditDialog";
+import EditDialog from "./reservation/editDialog";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import LoadingOverlay from "./layout/LoadingOverlay";
-import ConfirmationDialog from "./reservation/ConfirmDialog";
+import ConfirmationDialog from "./reservation/confirmDialog";
 import { bookingOptionTexts } from "../utils/texts";
 import CommentsDialog from "./dialog/commentsDialog";
 import { getComment } from "../actions/bookingAction";
@@ -307,7 +307,7 @@ const Court = (props) => {
     );
   };
 
-  const handleComments = (commentIds, players, id) => {
+  const handleComments = async (commentIds, players, id) => {
     setOpenCommentDialog(true);
     setCommentPlayers(players);
     setBookingId(id);
@@ -316,7 +316,7 @@ const Court = (props) => {
       commentIds: commentIds,
     };
 
-    props.getComment(data);
+    await props.getComment(data);
   };
 
   const onCommentDialogClose = () => {
@@ -376,8 +376,8 @@ const Court = (props) => {
 
   return (
     <>
-      {isBooking && <LoadingOverlay text={"Booking..."} color="success" />}
-      {isDeleting && <LoadingOverlay text={"Deleting..."} color="warning" />}
+      {isBooking && <LoadingOverlay text="Booking..." color="success" />}
+      {isDeleting && <LoadingOverlay text="Deleting..." color="warning" />}
       <Box>
         <CustomAlert
           openState={open}
@@ -409,6 +409,8 @@ const Court = (props) => {
           onClose={onCommentDialogClose}
           players={commentPlayers}
           bookingId={bookingId}
+          text="Are you sure you want to delete this reservation?"
+          title="Delete reservation"
         />
         <Box
           backgroundColor={theme.header.background}
@@ -625,6 +627,9 @@ const Court = (props) => {
                   {...flatProps}
                   value={selectedPlayer.name}
                   onChange={onChangePlayer}
+                  isOptionEqualToValue={(option, value) => {
+                    return option.value === value.value;
+                  }}
                   renderInput={(params) => (
                     <TextField {...params} label="Players" variant="standard" />
                   )}
@@ -748,6 +753,9 @@ const Court = (props) => {
                     {...flatOptionProps}
                     value={selectedOption}
                     onChange={onOptionChange}
+                    isOptionEqualToValue={(option, value) => {
+                      return option.value === value.value;
+                    }}
                     renderInput={(params) => (
                       <TextField
                         {...params}

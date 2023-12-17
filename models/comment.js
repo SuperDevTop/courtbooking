@@ -8,7 +8,6 @@ const commentSchema = new mongoose.Schema({
 
   player: {
     type: String,
-    required: true,
   },
 
   isPermanent: {
@@ -22,5 +21,7 @@ const commentSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+// commentSchema.index({ booker: 1, player: 1 }, { unique: true });
 
 module.exports = mongoose.model("Comment", commentSchema);

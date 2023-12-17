@@ -249,8 +249,49 @@ router.post("/getComment", async (req, res) => {
 
     res.status(200).json({ comments });
   } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.delete("/deleteComment/:bookingId/:commentId", async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.bookingId);
+    const comment = await Comment.findById(req.params.commentId);
+
+    if (!booking || !comment) {
+      res.status(404).json({ message: "Booking or comment not found" });
+    }
+
+    // Check if the comment belongs to the booking
+    if (!booking.comments.includes(req.params.commentId)) {
+      res
+        .status(403)
+        .json({ message: "The booking doesn't include such bomment" });
+    }
+
+    // Remove the comment reference from the booking
+    booking.comments.pull(req.params.commentId);
+    const updatedBooking = await booking.save();
+
+    // Delete the comment
+    await Comment.findByIdAndDelete(req.params.commentId);
+
+    const commentIds = booking.comments;
+    const comments = await Promise.all(
+      commentIds.map(async (one) => {
+        const commentId = new mongoose.Types.ObjectId(one);
+        const comment = await Comment.findById(commentId);
+
+        return comment;
+      })
+    );
+
+    console.log('A comment has been removed successfully!');
+    res.status(200).json({ comments, updatedBooking });
+  } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: error.message });
   }
 });
 
