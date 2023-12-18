@@ -7,8 +7,12 @@ const path = require("path");
 const router = express.Router();
 
 const User = require("../models/user");
-const backendUrl = '/';
+let backendUrl = 'http://localhost:5000/';
+require("dotenv").config();
 
+if (process.env.NODE_ENV === 'production') {
+  backendUrl = "http://ec2-18-221-87-111.us-east-2.compute.amazonaws.com/";
+}
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -133,19 +137,19 @@ router.post("/updateUser", async (req, res) => {
 });
 
 // Multer configuration
-// const storage = multer.diskStorage({
-//   destination: "images/avatars", // Specify the path where you want to save the uploaded files
+const storage = multer.diskStorage({
+  destination: "images/avatars", // Specify the path where you want to save the uploaded files
 
-//   filename: (req, file, cb) => {
-//     const ext = path.extname(file.originalname);
-//     cb(null, `${Date.now()}${ext}`);
-//   },
-// });
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}${ext}`);
+  },
+});
 
-// const upload = multer({ storage });
+const upload = multer({ storage });
 
-// router.post("/uploadAvatar", upload.single("avatar"), async (req, res) => {
-router.post("/uploadAvatar", async (req, res) => {
+router.post("/uploadAvatar", upload.single("avatar"), async (req, res) => {
+// router.post("/uploadAvatar", async (req, res) => {
   // Check if a file was provided in the request
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
@@ -159,7 +163,7 @@ router.post("/uploadAvatar", async (req, res) => {
     { email: email },
     {
       $set: {
-        avatar: backendUrl + "/" + uploadedFilePath,
+        avatar: backendUrl + uploadedFilePath,
       },
     },
     { new: true }
@@ -169,7 +173,7 @@ router.post("/uploadAvatar", async (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json({ message: err });
+      res.status(500).json({ message: err.message });
     });
 });
 

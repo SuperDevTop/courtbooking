@@ -20,7 +20,7 @@ require("dotenv").config();
 //     "mongodb://127.0.0.1:27017/tennis_court_booking",
     mongoose
       .connect(
-        "mongodb+srv://ctori0816:QwBaTtsIJcRJLTOM@cluster0.psaminp.mongodb.net/tennis_court_booking",
+          "mongodb+srv://ctori0816:QwBaTtsIJcRJLTOM@cluster0.psaminp.mongodb.net/tennis_court_booking",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -41,7 +41,7 @@ app.use("/api/admin", require("./routes/admin"));
 app.use("/api/court", require("./routes/court"));
 app.use("/api/chat", require("./routes/chat"));
 
-// app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 // Your code
 if (process.env.NODE_ENV === "production") {

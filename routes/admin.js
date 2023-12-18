@@ -9,6 +9,9 @@ const Player = require("../models/players");
 router.get("/getUsers", async (req, res) => {
   try {
     const users = await User.find({});
+    // const users = await User.find({
+    //   role: {$ne: 'superadmin'}
+    // })
 
     if (users.length === 0) {
       res.status(200).json({ users: [] });
