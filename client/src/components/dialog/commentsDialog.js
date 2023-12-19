@@ -27,9 +27,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { connect } from "react-redux";
 
 import { addComment, deleteComment } from "../../actions/bookingAction";
-import CustomAlert from "../CustomAlert";
-import ConfirmDialog from './confirmDialog'
-import LoadingOverlay from "../layout/LoadingOverlay";
+import CustomAlert from "../customAlert";
+import ConfirmDialog from "./confirmDialog";
+import LoadingOverlay from "../layout/loadingOverlay";
 
 const CommentsDialog = ({
   open,
@@ -209,11 +209,12 @@ const CommentsDialog = ({
                       </TableCell>
                       <TableCell align="right">
                         <DeleteIcon
-                          sx={{ color: "red",
-                          '& :hover' :{
-                            cursor: "pointer"
-                          }
-                        }}
+                          sx={{
+                            color: "red",
+                            "& :hover": {
+                              cursor: "pointer",
+                            },
+                          }}
                           onClick={() => {
                             onDelete(row);
                           }}

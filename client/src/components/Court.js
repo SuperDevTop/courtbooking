@@ -25,16 +25,16 @@ import IconButton from "@mui/material/IconButton";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useTheme } from "@emotion/react";
 
-import ImageCard from "./ImageCard";
+import ImageCard from "./imageCard";
 import { createBook, deleteBooking } from "../actions/bookingAction";
 import { alpha3ToAlph2 } from "../utils/countryCode";
-import CustomAlert from "./CustomAlert";
-import ChipsWithCloseButton from "./ChipsWithCloseButton";
+import CustomAlert from "./customAlert";
+import ChipsWithCloseButton from "./chipsWithCloseButton";
 import { colorScale } from "../utils/gradientColor";
-import EditDialog from './dialog/editDialog'
+import EditDialog from "./dialog/editDialog";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
-import LoadingOverlay from "./layout/LoadingOverlay";
-import ConfirmationDialog from './dialog/confirmDialog'
+import LoadingOverlay from "./layout/loadingOverlay";
+import ConfirmationDialog from "./dialog/confirmDialog";
 import { bookingOptionTexts } from "../utils/texts";
 import CommentsDialog from "./dialog/commentsDialog";
 import { getComment } from "../actions/bookingAction";

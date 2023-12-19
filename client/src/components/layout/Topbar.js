@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Grid } from "@mui/material";
-import SearchBar from "../SearchBar";
+import SearchBar from "../searchBar";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";

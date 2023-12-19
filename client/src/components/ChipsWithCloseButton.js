@@ -3,24 +3,22 @@ import Chip from "@mui/material/Chip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { Box } from "@mui/material";
-// import { connect } from "react-redux";
 
 const ChipsWithCloseButton = ({
   chip,
   handleDeleteChip,
-  // players,
   ball,
   setParentBalls,
   setParentWarmups,
   parentWarmups,
   parentBalls,
+  onChangePlayer,
 }) => {
   const [chips, setChips] = useState(chip);
   const [balls, setBalls] = useState([false, false, false, false]);
   const [warmups, setWarmups] = useState([false, false, false, false]);
 
   const handleChange = (event, index) => {
-
     const newWarmups = [...warmups];
     newWarmups[index] = event.target.checked;
 
@@ -29,7 +27,6 @@ const ChipsWithCloseButton = ({
   };
 
   const handleBallChange = (event, index) => {
-
     const newBalls = [...balls];
     newBalls[index] = event.target.checked;
 
@@ -61,6 +58,9 @@ const ChipsWithCloseButton = ({
             color="primary"
             variant="filled"
             style={{ margin: "7px" }}
+            onClick={() => {
+              onChangePlayer(null, chip);
+            }}
           />
           <FormControlLabel
             control={
@@ -68,7 +68,7 @@ const ChipsWithCloseButton = ({
                 onChange={(event) => {
                   handleChange(event, index);
                 }}
-                checked={warmups[index]}
+                checked={!!warmups[index]}
               />
             }
             label="Warm Up"
@@ -94,9 +94,4 @@ const ChipsWithCloseButton = ({
   );
 };
 
-// const mapStateToProps = (state) => ({
-//   players: state.players.players,
-// });
-
-// export default connect(mapStateToProps)(ChipsWithCloseButton);
 export default ChipsWithCloseButton;

@@ -6,14 +6,12 @@ import {
   MenuItem,
   TextField,
   Select,
-} from "@mui/material";
-import React, { useEffect } from "react";
-import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
 import { FormControl, InputLabel } from "@mui/material";
@@ -26,12 +24,12 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import { alpha3ToAlph2 } from "../../utils/countryCode";
 import { updateBook } from "../../actions/bookingAction";
-import CustomAlert from "../CustomAlert";
-import ChipsWithCloseButton from "../ChipsWithCloseButton";
+import CustomAlert from "../customAlert";
+import ChipsWithCloseButton from "../chipsWithCloseButton";
 import { currentPageToCourts } from "../../utils/currentPageToCourts";
 import { colorScale } from "../../utils/gradientColor";
-import ImageCard from "../ImageCard";
-import LoadingOverlay from "../layout/LoadingOverlay";
+import ImageCard from "../imageCard";
+import LoadingOverlay from "../layout/loadingOverlay";
 import { bookingOptionTexts } from "../../utils/texts";
 
 const EditDialog = ({
@@ -73,29 +71,30 @@ const EditDialog = ({
   };
 
   useEffect(() => {
-    players.length > 0 && setSelectedPlayer(players[0].name);
-    players.length > 0 && setSelectedPlayerData(players[0]);
-
     if (players.length > 0) {
-      const lastname = players[0].name.split(" ");
-      setImage("/images/players/" + lastname[lastname.length - 1] + ".jpg");
+      if (data.hasOwnProperty("players")) {
+        setChip(data.players);
+        setTimeLength(data.time_slot);
+        setSelectedOption(data.option);
+        setWarmups(data.warmups);
+        setBalls(data.balls);
+
+        setSelectedPlayer(data.players[0]);
+
+        const index = players.findIndex(
+          (player) => player.name === data.players[0]
+        );
+        setSelectedPlayerData(players[index]);
+
+        const lastname = players[index].name.split(" ");
+        setImage("/images/players/" + lastname[lastname.length - 1] + ".jpg");
+      }
     }
-    // eslint-disable-next-line
-  }, [players]);
+  }, [players, data]);
 
   const flatProps = {
     options: players.map((option) => option.name),
   };
-
-  useEffect(() => {
-    if (data.hasOwnProperty("players")) {
-      setChip(data.players);
-      setTimeLength(data.time_slot);
-      setSelectedOption(data.option);
-      setWarmups(data.warmups);
-      setBalls(data.balls);
-    }
-  }, [data]);
 
   const onSave = () => {
     let reservation_type = "Practice";
@@ -210,16 +209,7 @@ const EditDialog = ({
   };
 
   return (
-    <Dialog
-      open={open}
-      maxWidth="md"
-      fullWidth
-      // PaperProps={{
-      //   style: {
-      //     backgroundColor: "#f0f0f0",
-      //   },
-      // }}
-    >
+    <Dialog open={open} maxWidth="md" fullWidth>
       {isSaving && <LoadingOverlay text="Saving..." color="success" />}
       <CustomAlert
         openState={alertOpen}
@@ -247,7 +237,6 @@ const EditDialog = ({
         marginTop={2}
         marginBottom={3}
         textAlign="center"
-        // color="black"
       >
         <EditNoteIcon sx={{ verticalAlign: "text-bottom", marginRight: 1 }} />
         Edit reservation
@@ -259,7 +248,6 @@ const EditDialog = ({
             <Stack spacing={1}>
               <Autocomplete
                 {...flatProps}
-                id="controlled-demo"
                 value={selectedPlayer}
                 onChange={onChangePlayer}
                 isOptionEqualToValue={(option, value) =>
@@ -346,7 +334,6 @@ const EditDialog = ({
               </InputLabel>
               <Select
                 labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
                 value={timeLength}
                 onChange={onChangeTimeLength}
                 label="timeLength"
@@ -379,6 +366,7 @@ const EditDialog = ({
                 setParentWarmups={setWarmups}
                 parentWarmups={warmups}
                 parentBalls={balls}
+                onChangePlayer={onChangePlayer}
               />
             </Box>
 
@@ -391,7 +379,7 @@ const EditDialog = ({
               <Button
                 variant="outlined"
                 onClick={addPlayer}
-                sx={{ marginTop: 2, marginBottom: 2, width: '43%' }}
+                sx={{ marginTop: 2, marginBottom: 2, width: "43%" }}
               >
                 <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
                 Add Player
@@ -399,7 +387,6 @@ const EditDialog = ({
               <Stack spacing={1} sx={{ width: "50%" }}>
                 <Autocomplete
                   {...flatOptionProps}
-                  id="controlled-options"
                   value={selectedOption}
                   onChange={onOptionChange}
                   isOptionEqualToValue={(option, value) => {

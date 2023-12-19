@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { TimeIcon } from "@mui/x-date-pickers";
-import TimeBox from "./layout/TimeBox";
+import TimeBox from "./layout/timeBox";
 import { timeTexts } from "../utils/texts";
 import { useTheme } from "@emotion/react";
 

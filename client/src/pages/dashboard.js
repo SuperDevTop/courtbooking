@@ -11,12 +11,12 @@ import TimePanel from "../components/timePanel";
 import Court from "../components/court";
 import { getPlayersData } from "../actions/playerActions";
 import setAuthToken from "../utils/setAuthToken";
-import Topbar from "../components/layout/Topbar";
+import Topbar from "../components/layout/topbar";
 // import { courtNames } from "../utils/courtNames";
 import { getBookingData } from "../actions/bookingAction";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import { socket } from "../utils/socketService";
-import CustomAlert from "../components/CustomAlert";
+import CustomAlert from "../components/customAlert";
 import { changeCurrentPage } from "../actions/pageAction";
 
 const Dashboard = ({

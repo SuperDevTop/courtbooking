@@ -10,11 +10,11 @@ import { Container } from "@mui/material";
 
 import Register from "./pages/register";
 import Login from "./pages/login";
-import DrawerAppBar from "./components/layout/Navbar";
+import DrawerAppBar from "./components/layout/navbar";
 import Dashboard from "./pages/dashboard";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import Footer from "./components/layout/Footer";
+import Footer from "./components/layout/footer";
 import setAuthToken from "./utils/setAuthToken";
 import { useDispatch } from "react-redux";
 import { loadUser } from "./actions/authActions";

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import LoadingOverlay from "../layout/LoadingOverlay";
+import LoadingOverlay from "../layout/loadingOverlay";
 
 const PrivateRoute = ({
     component: Component,
