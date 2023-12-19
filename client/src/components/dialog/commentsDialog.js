@@ -28,7 +28,7 @@ import { connect } from "react-redux";
 
 import { addComment, deleteComment } from "../../actions/bookingAction";
 import CustomAlert from "../CustomAlert";
-import ConfirmDialog from "../reservation/confirmDialog";
+import ConfirmDialog from './confirmDialog'
 import LoadingOverlay from "../layout/LoadingOverlay";
 
 const CommentsDialog = ({

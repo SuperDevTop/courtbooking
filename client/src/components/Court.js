@@ -31,10 +31,10 @@ import { alpha3ToAlph2 } from "../utils/countryCode";
 import CustomAlert from "./CustomAlert";
 import ChipsWithCloseButton from "./ChipsWithCloseButton";
 import { colorScale } from "../utils/gradientColor";
-import EditDialog from "./reservation/editDialog";
+import EditDialog from './dialog/editDialog'
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import LoadingOverlay from "./layout/LoadingOverlay";
-import ConfirmationDialog from "./reservation/confirmDialog";
+import ConfirmationDialog from './dialog/confirmDialog'
 import { bookingOptionTexts } from "../utils/texts";
 import CommentsDialog from "./dialog/commentsDialog";
 import { getComment } from "../actions/bookingAction";
