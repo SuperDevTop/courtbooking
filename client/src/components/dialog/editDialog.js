@@ -10,11 +10,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { FormControl, InputLabel } from "@mui/material";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
@@ -24,13 +24,16 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import { alpha3ToAlph2 } from "../../utils/countryCode";
 import { updateBook } from "../../actions/bookingAction";
-import CustomAlert from "../customAlert";
-import ChipsWithCloseButton from "../chipsWithCloseButton";
 import { currentPageToCourts } from "../../utils/currentPageToCourts";
 import { colorScale } from "../../utils/gradientColor";
-import ImageCard from "../imageCard";
-import LoadingOverlay from "../layout/loadingOverlay";
 import { bookingOptionTexts } from "../../utils/texts";
+import ChipsWithCloseButton from "../chipsWithCloseButton";
+import CustomAlert from "../customAlert";
+import ImageCard from "../imageCard";
+import LoadingOverlay from "./loadingOverlay";
+import GlobalSearchbarResultItem from "../searchBar/globalSearchbarResultItem";
+import Scrollbars from "react-custom-scrollbars-2";
+import imageUrlFromPlayerName from "../../utils/usefulFuncs";
 
 const EditDialog = ({
   open,
@@ -40,6 +43,7 @@ const EditDialog = ({
   players,
   currentPage,
   booking_date,
+  total_booking_data,
 }) => {
   const withCommonIconStyle = (WrappedComponent) => (props) =>
     (
@@ -65,6 +69,8 @@ const EditDialog = ({
   const [image, setImage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
+  const [bookingDataOfSelectedPlayer, setBookingDataOfSelectedPlayer] =
+    useState([]);
 
   const flatOptionProps = {
     options: bookingOptionTexts,
@@ -78,19 +84,30 @@ const EditDialog = ({
         setSelectedOption(data.option);
         setWarmups(data.warmups);
         setBalls(data.balls);
-
         setSelectedPlayer(data.players[0]);
 
         const index = players.findIndex(
           (player) => player.name === data.players[0]
         );
         setSelectedPlayerData(players[index]);
-
-        const lastname = players[index].name.split(" ");
-        setImage("/images/players/" + lastname[lastname.length - 1] + ".jpg");
+        setImage(imageUrlFromPlayerName(players[index].name));
       }
     }
   }, [players, data]);
+
+  // Get booking data of selected player
+  useEffect(() => {
+    if (selectedPlayer === "test") {
+      setBookingDataOfSelectedPlayer([]);
+    } else {
+      const filteredArray = total_booking_data.filter((subData) =>
+        subData.players.some((player) =>
+          player.toLowerCase().includes(selectedPlayer.toLowerCase())
+        )
+      );
+      setBookingDataOfSelectedPlayer(filteredArray.reverse());
+    }
+  }, [selectedPlayer, total_booking_data]);
 
   const flatProps = {
     options: players.map((option) => option.name),
@@ -147,7 +164,7 @@ const EditDialog = ({
   };
 
   const onClose = () => {
-    setWarmups(data.warmups); // set warmups again as initail because the user might open edit_dialog again
+    setWarmups(data.warmups); // set warmups again as initial because the user might open edit_dialog again
     setChip(data.players);
     setAlertOpen(false);
     close();
@@ -164,13 +181,15 @@ const EditDialog = ({
   };
 
   const onChangePlayer = (event, newValue) => {
+    if (newValue === null) {
+      return
+    }
+
     setSelectedPlayer(newValue);
     const playerData = players.find((player) => player.name === newValue);
 
     setSelectedPlayerData(playerData);
-
-    const lastname = playerData.name.split(" ");
-    setImage("/images/players/" + lastname[lastname.length - 1] + ".jpg");
+    setImage(imageUrlFromPlayerName(playerData.name));
   };
 
   const addPlayer = () => {
@@ -209,7 +228,7 @@ const EditDialog = ({
   };
 
   return (
-    <Dialog open={open} maxWidth="md" fullWidth>
+    <Dialog open={open} maxWidth="lg" fullWidth>
       {isSaving && <LoadingOverlay text="Saving..." color="success" />}
       <CustomAlert
         openState={alertOpen}
@@ -234,17 +253,18 @@ const EditDialog = ({
       <DialogTitle
         fontWeight={600}
         variant="h6"
-        marginTop={2}
-        marginBottom={3}
+        marginTop={1}
+        marginBottom={1}
         textAlign="center"
       >
         <EditNoteIcon sx={{ verticalAlign: "text-bottom", marginRight: 1 }} />
-        Edit reservation
+        <span style={{ fontSize: 25 }}>Edit Reservation</span>
         <EditNoteIcon sx={{ verticalAlign: "text-bottom", marginLeft: 1 }} />
       </DialogTitle>
+      <Scrollbars autoHeight autoHeightMax={500}>
       <DialogContent>
-        <Grid container color="primary.info">
-          <Grid item xs={5}>
+        <Grid container color="primary.info" spacing={2}>
+          <Grid item xs={7}>
             <Stack spacing={1}>
               <Autocomplete
                 {...flatProps}
@@ -258,9 +278,8 @@ const EditDialog = ({
                 )}
               />
             </Stack>
-
             <Grid container>
-              <Grid item xs={7}>
+              <Grid item xs={4}>
                 <Typography
                   marginTop={3}
                   variant="h6"
@@ -282,7 +301,6 @@ const EditDialog = ({
                   <CheckCircleWithStyle />
                   Seeded: {selectedPlayerData.tournament_seed}
                 </Typography>
-
                 <Typography
                   component={"span"}
                   variant="h6"
@@ -292,59 +310,72 @@ const EditDialog = ({
                   <CheckCircleWithStyle />
                   {selectedPlayerData.natl}
                 </Typography>
-
                 <WorldFlag
                   countryCode={alpha3ToAlph2[selectedPlayerData.natl]}
                   svg
                   style={{ width: "3em", height: "3em" }}
                 />
                 <br />
-              </Grid>
-              <Grid item xs={5} textAlign="center">
+                <Typography variant="h6" marginTop={1} color={colorScale[3]}>
+                  <CheckCircleWithStyle />
+                  Handiness:{" "}
+                  {selectedPlayerData.right_handed ? "Right" : "Left"} <br />
+                </Typography>
+                <Typography variant="h6" marginTop={2} color={colorScale[4]}>
+                  <CheckCircleWithStyle />
+                  Status: {selectedPlayerData.status}
+                </Typography>
+                <Typography variant="h6" marginTop={2} color={colorScale[5]}>
+                  <CheckCircleWithStyle />
+                  {selectedPlayerData.singles_in ? "Singles In" : "Singles Out"}
+                </Typography>
+                <Typography variant="h6" marginTop={2} color={colorScale[6]}>
+                  <CheckCircleWithStyle />
+                  {selectedPlayerData.doubles_in ? "Doubles In" : "Doubles Out"}
+                </Typography>
                 <img
                   src={"/images/" + selectedPlayerData.atp_wta + ".png"}
-                  style={{ width: 100, marginTop: 30 }}
+                  style={{ width: 100, marginTop: 30, minWidth: 120 }}
                   alt={selectedPlayerData.atp_wta}
-                />
+                />{" "}
+                <br></br>
+                <FormControl
+                  variant="filled"
+                  sx={{ minWidth: 120, marginTop: 2 }}
+                >
+                  <InputLabel id="demo-simple-select-filled-label">
+                    Reservation Type
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-filled-label"
+                    value={timeLength}
+                    onChange={onChangeTimeLength}
+                    label="timeLength"
+                  >
+                    <MenuItem value={2}>1 hr</MenuItem>
+                    <MenuItem value={1}>30 mins</MenuItem>
+                    <MenuItem value={4}>2 hrs</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={8} textAlign="center" paddingTop={2}>
+                <Scrollbars>
+                  <div style={{ maxHeight: 500 }}>
+                    {bookingDataOfSelectedPlayer.map((item, index) => (
+                      <GlobalSearchbarResultItem
+                        data={item}
+                        index={index}
+                        key={index}
+                        clickable={false}
+                      />
+                    ))}
+                  </div>
+                </Scrollbars>
               </Grid>
             </Grid>
-            <Typography variant="h6" marginTop={1} color={colorScale[3]}>
-              <CheckCircleWithStyle />
-              Handiness: {selectedPlayerData.right_handed
-                ? "Right"
-                : "Left"}{" "}
-              <br />
-            </Typography>
-            <Typography variant="h6" marginTop={2} color={colorScale[4]}>
-              <CheckCircleWithStyle />
-              Status: {selectedPlayerData.status}
-            </Typography>
-            <Typography variant="h6" marginTop={2} color={colorScale[5]}>
-              <CheckCircleWithStyle />
-              {selectedPlayerData.singles_in ? "Singles In" : "Singles Out"}
-            </Typography>
-            <Typography variant="h6" marginTop={2} color={colorScale[6]}>
-              <CheckCircleWithStyle />
-              {selectedPlayerData.doubles_in ? "Doubles In" : "Doubles Out"}
-            </Typography>
-            <br></br>
-            <FormControl variant="filled" sx={{ minWidth: 120, marginTop: 2 }}>
-              <InputLabel id="demo-simple-select-filled-label">
-                Reservation Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-filled-label"
-                value={timeLength}
-                onChange={onChangeTimeLength}
-                label="timeLength"
-              >
-                <MenuItem value={2}>1 hr</MenuItem>
-                <MenuItem value={1}>30 mins</MenuItem>
-                <MenuItem value={4}>2 hrs</MenuItem>
-              </Select>
-            </FormControl>
+            <br />
           </Grid>
-          <Grid item xs={6} marginLeft={8}>
+          <Grid item xs={5}>
             <Box
               sx={{
                 borderRadius: 1.5,
@@ -369,7 +400,6 @@ const EditDialog = ({
                 onChangePlayer={onChangePlayer}
               />
             </Box>
-
             <div
               style={{
                 display: "flex",
@@ -406,7 +436,8 @@ const EditDialog = ({
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ paddingRight: 5, paddingBottom: 3 }}>
+      </Scrollbars>
+      <DialogActions sx={{ paddingRight: 2.5, paddingBottom: 3 }}>
         <Button onClick={onClose} variant="outlined">
           Close
         </Button>
@@ -425,6 +456,7 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
   currentPage: state.page.currentPage,
   booking_date: state.booking.booking_date,
+  total_booking_data: state.booking.total_booking_data,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditDialog);

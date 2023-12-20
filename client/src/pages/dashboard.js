@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
-
 import { Box, Grid } from "@mui/material";
-import { connect } from "react-redux";
-import { useDispatch } from "react-redux";
-import jwtDecode from "jwt-decode";
+import { connect, useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
-import { logOut } from "../actions/authActions";
 import TimePanel from "../components/timePanel";
 import Court from "../components/court";
-import { getPlayersData } from "../actions/playerActions";
 import setAuthToken from "../utils/setAuthToken";
 import Topbar from "../components/layout/topbar";
-// import { courtNames } from "../utils/courtNames";
+import CustomAlert from "../components/customAlert";
+import { getPlayersData } from "../actions/playerActions";
 import { getBookingData } from "../actions/bookingAction";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import { socket } from "../utils/socketService";
-import CustomAlert from "../components/customAlert";
+import { logOut } from "../actions/authActions";
 import { changeCurrentPage } from "../actions/pageAction";
 
 const Dashboard = ({
@@ -63,8 +60,6 @@ const Dashboard = ({
     getPlayersData();
   }, [getPlayersData]);
 
-  // const titles = courtNames;
-  const colors = ["green", "red", "yellow", "blue", "pink"];
   const [displayedCourts, setdisplayedCourts] = useState([]);
   const [titles, setTitles] = useState([]);
   const [openAlert, setOpenAlert] = useState(false);
@@ -128,7 +123,6 @@ const Dashboard = ({
             <Grid item xs={12} sm={3} md={2} lg={2} key={court}>
               <Court
                 name={titles[court]}
-                headerColor={colors[court % 5]}
                 players={players}
                 booking_data={booking_data[index] ? booking_data[index] : []}
                 court={courts[court]}

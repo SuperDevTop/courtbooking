@@ -1,7 +1,8 @@
 import { Box, InputAdornment, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import { connect } from "react-redux";
+import SearchIcon from "@mui/icons-material/Search";
+import Scrollbars from "react-custom-scrollbars-2";
 
 import { updateSearchingPlayer } from "../actions/playerActions";
 import GlobalSearchbarResultItem from "./searchBar/globalSearchbarResultItem";
@@ -11,7 +12,7 @@ const SearchBar = ({ updateSearchingPlayer, total_booking_data }) => {
 
   const handleChange = (event) => {
     const { value } = event.target;
-    // updateSearchingPlayer(value);
+    updateSearchingPlayer(value);
     setSearchTerm(value);
   };
 
@@ -54,22 +55,27 @@ const SearchBar = ({ updateSearchingPlayer, total_booking_data }) => {
         <Box
           marginLeft="8.5%"
           width="41%"
-          position={'absolute'}
+          position="absolute"
           zIndex={10}
           borderRadius={1}
           color="black"
           border="solid 1px grey"
           maxHeight={400}
           overflow="auto"
-          sx={
-            {
-              backgroundColor: "white",
-            }
-          }
+          sx={{
+            backgroundColor: "white",
+          }}
         >
-          {filteredData.map((item, index) => (
-            <GlobalSearchbarResultItem data={item} index={index} key={index} />
-          ))}
+          <Scrollbars autoHeightMax={300} autoHeight autoHide>
+            {filteredData.map((item, index) => (
+              <GlobalSearchbarResultItem
+                data={item}
+                index={index}
+                key={index}
+                clickable={true}
+              />
+            ))}
+          </Scrollbars>
         </Box>
       )}
     </Box>

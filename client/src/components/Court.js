@@ -1,5 +1,6 @@
-import { Box, Button, Typography, Grid, MenuItem } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { useTheme } from "@emotion/react";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
@@ -9,36 +10,41 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  TextField,
+  Select,
+  Box,
+  Button,
+  Typography,
+  Grid,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
-import { useState } from "react";
 import Stack from "@mui/material/Stack";
-import { TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
-import { connect } from "react-redux";
-import { Select } from "@mui/material";
-import { FormControl, InputLabel } from "@mui/material";
 import WorldFlag from "react-country-flag";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useTheme } from "@emotion/react";
 
 import ImageCard from "./imageCard";
-import { createBook, deleteBooking } from "../actions/bookingAction";
-import { alpha3ToAlph2 } from "../utils/countryCode";
 import CustomAlert from "./customAlert";
 import ChipsWithCloseButton from "./chipsWithCloseButton";
-import { colorScale } from "../utils/gradientColor";
 import EditDialog from "./dialog/editDialog";
-import { currentPageToCourts } from "../utils/currentPageToCourts";
-import LoadingOverlay from "./layout/loadingOverlay";
+import LoadingOverlay from "./dialog/loadingOverlay";
 import ConfirmationDialog from "./dialog/confirmDialog";
-import { bookingOptionTexts } from "../utils/texts";
 import CommentsDialog from "./dialog/commentsDialog";
+import GlobalSearchbarResultItem from "./searchBar/globalSearchbarResultItem";
+import Scrollbars from "react-custom-scrollbars-2";
+import imageUrlFromPlayerName from "../utils/usefulFuncs";
+import { createBook, deleteBooking } from "../actions/bookingAction";
+import { alpha3ToAlph2 } from "../utils/countryCode";
+import { colorScale } from "../utils/gradientColor";
+import { currentPageToCourts } from "../utils/currentPageToCourts";
+import { bookingOptionTexts } from "../utils/texts";
 import { getComment } from "../actions/bookingAction";
-// import Avatar from "@mui/material/Avatar";
 
 const withCommonIconStyle = (WrappedComponent) => (props) =>
   (
@@ -52,11 +58,9 @@ const CheckCircleWithStyle = withCommonIconStyle(CheckCircleIcon);
 
 const Court = (props) => {
   const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(false);
+  const [openMaxPlayerWarning, setOpenMaxPlayerWarning] = useState(false);
   const [bookingCreated, setbookingCreated] = useState(false);
   const [bookingDeleted, setbookingDeleted] = useState(false);
-
-  const players = props.players;
   const [openDialog, setOpenDialog] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState({});
@@ -72,15 +76,26 @@ const Court = (props) => {
   const [indexToBeDeleted, setIndexToBeDeleted] = useState(0);
   const [openCommentDialog, setOpenCommentDialog] = useState(false);
   const [commentPlayers, setCommentPlayers] = useState([]);
-  const name = props.name;
   const bookedTimeIndexes = [];
   const [selectedOption, setSelectedOption] = useState("");
   const [bookingId, setBookingId] = useState(null);
-  const { court } = props;
+  const [bookingDataOfSelectedPlayer, setBookingDataOfSelectedPlayer] =
+    useState([]);
+
+  const {
+    court,
+    total_booking_data,
+    name,
+    players,
+    booking_data,
+    currentPage,
+    booking_date,
+    getComment,
+    createBook,
+    deleteBooking,
+  } = props;
 
   const theme = useTheme();
-
-  const booking_data = props.booking_data;
 
   let timeTexts = [
     "8:00",
@@ -171,10 +186,22 @@ const Court = (props) => {
     players.length > 0 && setSelectedPlayer(players[0]);
 
     if (players.length > 0) {
-      const lastname = players[0].name.split(" ");
-      setImage("/images/players/" + lastname[lastname.length - 1] + ".jpg");
+      setImage(imageUrlFromPlayerName(players[0].name));
     }
   }, [players]);
+
+  useEffect(() => {
+    if (Object.keys(selectedPlayer).length === 0) {
+      setBookingDataOfSelectedPlayer([]);
+    } else {
+      const filteredArray = total_booking_data.filter((subData) =>
+        subData.players.some((player) =>
+          player.toLowerCase().includes(selectedPlayer.name.toLowerCase())
+        )
+      );
+      setBookingDataOfSelectedPlayer(filteredArray.reverse());
+    }
+  }, [selectedPlayer, total_booking_data]);
 
   const closeDialog = () => {
     setSchdulingPlayers([]);
@@ -190,13 +217,7 @@ const Court = (props) => {
     if (players.length !== 0) {
       if (newValue !== null) {
         setSelectedPlayer(players.find((player) => player.name === newValue));
-
-        const lastname = newValue.split(" ");
-        setImage("/images/players/" + lastname[lastname.length - 1] + ".jpg");
-
-        if (newValue === "Juan Manuel Cerundolo") {
-          setImage("/images/players/Juan-Manuel_Cerundolo.jpg");
-        }
+        setImage(imageUrlFromPlayerName(newValue));
       }
     }
   };
@@ -212,7 +233,7 @@ const Court = (props) => {
   };
 
   const onSchedule = () => {
-    const initialDate = new Date(props.booking_date);
+    const initialDate = new Date(booking_date);
     const newDate = new Date(
       initialDate.getTime() + rownum * 30 * 60 * 1000 + 480 * 60 * 1000
     ); // start time : calculated by row(time is increased 30mins row by row, and the first row is 8:00)
@@ -228,15 +249,14 @@ const Court = (props) => {
       //
     }
 
-    const { displayedCourtNames } = currentPageToCourts(props.currentPage);
+    const { displayedCourtNames } = currentPageToCourts(currentPage);
     let balls = [];
     let reservation_type = "Practice";
+    const warmupsTrueCount = warmups.filter((one) => one === true).length;
 
     for (let index = 0; index < warmups.length; index++) {
       balls.push(false);
     }
-
-    const warmupsTrueCount = warmups.filter((one) => one === true).length;
 
     if (warmupsTrueCount > 0) {
       reservation_type = "Warm Up";
@@ -250,14 +270,14 @@ const Court = (props) => {
       reservation_type: reservation_type,
       players: schedulingPlayers,
       court_names: displayedCourtNames,
-      date: props.booking_date,
+      date: booking_date,
       warmups: warmups,
       balls: balls,
       option: selectedOption,
     };
 
     setIsBooking(true);
-    props.createBook(data, bookingSuccess);
+    createBook(data, bookingSuccess);
   };
 
   const addPlayer = () => {
@@ -267,16 +287,16 @@ const Court = (props) => {
 
       return;
     } else if (schedulingPlayers.length === 4) {
-      setOpen1(false);
+      setOpenMaxPlayerWarning(false);
 
       setTimeout(() => {
-        setOpen1(true);
+        setOpenMaxPlayerWarning(true);
       }, 200);
 
       return;
     }
 
-    let bFound = schedulingPlayers.find(
+    const bFound = schedulingPlayers.find(
       (element) => element === selectedPlayer.name
     );
 
@@ -316,7 +336,7 @@ const Court = (props) => {
       commentIds: commentIds,
     };
 
-    await props.getComment(data);
+    await getComment(data);
   };
 
   const onCommentDialogClose = () => {
@@ -353,39 +373,34 @@ const Court = (props) => {
 
   const onConfirm = () => {
     const id = dat[indexToBeDeleted]._id;
-    const { displayedCourtNames } = currentPageToCourts(props.currentPage);
+    const { displayedCourtNames } = currentPageToCourts(currentPage);
 
     const data = {
       id: id,
       court_names: displayedCourtNames,
-      date: props.booking_date,
+      date: booking_date,
     };
 
     setIsDeleting(true);
-    props.deleteBooking(data, deleteReservationSuccess);
+    deleteBooking(data, deleteReservationSuccess);
   };
 
   const onOptionChange = (event, option) => {
     setSelectedOption(option);
   };
 
-  // const avatarUrlFromName = (name) => {
-  //   const lastname = name.split(" ");
-  //   return "/images/players/" + lastname[lastname.length - 1] + ".jpg";
-  // };
-
   return (
     <>
       {isBooking && <LoadingOverlay text="Booking..." color="success" />}
       {isDeleting && <LoadingOverlay text="Deleting..." color="warning" />}
-      <Box>
+      <Box sx={{ borderBottom: `1px solid ${theme.palette.primary.light}` }}>
         <CustomAlert
           openState={open}
           text="You must select one player at least !"
           severity="warning"
         />
         <CustomAlert
-          openState={open1}
+          openState={openMaxPlayerWarning}
           text="You can book 4 players at max !"
           severity="warning"
         />
@@ -396,13 +411,15 @@ const Court = (props) => {
         />
         <CustomAlert
           openState={bookingDeleted}
-          text="The reservation was removed successfully!"
+          text="The reservation has been removed successfully!"
           severity="success"
         />
         <ConfirmationDialog
           open={openConfirmDialog}
           onClose={onCloseConfirm}
           onConfirm={onConfirm}
+          text="Are you sure you want to delete this reservation?"
+          title="Delete reservation"
         />
         <CommentsDialog
           open={openCommentDialog}
@@ -468,13 +485,6 @@ const Court = (props) => {
                         justifyContent="center"
                         py={0.5}
                       >
-                        {/* {dat[index].time_slot !== 1 && (
-                          <Avatar
-                            alt={player}
-                            src={avatarUrlFromName(player)}
-                          />
-                        )} */}
-
                         <Typography
                           variant="h6"
                           key={index}
@@ -486,9 +496,10 @@ const Court = (props) => {
                           <img
                             src="/images/ball.png"
                             width={30}
+                            height={30}
                             alt="ball"
-                            style={{ marginLeft: 5 }}
-                          ></img>
+                            style={{ marginLeft: 5, marginRight: 5 }}
+                          />
                         )}
                       </Box>
                     ))}
@@ -595,16 +606,7 @@ const Court = (props) => {
       </Box>
 
       {/* Create Reservation Dialog */}
-      <Dialog
-        open={openDialog}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          style: {
-            maxWidth: "800px",
-          },
-        }}
-      >
+      <Dialog open={openDialog} maxWidth="lg" fullWidth>
         <DialogTitle
           fontWeight={600}
           variant="h6"
@@ -619,158 +621,203 @@ const Court = (props) => {
             sx={{ verticalAlign: "text-bottom", marginLeft: 1 }}
           />
         </DialogTitle>
-        <DialogContent>
-          <Grid container color="primary.info">
-            <Grid item xs={6}>
-              <Stack spacing={1}>
-                <Autocomplete
-                  {...flatProps}
-                  value={selectedPlayer.name}
-                  onChange={onChangePlayer}
-                  isOptionEqualToValue={(option, value) => {
-                    return option.value === value.value;
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Players" variant="standard" />
-                  )}
-                />
-              </Stack>
-              <Grid container>
-                <Grid item xs={7}>
-                  <Typography
-                    marginTop={3}
-                    variant="h6"
-                    alignItems="center"
-                    color={colorScale[0]}
-                  >
-                    <CheckCircleIcon
-                      sx={{ marginRight: 1, verticalAlign: "text-bottom" }}
-                    />
-                    {selectedPlayer.name}
-                  </Typography>
-                  <Typography
-                    marginTop={2}
-                    marginBottom={2}
-                    alignItems="center"
-                    variant="h6"
-                    color={colorScale[1]}
-                  >
-                    <CheckCircleWithStyle />
-                    Seeded: {selectedPlayer.tournament_seed}
-                  </Typography>
-
-                  <Typography
-                    component={"span"}
-                    variant="h6"
-                    style={{ marginRight: 30 }}
-                    color={colorScale[2]}
-                  >
-                    <CheckCircleWithStyle />
-                    {selectedPlayer.natl}
-                  </Typography>
-
-                  <WorldFlag
-                    countryCode={alpha3ToAlph2[selectedPlayer.natl]}
-                    svg
-                    style={{ width: "3em", height: "3em" }}
-                  />
-                  <br />
-                </Grid>
-                <Grid item xs={5} textAlign="center">
-                  <img
-                    src={"/images/" + selectedPlayer.atp_wta + ".png"}
-                    style={{ width: 100, marginTop: 30 }}
-                    alt={selectedPlayer.atp_wta}
-                  />
-                </Grid>
-              </Grid>
-              <Typography variant="h6" marginTop={1} color={colorScale[3]}>
-                <CheckCircleWithStyle />
-                Handiness: {selectedPlayer.right_handed ? "Right" : "Left"}{" "}
-                <br />
-              </Typography>
-              <Typography variant="h6" marginTop={2} color={colorScale[4]}>
-                <CheckCircleWithStyle />
-                Status: {selectedPlayer.status}
-              </Typography>
-              <Typography variant="h6" marginTop={2} color={colorScale[5]}>
-                <CheckCircleWithStyle />
-                {selectedPlayer.singles_in ? "Singles In" : "Singles Out"}
-              </Typography>
-              <Typography variant="h6" marginTop={2} color={colorScale[6]}>
-                <CheckCircleWithStyle />
-                {selectedPlayer.doubles_in ? "Doubles In" : "Doubles Out"}
-              </Typography>
-              <Typography variant="h6" marginTop={2} color={colorScale[7]}>
-                <CheckCircleWithStyle />
-                {props.name}
-              </Typography>
-              <FormControl
-                variant="filled"
-                sx={{ minWidth: 120, marginTop: 2 }}
-              >
-                <InputLabel id="demo-simple-select-filled-label">
-                  Reservation Type
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  value={timeLength}
-                  onChange={onChangeTimeLength}
-                  label="timeLength"
-                >
-                  <MenuItem value={2}>1 hr</MenuItem>
-                  <MenuItem value={1}>30 mins</MenuItem>
-                  <MenuItem value={4}>2 hrs</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-              <Box sx={{ marginTop: 8, marginRight: 2, borderRadius: 1.5 }}>
-                <Typography variant="h6" textAlign="center">
-                  Selected Players:
-                </Typography>
-                <ChipsWithCloseButton
-                  chip={schedulingPlayers}
-                  handleDeleteChip={handleDeleteChip}
-                  ball={false}
-                  setParentWarmups={setWarmups}
-                  parentWarmups={warmups}
-                />
-              </Box>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={addPlayer}
-                  sx={{ marginTop: 2, marginBottom: 2 }}
-                >
-                  <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
-                  Add Player
-                </Button>
-                <Stack spacing={1} sx={{ width: "50%" }}>
+        <Scrollbars autoHeight autoHeightMax={500}>
+          <DialogContent>
+            <Grid container color="primary.info" spacing={3}>
+              <Grid item xs={7}>
+                <Stack spacing={1}>
                   <Autocomplete
-                    {...flatOptionProps}
-                    value={selectedOption}
-                    onChange={onOptionChange}
+                    {...flatProps}
+                    value={selectedPlayer.name}
+                    onChange={onChangePlayer}
                     isOptionEqualToValue={(option, value) => {
                       return option.value === value.value;
                     }}
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="Options"
+                        label="Players"
                         variant="standard"
                       />
                     )}
                   />
                 </Stack>
-              </div>
-              <ImageCard image_Url={image} title={selectedPlayer.name} />
+                <Grid container>
+                  <Grid item xs={4}>
+                    <Typography
+                      marginTop={3}
+                      variant="h6"
+                      alignItems="center"
+                      color={colorScale[0]}
+                    >
+                      <CheckCircleIcon
+                        sx={{ marginRight: 1, verticalAlign: "text-bottom" }}
+                      />
+                      {selectedPlayer.name}
+                    </Typography>
+                    <Typography
+                      marginTop={2}
+                      marginBottom={2}
+                      alignItems="center"
+                      variant="h6"
+                      color={colorScale[1]}
+                    >
+                      <CheckCircleWithStyle />
+                      Seeded: {selectedPlayer.tournament_seed}
+                    </Typography>
+
+                    <Typography
+                      component={"span"}
+                      variant="h6"
+                      style={{ marginRight: 30 }}
+                      color={colorScale[2]}
+                    >
+                      <CheckCircleWithStyle />
+                      {selectedPlayer.natl}
+                    </Typography>
+
+                    <WorldFlag
+                      countryCode={alpha3ToAlph2[selectedPlayer.natl]}
+                      svg
+                      style={{ width: "3em", height: "3em" }}
+                    />
+                    <br />
+                    <Typography
+                      variant="h6"
+                      marginTop={1}
+                      color={colorScale[3]}
+                    >
+                      <CheckCircleWithStyle />
+                      Handiness:{" "}
+                      {selectedPlayer.right_handed ? "Right" : "Left"} <br />
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      marginTop={2}
+                      color={colorScale[4]}
+                    >
+                      <CheckCircleWithStyle />
+                      Status: {selectedPlayer.status}
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      marginTop={2}
+                      color={colorScale[5]}
+                    >
+                      <CheckCircleWithStyle />
+                      {selectedPlayer.singles_in ? "Singles In" : "Singles Out"}
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      marginTop={2}
+                      color={colorScale[6]}
+                    >
+                      <CheckCircleWithStyle />
+                      {selectedPlayer.doubles_in ? "Doubles In" : "Doubles Out"}
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      marginTop={2}
+                      color={colorScale[7]}
+                    >
+                      <CheckCircleWithStyle />
+                      {name}
+                    </Typography>
+                    <img
+                      src={"/images/" + selectedPlayer.atp_wta + ".png"}
+                      style={{ width: 100, marginTop: 30, minWidth: 120 }}
+                      alt={selectedPlayer.atp_wta}
+                    />
+                    <FormControl
+                      variant="filled"
+                      sx={{ minWidth: 120, marginTop: 2 }}
+                    >
+                      <InputLabel id="demo-simple-select-filled-label">
+                        Reservation Type
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-filled-label"
+                        id="demo-simple-select-filled"
+                        value={timeLength}
+                        onChange={onChangeTimeLength}
+                        label="timeLength"
+                      >
+                        <MenuItem value={2}>1 hr</MenuItem>
+                        <MenuItem value={1}>30 mins</MenuItem>
+                        <MenuItem value={4}>2 hrs</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <br />
+                  </Grid>
+                  <Grid item xs={8} textAlign="center" paddingTop={3}>
+                    <Scrollbars>
+                      <div style={{ maxHeight: 300 }}>
+                        {bookingDataOfSelectedPlayer.map((item, index) => (
+                          <GlobalSearchbarResultItem
+                            data={item}
+                            index={index}
+                            key={index}
+                            clickable={false}
+                          />
+                        ))}
+                      </div>
+                    </Scrollbars>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={5}>
+                <Box sx={{ marginRight: 2, borderRadius: 1.5 }}>
+                  <Typography variant="h6" textAlign="center">
+                    Selected Players:
+                  </Typography>
+                  <ChipsWithCloseButton
+                    chip={schedulingPlayers}
+                    handleDeleteChip={handleDeleteChip}
+                    ball={false}
+                    setParentWarmups={setWarmups}
+                    parentWarmups={warmups}
+                  />
+                </Box>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={addPlayer}
+                    sx={{ marginTop: 2, marginBottom: 2 }}
+                  >
+                    <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
+                    Add Player
+                  </Button>
+                  <Stack spacing={1} sx={{ width: "50%" }}>
+                    <Autocomplete
+                      {...flatOptionProps}
+                      value={selectedOption}
+                      onChange={onOptionChange}
+                      isOptionEqualToValue={(option, value) => {
+                        return option.value === value.value;
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Options"
+                          variant="standard"
+                        />
+                      )}
+                    />
+                  </Stack>
+                </div>
+                <ImageCard
+                  image_Url={image}
+                  title={selectedPlayer.name}
+                  sx={{ width: 300, height: 300 }}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions sx={{ paddingRight: 5, paddingBottom: 3 }}>
+          </DialogContent>
+        </Scrollbars>
+        <DialogActions sx={{ paddingRight: 2.4, paddingBottom: 3 }}>
           <Button onClick={closeDialog} variant="outlined">
             Close
           </Button>
@@ -800,6 +847,7 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
   booking_date: state.booking.booking_date,
   currentPage: state.page.currentPage,
+  total_booking_data: state.booking.total_booking_data,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Court);

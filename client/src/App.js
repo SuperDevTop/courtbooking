@@ -12,37 +12,20 @@ import Register from "./pages/register";
 import Login from "./pages/login";
 import DrawerAppBar from "./components/layout/navbar";
 import Dashboard from "./pages/dashboard";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Footer from "./components/layout/footer";
 import setAuthToken from "./utils/setAuthToken";
-import { useDispatch } from "react-redux";
-import { loadUser } from "./actions/authActions";
 import jwtDecode from "jwt-decode";
 import PrivateRoute from "./components/routes/privateRoute";
-// import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { logOut } from "./actions/authActions";
 import ThemeProvider from "./theme/ThemeProvider";
 import ApplicationsMessenger from "./components/chat";
+import Scrollbars from "react-custom-scrollbars-2";
+import About from "./pages/about";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useDispatch } from "react-redux";
+import { loadUser } from "./actions/authActions";
+import { logOut } from "./actions/authActions";
 import { initiateSocketConnection } from "./utils/socketService";
-
-// const theme = createTheme({
-//   palette: {
-//     primary: {
-//       main: '#673AB7',
-//       dark: '#512DA8',
-//       light: '#D1C4E9',
-//       text: '##212121',
-//       accent: '#7C4DFF',
-//       divider: '#BDBDBD',
-//       info: '#3f055d',
-//     },
-//     secondary: {
-//       main: '#00ff00',
-//       text: '#757575'
-//     },
-//   },
-// });
 
 const App = () => {
   const dispatch = useDispatch();
@@ -70,8 +53,8 @@ const App = () => {
   return (
     <Router>
       <ThemeProvider>
-        {/* <ThemeProvider theme={theme}> */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Scrollbars>
           <DrawerAppBar />
           <Container
             maxWidth="1536"
@@ -85,6 +68,7 @@ const App = () => {
               ></Route>
               <Route exact path="/register" element={<Register />}></Route>
               <Route exact path="/login" element={<Login />}></Route>
+              <Route exact path="/about" element={<About />}></Route>
               <Route
                 exact
                 path="/dashboard"
@@ -98,6 +82,7 @@ const App = () => {
             </Routes>
           </Container>
           <Footer />
+          </Scrollbars>
         </LocalizationProvider>
       </ThemeProvider>
     </Router>

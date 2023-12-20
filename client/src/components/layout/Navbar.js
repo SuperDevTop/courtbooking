@@ -14,31 +14,29 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import setAuthToken from "../../utils/setAuthToken";
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import { connect } from "react-redux";
 import { logOut } from "../../actions/authActions";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import setAuthToken from "../../utils/setAuthToken";
 import { Avatar } from "@mui/material";
+
+import { getInitials } from "../../utils/usefulFuncs";
 import AccountPopover from "../account/accountPopover";
-// import { useTheme } from "@emotion/react";
 
 const drawerWidth = 240;
 let navItems = [];
 
 function DrawerAppBar(props) {
-  // const theme = useTheme();
-  // const { primary, secondary } = theme.palette;
-
   if (props.isAuthenticated) {
     navItems = ["About", "Messages"];
   } else {
     navItems = [];
   }
 
-  const { window } = props;
+  const { window, user } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
@@ -71,8 +69,8 @@ function DrawerAppBar(props) {
       </Typography>
       <Divider />
       <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
+        {navItems.map((item, index) => (
+          <ListItem key={index} disablePadding>
             <ListItemButton sx={{ textAlign: "center" }}>
               <ListItemText primary={item} />
             </ListItemButton>
@@ -86,15 +84,12 @@ function DrawerAppBar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box
-      display={props.isAuthenticated ? "flex" : "none"}
-    >
+    <Box display={props.isAuthenticated ? "flex" : "none"}>
       <CssBaseline />
       <AppBar
         component="nav"
         position="static"
-        sx={{ color: "black", padding:2 }}
-
+        sx={{ color: "black", padding: 2 }}
       >
         <Toolbar>
           <IconButton
@@ -120,7 +115,7 @@ function DrawerAppBar(props) {
           <Typography
             variant="h6"
             component="div"
-            color='white'
+            color="white"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
             <i>CourtBooking</i>
@@ -132,8 +127,8 @@ function DrawerAppBar(props) {
                 color="primary"
                 sx={{
                   marginRight: 2,
+                  border: "none",
                 }}
-                variant="outlined"
               >
                 <Typography variant="h6" fontSize={17}>
                   {item === "Logout" ? (
@@ -157,12 +152,14 @@ function DrawerAppBar(props) {
             ))}
           </Box>
           <Avatar
-            src="/images/avatars/default.png"
+            src={user && user.avatar}
             sx={{ width: 35, height: 35, cursor: "pointer" }}
             onClick={(event) => {
               setAnchorEl(event.currentTarget);
             }}
-          />
+          >
+            {getInitials(user.name)}
+          </Avatar>
           <AccountPopover
             open={popoverOpen}
             onClose={() => {
@@ -206,6 +203,7 @@ DrawerAppBar.propTypes = {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps)(DrawerAppBar);

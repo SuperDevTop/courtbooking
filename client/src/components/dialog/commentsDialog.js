@@ -15,6 +15,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
+import { connect } from "react-redux";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -23,13 +24,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
-// import EditIcon from "@mui/icons-material/Edit";
-import { connect } from "react-redux";
+import CommentIcon from "@mui/icons-material/Comment";
 
 import { addComment, deleteComment } from "../../actions/bookingAction";
 import CustomAlert from "../customAlert";
 import ConfirmDialog from "./confirmDialog";
-import LoadingOverlay from "../layout/loadingOverlay";
+import LoadingOverlay from "./loadingOverlay";
 
 const CommentsDialog = ({
   open,
@@ -125,7 +125,11 @@ const CommentsDialog = ({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
-      <DialogTitle textAlign="center">Comments</DialogTitle>
+      <DialogTitle textAlign="center">
+        <CommentIcon sx={{ verticalAlign: "bottom", marginRight: 1 }} />
+        Comments
+        <CommentIcon sx={{ verticalAlign: "bottom", marginLeft: 1 }} />
+      </DialogTitle>
       <DialogContent sx={{ display: "flex", alignItems: "center" }}>
         <Grid container>
           <Grid item xs={4}>
@@ -219,7 +223,6 @@ const CommentsDialog = ({
                             onDelete(row);
                           }}
                         />
-                        {/* <EditIcon sx={{ color: "greenyellow" }} /> */}
                       </TableCell>
                     </TableRow>
                   ))}

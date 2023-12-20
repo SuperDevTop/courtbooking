@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
 import {
   TextField,
   Button,
@@ -7,11 +8,10 @@ import {
   FormHelperText,
   Avatar,
   Grid,
+  Box,
+  Paper,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { connect } from "react-redux";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -81,8 +81,7 @@ const Login = (props) => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            // py: 2,
-            p:2
+            p: 2,
           }}
         >
           <Avatar sx={{ m: 1 }}>

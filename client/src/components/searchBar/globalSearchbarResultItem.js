@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Box, Typography } from "@mui/material";
-import { Grid } from "@mui/material";
+import { Box, Typography, Grid } from "@mui/material";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import { connect } from "react-redux";
 
-import EditDialog from '../dialog/editDialog'
+import EditDialog from "../dialog/editDialog";
 
-const GlobalSearchbarResultItem = ({ data, index, players }) => {
+const GlobalSearchbarResultItem = ({ data, index, players, clickable }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const onCloseDialog = () => {
     setOpenDialog(false);
@@ -25,7 +24,7 @@ const GlobalSearchbarResultItem = ({ data, index, players }) => {
   return (
     <>
       <Box
-        onClick={() => handleClick(data)}
+        onClick={() => clickable && handleClick(data)}
         fontSize={18}
         sx={{
           "&:hover": {
@@ -46,7 +45,8 @@ const GlobalSearchbarResultItem = ({ data, index, players }) => {
             {index + 1}
           </Grid>
           <Grid item xs={3}>
-            {data.start_time.substring(11, 16)} (GMT)<br />
+            {data.start_time.substring(11, 16)} (GMT)
+            <br />
             {data.start_time.substring(0, 10)}
           </Grid>
           <Grid item xs={4} textAlign={"start"} pl={2}>
