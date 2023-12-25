@@ -13,12 +13,11 @@ const Footer = ({ isAuthenticated }) => {
   const location = useLocation();
 
   useEffect(() => {
-    setIsMessagesPage(location.pathname.includes("Messages"));
+    setIsMessagesPage(location.pathname.includes("messages"));
   }, [location]);
 
   return isMessagesPage ? null : (
     <Box
-      // bgcolor= {primary.dark}
       py={2}
       color="white"
       textAlign="center"
@@ -27,8 +26,8 @@ const Footer = ({ isAuthenticated }) => {
     >
       <Grid container alignItems="center" color="secondary.main">
         <Grid item xs={4}>
-          6, 345, 450 <br></br>
-          Registered Players
+          <span style={{ fontWeight: 800 }}>34, 450 </span> <br></br>
+          <span style={{ fontWeight: 500 }}>Registered Users</span>
         </Grid>
         <Grid item xs={4}>
           Copyright @ {currentYear} BookingCourt

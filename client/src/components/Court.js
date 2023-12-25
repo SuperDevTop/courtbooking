@@ -36,9 +36,10 @@ import EditDialog from "./dialog/editDialog";
 import LoadingOverlay from "./dialog/loadingOverlay";
 import ConfirmationDialog from "./dialog/confirmDialog";
 import CommentsDialog from "./dialog/commentsDialog";
-import GlobalSearchbarResultItem from "./searchBar/globalSearchbarResultItem";
 import Scrollbars from "react-custom-scrollbars-2";
 import imageUrlFromPlayerName from "../utils/usefulFuncs";
+import MyBookingDataDialog from "./dialog/myBookingData";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { createBook, deleteBooking } from "../actions/bookingAction";
 import { alpha3ToAlph2 } from "../utils/countryCode";
 import { colorScale } from "../utils/gradientColor";
@@ -73,6 +74,7 @@ const Court = (props) => {
   const [isBooking, setIsBooking] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [openMyBookingDataDialog, setOpenMyBookingDataDialog] = useState(false);
   const [indexToBeDeleted, setIndexToBeDeleted] = useState(0);
   const [openCommentDialog, setOpenCommentDialog] = useState(false);
   const [commentPlayers, setCommentPlayers] = useState([]);
@@ -624,7 +626,7 @@ const Court = (props) => {
         <Scrollbars autoHeight autoHeightMax={500}>
           <DialogContent>
             <Grid container color="primary.info" spacing={3}>
-              <Grid item xs={7}>
+              <Grid item xs={8}>
                 <Stack spacing={1}>
                   <Autocomplete
                     {...flatProps}
@@ -642,8 +644,8 @@ const Court = (props) => {
                     )}
                   />
                 </Stack>
-                <Grid container>
-                  <Grid item xs={4}>
+                <Grid container spacing={1}>
+                  <Grid item xs={3}>
                     <Typography
                       marginTop={3}
                       variant="h6"
@@ -723,102 +725,151 @@ const Court = (props) => {
                       <CheckCircleWithStyle />
                       {name}
                     </Typography>
-                    <img
-                      src={"/images/" + selectedPlayer.atp_wta + ".png"}
-                      style={{ width: 100, marginTop: 30, minWidth: 120 }}
-                      alt={selectedPlayer.atp_wta}
-                    />
-                    <FormControl
-                      variant="filled"
-                      sx={{ minWidth: 120, marginTop: 2 }}
-                    >
-                      <InputLabel id="demo-simple-select-filled-label">
-                        Reservation Type
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-filled-label"
-                        id="demo-simple-select-filled"
-                        value={timeLength}
-                        onChange={onChangeTimeLength}
-                        label="timeLength"
-                      >
-                        <MenuItem value={2}>1 hr</MenuItem>
-                        <MenuItem value={1}>30 mins</MenuItem>
-                        <MenuItem value={4}>2 hrs</MenuItem>
-                      </Select>
-                    </FormControl>
                     <br />
                   </Grid>
-                  <Grid item xs={8} textAlign="center" paddingTop={3}>
-                    <Scrollbars>
-                      <div style={{ maxHeight: 300 }}>
-                        {bookingDataOfSelectedPlayer.map((item, index) => (
-                          <GlobalSearchbarResultItem
-                            data={item}
-                            index={index}
-                            key={index}
-                            clickable={false}
-                          />
-                        ))}
-                      </div>
-                    </Scrollbars>
+                  <Grid item xs={5} marginTop={3}>
+                    <ImageCard image_Url={image} title={selectedPlayer.name} />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={4}
+                    marginTop={4}
+                    paddingRight={3}
+                    sx={{ paddingLeft: "53px !important" }}
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={addPlayer}
+                      sx={{
+                        marginBottom: 2,
+                        paddingTop: 1.8,
+                        paddingBottom: 1.8,
+                      }}
+                      fullWidth
+                    >
+                      <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
+                      Add Player
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        setOpenMyBookingDataDialog(true);
+                      }}
+                      sx={{
+                        marginTop: 2,
+                        marginBottom: 2,
+                        paddingTop: 1.8,
+                        paddingBottom: 1.8,
+                      }}
+                      fullWidth
+                    >
+                      <VisibilityIcon sx={{ marginRight: 1 }} />
+                      View Books
+                    </Button>
+                    {/* <img
+                      src={"/images/" + selectedPlayer.atp_wta + ".png"}
+                      style={{ width: 100, minWidth: "100%" }}
+                      alt={selectedPlayer.atp_wta}
+                    /> */}
+
+                    <MyBookingDataDialog
+                      open={openMyBookingDataDialog}
+                      title="Booking Plans"
+                      onClose={() => {
+                        setOpenMyBookingDataDialog(false);
+                      }}
+                      bookingDataOfSelectedPlayer={bookingDataOfSelectedPlayer}
+                    />
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={5}>
-                <Box sx={{ marginRight: 2, borderRadius: 1.5 }}>
-                  <Typography variant="h6" textAlign="center">
-                    Selected Players:
-                  </Typography>
-                  <ChipsWithCloseButton
-                    chip={schedulingPlayers}
-                    handleDeleteChip={handleDeleteChip}
-                    ball={false}
-                    setParentWarmups={setWarmups}
-                    parentWarmups={warmups}
-                  />
-                </Box>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={addPlayer}
-                    sx={{ marginTop: 2, marginBottom: 2 }}
+              <Grid item xs={4} paddingTop={5}>
+                <Box sx={{ marginRight: 2, borderRadius: 1.5 }} marginTop={2}>
+                  <fieldset
+                    style={{
+                      border: " 1px solid grey",
+                      borderRadius: "10px",
+                    }}
                   >
-                    <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
-                    Add Player
-                  </Button>
-                  <Stack spacing={1} sx={{ width: "50%" }}>
-                    <Autocomplete
-                      {...flatOptionProps}
-                      value={selectedOption}
-                      onChange={onOptionChange}
-                      isOptionEqualToValue={(option, value) => {
-                        return option.value === value.value;
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Options"
-                          variant="standard"
+                    <legend>Settings</legend>
+                    <Box
+                      display="flex"
+                      alignItems="flex-end"
+                      justifyContent="space-around"
+                    >
+                      <FormControl
+                        variant="filled"
+                        sx={{ minWidth: 120, marginTop: 2 }}
+                      >
+                        <InputLabel id="demo-simple-select-filled-label">
+                          Reservation Type
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-filled-label"
+                          id="demo-simple-select-filled"
+                          value={timeLength}
+                          onChange={onChangeTimeLength}
+                          label="timeLength"
+                        >
+                          <MenuItem value={2}>1 hr</MenuItem>
+                          <MenuItem value={1}>30 mins</MenuItem>
+                          <MenuItem value={4}>2 hrs</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <Stack spacing={1} sx={{ width: "50%" }}>
+                        <Autocomplete
+                          {...flatOptionProps}
+                          value={selectedOption}
+                          onChange={onOptionChange}
+                          isOptionEqualToValue={(option, value) => {
+                            return option.value === value.value;
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Options"
+                              variant="standard"
+                            />
+                          )}
                         />
-                      )}
+                      </Stack>
+                    </Box>
+                  </fieldset>
+
+                  {/* <Typography
+                    variant="h5"
+                    textAlign="center"
+                    marginTop={4}
+                    marginBottom={2}
+                  >
+                    Selected Players:
+                  </Typography> */}
+                  <fieldset style={{ minHeight: 300, borderRadius: '10px', marginTop: '20px', border:'solid 1px grey' }}>
+                    <legend>Selected Players</legend>
+                    <ChipsWithCloseButton
+                      chip={schedulingPlayers}
+                      handleDeleteChip={handleDeleteChip}
+                      ball={false}
+                      setParentWarmups={setWarmups}
+                      parentWarmups={warmups}
                     />
-                  </Stack>
-                </div>
-                <ImageCard
-                  image_Url={image}
-                  title={selectedPlayer.name}
-                  sx={{ width: 300, height: 300 }}
-                />
+                  </fieldset>
+                </Box>
               </Grid>
             </Grid>
           </DialogContent>
         </Scrollbars>
-        <DialogActions sx={{ paddingRight: 2.4, paddingBottom: 3 }}>
-          <Button onClick={closeDialog} variant="outlined">
+        <DialogActions sx={{ paddingRight: 4.4, paddingBottom: 4 }}>
+          <Button
+            onClick={closeDialog}
+            variant="outlined"
+            sx={{ marginRight: 1.2 }}
+          >
             Close
           </Button>
           <Button onClick={onSchedule} variant="outlined">

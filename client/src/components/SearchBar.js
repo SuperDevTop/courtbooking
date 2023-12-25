@@ -1,6 +1,7 @@
 import { Box, InputAdornment, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { useTheme } from "@emotion/react";
 import SearchIcon from "@mui/icons-material/Search";
 import Scrollbars from "react-custom-scrollbars-2";
 
@@ -9,6 +10,7 @@ import GlobalSearchbarResultItem from "./searchBar/globalSearchbarResultItem";
 
 const SearchBar = ({ updateSearchingPlayer, total_booking_data }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const theme = useTheme();
 
   const handleChange = (event) => {
     const { value } = event.target;
@@ -53,18 +55,16 @@ const SearchBar = ({ updateSearchingPlayer, total_booking_data }) => {
       />
       {filteredData.length > 0 && (
         <Box
+          backgroundColor={theme.palette.background.default}
           marginLeft="8.5%"
           width="41%"
           position="absolute"
           zIndex={10}
           borderRadius={1}
-          color="black"
+          color="white"
           border="solid 1px grey"
           maxHeight={400}
           overflow="auto"
-          sx={{
-            backgroundColor: "white",
-          }}
         >
           <Scrollbars autoHeightMax={300} autoHeight autoHide>
             {filteredData.map((item, index) => (

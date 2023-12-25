@@ -14,13 +14,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import setAuthToken from "../../utils/setAuthToken";
+import InfoIcon from "@mui/icons-material/Info";
+import ChatIcon from "@mui/icons-material/Chat";
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import { connect } from "react-redux";
-import { logOut } from "../../actions/authActions";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { Avatar } from "@mui/material";
 
 import { getInitials } from "../../utils/usefulFuncs";
@@ -31,7 +29,7 @@ let navItems = [];
 
 function DrawerAppBar(props) {
   if (props.isAuthenticated) {
-    navItems = ["About", "Messages"];
+    navItems = ["messages", "about"];
   } else {
     navItems = [];
   }
@@ -39,22 +37,11 @@ function DrawerAppBar(props) {
   const { window, user } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const dispatch = useDispatch();
-  const history = useNavigate();
 
   const popoverOpen = Boolean(anchorEl);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
-  };
-
-  const onLogOut = () => {
-    if (localStorage.token) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-    }
-    setAuthToken(false);
-    dispatch(logOut(history));
   };
 
   const drawer = (
@@ -112,44 +99,57 @@ function DrawerAppBar(props) {
               }}
             />
           </Link>
+
           <Typography
             variant="h6"
             component="div"
             color="white"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            <i>CourtBooking</i>
+            <a
+              href="/dashboard"
+              style={{ color: "white", textDecoration: "none" }}
+            >
+              <i>CourtBooking</i>
+            </a>
           </Typography>
+
           <Box sx={{ display: { xs: "none", sm: "block" }, gap: 2 }}>
-            {navItems.map((item) => (
-              <Button
-                key={item}
-                color="primary"
-                sx={{
-                  marginRight: 2,
-                  border: "none",
-                }}
-              >
-                <Typography variant="h6" fontSize={17}>
-                  {item === "Logout" ? (
-                    <span
-                      fontFamily="cursive"
-                      onClick={onLogOut}
-                      style={{ textDecoration: "none", color: "inherit" }}
-                    >
-                      {item}
-                    </span>
-                  ) : (
-                    <NavLink
-                      to={`/${item}`}
-                      style={{ textDecoration: "none", color: "inherit" }}
-                    >
-                      {item}
-                    </NavLink>
-                  )}
-                </Typography>
-              </Button>
-            ))}
+            <Button
+              sx={{
+                marginRight: 1,
+                border: "none",
+                color: "white",
+              }}
+            >
+              <ChatIcon sx={{ marginRight: 0.5 }} />
+              <Typography variant="h6" fontSize={17}>
+                <NavLink
+                  to="/messages"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Chat
+                </NavLink>
+              </Typography>
+            </Button>
+            <Button
+              color="primary"
+              sx={{
+                marginRight: 2,
+                border: "none",
+                color: "white",
+              }}
+            >
+              <InfoIcon sx={{ marginRight: 0.5 }} />
+              <Typography variant="h6" fontSize={17}>
+                <NavLink
+                  to="/about"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  About
+                </NavLink>
+              </Typography>
+            </Button>
           </Box>
           <Avatar
             src={user && user.avatar}
