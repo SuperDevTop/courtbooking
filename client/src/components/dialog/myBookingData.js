@@ -56,7 +56,7 @@ function MyBookingDataDialog({
     );
 
     data1 = data1.map((obj, index) => {
-      return { ...obj, id: index + 1 };
+      return { ...obj, id: index + 1, start_time: obj.start_time.substring(11, 19) };
     });
 
     var tomorrowDate = new Date(today.getTime() + 86400000);
@@ -109,17 +109,6 @@ function MyBookingDataDialog({
               >
                 Today
               </Typography>
-              {/* {todayData.map((item, index) => (
-                <Grid container spacing={2} key={index}>
-                  <Grid item xs={6}>
-                    {item.start_time.substring(11, 19)}
-                  </Grid>
-                  <Grid item xs={6} display="flex" alignItems="center">
-                    <StadiumIcon color="white" sx={{ marginRight: 1 }} />
-                    {item.court_name}
-                  </Grid>
-                </Grid>
-              ))} */}
               <DataGrid
                 rows={todayData}
                 columns={columns}
@@ -169,7 +158,7 @@ function MyBookingDataDialog({
           </Grid>
         </Scrollbars>
       </DialogContent>
-      <DialogActions sx={{ marginRight: 1.5, marginBottom: 1.5 }}>
+      <DialogActions sx={{ marginRight: 1.8, marginBottom: 1.5 }}>
         <Button
           onClick={onClose}
           color="primary"

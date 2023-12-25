@@ -83,6 +83,7 @@ const Court = (props) => {
   const [bookingId, setBookingId] = useState(null);
   const [bookingDataOfSelectedPlayer, setBookingDataOfSelectedPlayer] =
     useState([]);
+  const [outofdate, setOutofdate] = useState(false);
 
   const {
     court,
@@ -204,6 +205,20 @@ const Court = (props) => {
       setBookingDataOfSelectedPlayer(filteredArray.reverse());
     }
   }, [selectedPlayer, total_booking_data]);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const aimDate = new Date(booking_date);
+
+    const currentOnlyDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const providedOnlyDate = new Date(aimDate.getFullYear(), aimDate.getMonth(), aimDate.getDate());
+
+    if (currentOnlyDate > providedOnlyDate) {
+      setOutofdate(true);
+    } else {
+      setOutofdate(false)
+    }
+  }, [booking_date]);
 
   const closeDialog = () => {
     setSchdulingPlayers([]);
@@ -516,7 +531,7 @@ const Court = (props) => {
                 </>
               ) : (
                 <>
-                  {court && !court.blocked && (
+                  {court && !court.blocked && !outofdate && (
                     <>
                       Available
                       <Box my={3.5} textAlign="center">
@@ -541,7 +556,7 @@ const Court = (props) => {
                       </Box>
                     </>
                   )}
-                  {court && court.blocked && (
+                  {court && (court.blocked || outofdate) && (
                     <div
                       style={{
                         background:
@@ -849,7 +864,14 @@ const Court = (props) => {
                   >
                     Selected Players:
                   </Typography> */}
-                  <fieldset style={{ minHeight: 300, borderRadius: '10px', marginTop: '20px', border:'solid 1px grey' }}>
+                  <fieldset
+                    style={{
+                      minHeight: 300,
+                      borderRadius: "10px",
+                      marginTop: "20px",
+                      border: "solid 1px grey",
+                    }}
+                  >
                     <legend>Selected Players</legend>
                     <ChipsWithCloseButton
                       chip={schedulingPlayers}
@@ -864,7 +886,7 @@ const Court = (props) => {
             </Grid>
           </DialogContent>
         </Scrollbars>
-        <DialogActions sx={{ paddingRight: 4.4, paddingBottom: 4 }}>
+        <DialogActions sx={{ paddingRight: 4.6, paddingBottom: 4 }}>
           <Button
             onClick={closeDialog}
             variant="outlined"
