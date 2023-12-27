@@ -638,7 +638,7 @@ const Court = (props) => {
             sx={{ verticalAlign: "text-bottom", marginLeft: 1 }}
           />
         </DialogTitle>
-        <Scrollbars autoHeight autoHeightMax={500}>
+        <Scrollbars autoHeight autoHeightMax={450}>
           <DialogContent>
             <Grid container color="primary.info" spacing={3}>
               <Grid item xs={8}>
@@ -879,6 +879,7 @@ const Court = (props) => {
                       ball={false}
                       setParentWarmups={setWarmups}
                       parentWarmups={warmups}
+                      onChangePlayer={onChangePlayer}
                     />
                   </fieldset>
                 </Box>
