@@ -638,7 +638,7 @@ const Court = (props) => {
             sx={{ verticalAlign: "text-bottom", marginLeft: 1 }}
           />
         </DialogTitle>
-        <Scrollbars autoHeight autoHeightMax={450}>
+        <Scrollbars autoHeight autoHeightMin={400}>
           <DialogContent>
             <Grid container color="primary.info" spacing={3}>
               <Grid item xs={8}>
