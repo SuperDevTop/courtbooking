@@ -638,7 +638,7 @@ const Court = (props) => {
             sx={{ verticalAlign: "text-bottom", marginLeft: 1 }}
           />
         </DialogTitle>
-        <Scrollbars autoHeight autoHeightMin={400}>
+        <Scrollbars autoHeight autoHeightMin={450}>
           <DialogContent>
             <Grid container color="primary.info" spacing={3}>
               <Grid item xs={8}>
@@ -887,7 +887,7 @@ const Court = (props) => {
             </Grid>
           </DialogContent>
         </Scrollbars>
-        <DialogActions sx={{ paddingRight: 4.6, paddingBottom: 4 }}>
+        <DialogActions sx={{ paddingRight: 4.6, paddingBottom: 3 }}>
           <Button
             onClick={closeDialog}
             variant="outlined"

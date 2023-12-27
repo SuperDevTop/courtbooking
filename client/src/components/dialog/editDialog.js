@@ -265,7 +265,7 @@ const EditDialog = ({
         <span style={{ fontSize: 25 }}>Edit Reservation</span>
         <EditNoteIcon sx={{ verticalAlign: "text-bottom", marginLeft: 1 }} />
       </DialogTitle>
-      <Scrollbars autoHeight autoHeightMax={500}>
+      <Scrollbars autoHeight autoHeightMin={450}>
         <DialogContent>
           <Grid container color="primary.info" spacing={2}>
             <Grid item xs={7}>
