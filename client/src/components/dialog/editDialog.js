@@ -34,7 +34,7 @@ import CustomAlert from "../customAlert";
 import ImageCard from "../imageCard";
 import LoadingOverlay from "./loadingOverlay";
 // import GlobalSearchbarResultItem from "../searchBar/globalSearchbarResultItem";
-import Scrollbars from "react-custom-scrollbars-2";
+// import Scrollbars from "react-custom-scrollbars-2";
 import imageUrlFromPlayerName from "../../utils/usefulFuncs";
 import MyBookingDataDialog from "./myBookingData";
 
@@ -265,8 +265,8 @@ const EditDialog = ({
         <span style={{ fontSize: 25 }}>Edit Reservation</span>
         <EditNoteIcon sx={{ verticalAlign: "text-bottom", marginLeft: 1 }} />
       </DialogTitle>
-      <Scrollbars autoHeight autoHeightMin={450}>
-        <DialogContent>
+      {/* <Scrollbars autoHeight autoHeightMin={450}> */}
+        <DialogContent style={{ paddingBottom: 0 }}>
           <Grid container color="primary.info" spacing={2}>
             <Grid item xs={7}>
               <Stack spacing={1}>
@@ -348,7 +348,13 @@ const EditDialog = ({
                   />{" "}
                   <br></br> */}
                 </Grid>
-                <Grid item xs={5} textAlign="center" paddingTop={2}>
+                <Grid
+                  item
+                  xs={5}
+                  textAlign="center"
+                  paddingTop={2}
+                  paddingLeft={2}
+                >
                   <ImageCard
                     image_Url={image}
                     title={selectedPlayer}
@@ -438,7 +444,7 @@ const EditDialog = ({
                   >
                     <FormControl
                       variant="filled"
-                      sx={{ minWidth: 120, marginTop: 2 }}
+                      sx={{ minWidth: 120 }}
                     >
                       <InputLabel id="demo-simple-select-filled-label">
                         Reservation Type
@@ -478,7 +484,7 @@ const EditDialog = ({
                   style={{
                     border: "1px solid grey",
                     borderRadius: "10px",
-                    minHeight: "250px",
+                    minHeight: "230px",
                     marginTop: "20px",
                   }}
                 >
@@ -499,7 +505,7 @@ const EditDialog = ({
             </Grid>
           </Grid>
         </DialogContent>
-      </Scrollbars>
+      {/* </Scrollbars> */}
       <DialogActions sx={{ paddingRight: 2.7, paddingBottom: 2 }}>
         <Button onClick={onClose} variant="outlined">
           Close

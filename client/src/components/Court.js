@@ -36,7 +36,7 @@ import EditDialog from "./dialog/editDialog";
 import LoadingOverlay from "./dialog/loadingOverlay";
 import ConfirmationDialog from "./dialog/confirmDialog";
 import CommentsDialog from "./dialog/commentsDialog";
-import Scrollbars from "react-custom-scrollbars-2";
+// import Scrollbars from "react-custom-scrollbars-2";
 import imageUrlFromPlayerName from "../utils/usefulFuncs";
 import MyBookingDataDialog from "./dialog/myBookingData";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -210,13 +210,21 @@ const Court = (props) => {
     const currentDate = new Date();
     const aimDate = new Date(booking_date);
 
-    const currentOnlyDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    const providedOnlyDate = new Date(aimDate.getFullYear(), aimDate.getMonth(), aimDate.getDate());
+    const currentOnlyDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate()
+    );
+    const providedOnlyDate = new Date(
+      aimDate.getFullYear(),
+      aimDate.getMonth(),
+      aimDate.getDate()
+    );
 
     if (currentOnlyDate > providedOnlyDate) {
       setOutofdate(true);
     } else {
-      setOutofdate(false)
+      setOutofdate(false);
     }
   }, [booking_date]);
 
@@ -623,23 +631,23 @@ const Court = (props) => {
       </Box>
 
       {/* Create Reservation Dialog */}
-      <Dialog open={openDialog} maxWidth="lg" fullWidth>
+      <Dialog open={openDialog} maxWidth="lg">
         <DialogTitle
           fontWeight={600}
           variant="h6"
-          marginTop={2}
+          marginTop={1}
           textAlign="center"
         >
           <CalendarMonthIcon
             sx={{ verticalAlign: "text-bottom", marginRight: 1 }}
           />
-          <span style={{ fontSize: 18 }}>SCHEDULE</span>
+          <span style={{ fontSize: 16 }}>SCHEDULE</span>
           <CalendarMonthIcon
             sx={{ verticalAlign: "text-bottom", marginLeft: 1 }}
           />
         </DialogTitle>
-        <Scrollbars autoHeight autoHeightMin={450}>
-          <DialogContent>
+        {/* <Scrollbars autoHeight autoHeightMin={460}> */}
+          <DialogContent sx={{ paddingBottom: 0, overflow: 'hidden' }}>
             <Grid container color="primary.info" spacing={3}>
               <Grid item xs={8}>
                 <Stack spacing={1}>
@@ -662,7 +670,7 @@ const Court = (props) => {
                 <Grid container spacing={1}>
                   <Grid item xs={3}>
                     <Typography
-                      marginTop={3}
+                      marginTop={2}
                       variant="h6"
                       alignItems="center"
                       color={colorScale[0]}
@@ -673,8 +681,8 @@ const Court = (props) => {
                       {selectedPlayer.name}
                     </Typography>
                     <Typography
-                      marginTop={2}
-                      marginBottom={2}
+                      marginTop={1.5}
+                      marginBottom={1}
                       alignItems="center"
                       variant="h6"
                       color={colorScale[1]}
@@ -701,7 +709,7 @@ const Court = (props) => {
                     <br />
                     <Typography
                       variant="h6"
-                      marginTop={1}
+                      marginTop={0.5}
                       color={colorScale[3]}
                     >
                       <CheckCircleWithStyle />
@@ -710,7 +718,7 @@ const Court = (props) => {
                     </Typography>
                     <Typography
                       variant="h6"
-                      marginTop={2}
+                      marginTop={1.5}
                       color={colorScale[4]}
                     >
                       <CheckCircleWithStyle />
@@ -718,7 +726,7 @@ const Court = (props) => {
                     </Typography>
                     <Typography
                       variant="h6"
-                      marginTop={2}
+                      marginTop={1.5}
                       color={colorScale[5]}
                     >
                       <CheckCircleWithStyle />
@@ -726,7 +734,7 @@ const Court = (props) => {
                     </Typography>
                     <Typography
                       variant="h6"
-                      marginTop={2}
+                      marginTop={1.5}
                       color={colorScale[6]}
                     >
                       <CheckCircleWithStyle />
@@ -734,7 +742,7 @@ const Court = (props) => {
                     </Typography>
                     <Typography
                       variant="h6"
-                      marginTop={2}
+                      marginTop={1.5}
                       color={colorScale[7]}
                     >
                       <CheckCircleWithStyle />
@@ -742,15 +750,21 @@ const Court = (props) => {
                     </Typography>
                     <br />
                   </Grid>
-                  <Grid item xs={5} marginTop={3}>
-                    <ImageCard image_Url={image} title={selectedPlayer.name} />
+                  <Grid
+                    item
+                    xs={5}
+                    marginTop={2}
+                    paddingLeft={1.5}
+                    paddingRight={1.5}
+                  >
+                    <ImageCard image_Url={image} title={selectedPlayer.name}/>
                   </Grid>
                   <Grid
                     item
                     xs={4}
                     marginTop={4}
                     paddingRight={3}
-                    sx={{ paddingLeft: "53px !important" }}
+                    sx={{ paddingLeft: "50px !important" }}
                     display="flex"
                     flexDirection="column"
                     justifyContent="center"
@@ -803,8 +817,8 @@ const Court = (props) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={4} paddingTop={5}>
-                <Box sx={{ marginRight: 2, borderRadius: 1.5 }} marginTop={2}>
+              <Grid item xs={4} paddingTop={2}>
+                <Box sx={{ marginRight: 2, borderRadius: 1.5 }} marginTop={1}>
                   <fieldset
                     style={{
                       border: " 1px solid grey",
@@ -819,7 +833,7 @@ const Court = (props) => {
                     >
                       <FormControl
                         variant="filled"
-                        sx={{ minWidth: 120, marginTop: 2 }}
+                        sx={{ minWidth: 120, marginTop: 0.5 }}
                       >
                         <InputLabel id="demo-simple-select-filled-label">
                           Reservation Type
@@ -866,9 +880,9 @@ const Court = (props) => {
                   </Typography> */}
                   <fieldset
                     style={{
-                      minHeight: 300,
+                      minHeight: 285,
                       borderRadius: "10px",
-                      marginTop: "20px",
+                      marginTop: "15px",
                       border: "solid 1px grey",
                     }}
                   >
@@ -886,7 +900,7 @@ const Court = (props) => {
               </Grid>
             </Grid>
           </DialogContent>
-        </Scrollbars>
+        {/* </Scrollbars> */}
         <DialogActions sx={{ paddingRight: 4.6, paddingBottom: 3 }}>
           <Button
             onClick={closeDialog}
