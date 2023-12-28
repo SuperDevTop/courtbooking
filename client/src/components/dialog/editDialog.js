@@ -260,6 +260,9 @@ const EditDialog = ({
         marginTop={1}
         marginBottom={1}
         textAlign="center"
+        style={{ 
+          padding: 0
+         }}
       >
         <EditNoteIcon sx={{ verticalAlign: "text-bottom", marginRight: 1 }} />
         <span style={{ fontSize: 25 }}>Edit Reservation</span>

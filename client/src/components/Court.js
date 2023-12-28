@@ -637,6 +637,9 @@ const Court = (props) => {
           variant="h6"
           marginTop={1}
           textAlign="center"
+          style={{
+            padding: 0,
+          }}
         >
           <CalendarMonthIcon
             sx={{ verticalAlign: "text-bottom", marginRight: 1 }}
@@ -647,230 +650,228 @@ const Court = (props) => {
           />
         </DialogTitle>
         {/* <Scrollbars autoHeight autoHeightMin={460}> */}
-          <DialogContent sx={{ paddingBottom: 0, overflow: 'hidden' }}>
-            <Grid container color="primary.info" spacing={3}>
-              <Grid item xs={8}>
-                <Stack spacing={1}>
-                  <Autocomplete
-                    {...flatProps}
-                    value={selectedPlayer.name}
-                    onChange={onChangePlayer}
-                    isOptionEqualToValue={(option, value) => {
-                      return option.value === value.value;
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Players"
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </Stack>
-                <Grid container spacing={1}>
-                  <Grid item xs={3}>
-                    <Typography
-                      marginTop={2}
-                      variant="h6"
-                      alignItems="center"
-                      color={colorScale[0]}
-                    >
-                      <CheckCircleIcon
-                        sx={{ marginRight: 1, verticalAlign: "text-bottom" }}
-                      />
-                      {selectedPlayer.name}
-                    </Typography>
-                    <Typography
-                      marginTop={1.5}
-                      marginBottom={1}
-                      alignItems="center"
-                      variant="h6"
-                      color={colorScale[1]}
-                    >
-                      <CheckCircleWithStyle />
-                      Seeded: {selectedPlayer.tournament_seed}
-                    </Typography>
-
-                    <Typography
-                      component={"span"}
-                      variant="h6"
-                      style={{ marginRight: 30 }}
-                      color={colorScale[2]}
-                    >
-                      <CheckCircleWithStyle />
-                      {selectedPlayer.natl}
-                    </Typography>
-
-                    <WorldFlag
-                      countryCode={alpha3ToAlph2[selectedPlayer.natl]}
-                      svg
-                      style={{ width: "3em", height: "3em" }}
-                    />
-                    <br />
-                    <Typography
-                      variant="h6"
-                      marginTop={0.5}
-                      color={colorScale[3]}
-                    >
-                      <CheckCircleWithStyle />
-                      Handiness:{" "}
-                      {selectedPlayer.right_handed ? "Right" : "Left"} <br />
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      marginTop={1.5}
-                      color={colorScale[4]}
-                    >
-                      <CheckCircleWithStyle />
-                      Status: {selectedPlayer.status}
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      marginTop={1.5}
-                      color={colorScale[5]}
-                    >
-                      <CheckCircleWithStyle />
-                      {selectedPlayer.singles_in ? "Singles In" : "Singles Out"}
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      marginTop={1.5}
-                      color={colorScale[6]}
-                    >
-                      <CheckCircleWithStyle />
-                      {selectedPlayer.doubles_in ? "Doubles In" : "Doubles Out"}
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      marginTop={1.5}
-                      color={colorScale[7]}
-                    >
-                      <CheckCircleWithStyle />
-                      {name}
-                    </Typography>
-                    <br />
-                  </Grid>
-                  <Grid
-                    item
-                    xs={5}
+        <DialogContent sx={{ paddingBottom: 0, overflow: "hidden" }}>
+          <Grid container color="primary.info" spacing={3}>
+            <Grid item xs={8}>
+              <Stack spacing={1}>
+                <Autocomplete
+                  {...flatProps}
+                  value={selectedPlayer.name}
+                  onChange={onChangePlayer}
+                  isOptionEqualToValue={(option, value) => {
+                    return option.value === value.value;
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Players" variant="standard" />
+                  )}
+                />
+              </Stack>
+              <Grid container spacing={1}>
+                <Grid item xs={3}>
+                  <Typography
                     marginTop={2}
-                    paddingLeft={1.5}
-                    paddingRight={1.5}
-                  >
-                    <ImageCard image_Url={image} title={selectedPlayer.name}/>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={4}
-                    marginTop={4}
-                    paddingRight={3}
-                    sx={{ paddingLeft: "50px !important" }}
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="center"
+                    variant="h6"
                     alignItems="center"
+                    color={colorScale[0]}
                   >
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={addPlayer}
-                      sx={{
-                        marginBottom: 2,
-                        paddingTop: 1.8,
-                        paddingBottom: 1.8,
-                      }}
-                      fullWidth
-                    >
-                      <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
-                      Add Player
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      onClick={() => {
-                        setOpenMyBookingDataDialog(true);
-                      }}
-                      sx={{
-                        marginTop: 2,
-                        marginBottom: 2,
-                        paddingTop: 1.8,
-                        paddingBottom: 1.8,
-                      }}
-                      fullWidth
-                    >
-                      <VisibilityIcon sx={{ marginRight: 1 }} />
-                      View Books
-                    </Button>
-                    {/* <img
+                    <CheckCircleIcon
+                      sx={{ marginRight: 1, verticalAlign: "text-bottom" }}
+                    />
+                    {selectedPlayer.name}
+                  </Typography>
+                  <Typography
+                    marginTop={1.5}
+                    marginBottom={1}
+                    alignItems="center"
+                    variant="h6"
+                    color={colorScale[1]}
+                  >
+                    <CheckCircleWithStyle />
+                    Seeded: {selectedPlayer.tournament_seed}
+                  </Typography>
+
+                  <Typography
+                    component={"span"}
+                    variant="h6"
+                    style={{ marginRight: 30 }}
+                    color={colorScale[2]}
+                  >
+                    <CheckCircleWithStyle />
+                    {selectedPlayer.natl}
+                  </Typography>
+
+                  <WorldFlag
+                    countryCode={alpha3ToAlph2[selectedPlayer.natl]}
+                    svg
+                    style={{ width: "3em", height: "3em" }}
+                  />
+                  <br />
+                  <Typography
+                    variant="h6"
+                    marginTop={0.5}
+                    color={colorScale[3]}
+                  >
+                    <CheckCircleWithStyle />
+                    Handiness: {selectedPlayer.right_handed
+                      ? "Right"
+                      : "Left"}{" "}
+                    <br />
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    marginTop={1.5}
+                    color={colorScale[4]}
+                  >
+                    <CheckCircleWithStyle />
+                    Status: {selectedPlayer.status}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    marginTop={1.5}
+                    color={colorScale[5]}
+                  >
+                    <CheckCircleWithStyle />
+                    {selectedPlayer.singles_in ? "Singles In" : "Singles Out"}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    marginTop={1.5}
+                    color={colorScale[6]}
+                  >
+                    <CheckCircleWithStyle />
+                    {selectedPlayer.doubles_in ? "Doubles In" : "Doubles Out"}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    marginTop={1.5}
+                    color={colorScale[7]}
+                  >
+                    <CheckCircleWithStyle />
+                    {name}
+                  </Typography>
+                  <br />
+                </Grid>
+                <Grid
+                  item
+                  xs={5}
+                  marginTop={2}
+                  paddingLeft={1.5}
+                  paddingRight={1.5}
+                >
+                  <ImageCard image_Url={image} title={selectedPlayer.name} />
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  marginTop={4}
+                  paddingRight={3}
+                  sx={{ paddingLeft: "50px !important" }}
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={addPlayer}
+                    sx={{
+                      marginBottom: 2,
+                      paddingTop: 1.8,
+                      paddingBottom: 1.8,
+                    }}
+                    fullWidth
+                  >
+                    <AddCircleOutlineIcon sx={{ marginRight: 1 }} />
+                    Add Player
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      setOpenMyBookingDataDialog(true);
+                    }}
+                    sx={{
+                      marginTop: 2,
+                      marginBottom: 2,
+                      paddingTop: 1.8,
+                      paddingBottom: 1.8,
+                    }}
+                    fullWidth
+                  >
+                    <VisibilityIcon sx={{ marginRight: 1 }} />
+                    View Books
+                  </Button>
+                  {/* <img
                       src={"/images/" + selectedPlayer.atp_wta + ".png"}
                       style={{ width: 100, minWidth: "100%" }}
                       alt={selectedPlayer.atp_wta}
                     /> */}
 
-                    <MyBookingDataDialog
-                      open={openMyBookingDataDialog}
-                      title="Booking Plans"
-                      onClose={() => {
-                        setOpenMyBookingDataDialog(false);
-                      }}
-                      bookingDataOfSelectedPlayer={bookingDataOfSelectedPlayer}
-                    />
-                  </Grid>
+                  <MyBookingDataDialog
+                    open={openMyBookingDataDialog}
+                    title="Booking Plans"
+                    onClose={() => {
+                      setOpenMyBookingDataDialog(false);
+                    }}
+                    bookingDataOfSelectedPlayer={bookingDataOfSelectedPlayer}
+                  />
                 </Grid>
               </Grid>
-              <Grid item xs={4} paddingTop={2}>
-                <Box sx={{ marginRight: 2, borderRadius: 1.5 }} marginTop={1}>
-                  <fieldset
-                    style={{
-                      border: " 1px solid grey",
-                      borderRadius: "10px",
-                    }}
+            </Grid>
+            <Grid item xs={4} paddingTop={2}>
+              <Box sx={{ marginRight: 2, borderRadius: 1.5 }} marginTop={1}>
+                <fieldset
+                  style={{
+                    border: " 1px solid grey",
+                    borderRadius: "10px",
+                  }}
+                >
+                  <legend>Settings</legend>
+                  <Box
+                    display="flex"
+                    alignItems="flex-end"
+                    justifyContent="space-around"
                   >
-                    <legend>Settings</legend>
-                    <Box
-                      display="flex"
-                      alignItems="flex-end"
-                      justifyContent="space-around"
+                    <FormControl
+                      variant="filled"
+                      sx={{ minWidth: 120, marginTop: 0.5 }}
                     >
-                      <FormControl
-                        variant="filled"
-                        sx={{ minWidth: 120, marginTop: 0.5 }}
+                      <InputLabel id="demo-simple-select-filled-label">
+                        Reservation Type
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-filled-label"
+                        id="demo-simple-select-filled"
+                        value={timeLength}
+                        onChange={onChangeTimeLength}
+                        label="timeLength"
                       >
-                        <InputLabel id="demo-simple-select-filled-label">
-                          Reservation Type
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          id="demo-simple-select-filled"
-                          value={timeLength}
-                          onChange={onChangeTimeLength}
-                          label="timeLength"
-                        >
-                          <MenuItem value={2}>1 hr</MenuItem>
-                          <MenuItem value={1}>30 mins</MenuItem>
-                          <MenuItem value={4}>2 hrs</MenuItem>
-                        </Select>
-                      </FormControl>
-                      <Stack spacing={1} sx={{ width: "50%" }}>
-                        <Autocomplete
-                          {...flatOptionProps}
-                          value={selectedOption}
-                          onChange={onOptionChange}
-                          isOptionEqualToValue={(option, value) => {
-                            return option.value === value.value;
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Options"
-                              variant="standard"
-                            />
-                          )}
-                        />
-                      </Stack>
-                    </Box>
-                  </fieldset>
+                        <MenuItem value={2}>1 hr</MenuItem>
+                        <MenuItem value={1}>30 mins</MenuItem>
+                        <MenuItem value={4}>2 hrs</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <Stack spacing={1} sx={{ width: "50%" }}>
+                      <Autocomplete
+                        {...flatOptionProps}
+                        value={selectedOption}
+                        onChange={onOptionChange}
+                        isOptionEqualToValue={(option, value) => {
+                          return option.value === value.value;
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Options"
+                            variant="standard"
+                          />
+                        )}
+                      />
+                    </Stack>
+                  </Box>
+                </fieldset>
 
-                  {/* <Typography
+                {/* <Typography
                     variant="h5"
                     textAlign="center"
                     marginTop={4}
@@ -878,28 +879,28 @@ const Court = (props) => {
                   >
                     Selected Players:
                   </Typography> */}
-                  <fieldset
-                    style={{
-                      minHeight: 285,
-                      borderRadius: "10px",
-                      marginTop: "15px",
-                      border: "solid 1px grey",
-                    }}
-                  >
-                    <legend>Selected Players</legend>
-                    <ChipsWithCloseButton
-                      chip={schedulingPlayers}
-                      handleDeleteChip={handleDeleteChip}
-                      ball={false}
-                      setParentWarmups={setWarmups}
-                      parentWarmups={warmups}
-                      onChangePlayer={onChangePlayer}
-                    />
-                  </fieldset>
-                </Box>
-              </Grid>
+                <fieldset
+                  style={{
+                    minHeight: 285,
+                    borderRadius: "10px",
+                    marginTop: "15px",
+                    border: "solid 1px grey",
+                  }}
+                >
+                  <legend>Selected Players</legend>
+                  <ChipsWithCloseButton
+                    chip={schedulingPlayers}
+                    handleDeleteChip={handleDeleteChip}
+                    ball={false}
+                    setParentWarmups={setWarmups}
+                    parentWarmups={warmups}
+                    onChangePlayer={onChangePlayer}
+                  />
+                </fieldset>
+              </Box>
             </Grid>
-          </DialogContent>
+          </Grid>
+        </DialogContent>
         {/* </Scrollbars> */}
         <DialogActions sx={{ paddingRight: 4.6, paddingBottom: 3 }}>
           <Button
