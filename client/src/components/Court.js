@@ -46,6 +46,7 @@ import { colorScale } from "../utils/gradientColor";
 import { currentPageToCourts } from "../utils/currentPageToCourts";
 import { bookingOptionTexts } from "../utils/texts";
 import { getComment } from "../actions/bookingAction";
+import { getTimeTexts } from "../utils/usefulFuncs";
 
 const withCommonIconStyle = (WrappedComponent) => (props) =>
   (
@@ -100,59 +101,62 @@ const Court = (props) => {
 
   const theme = useTheme();
 
-  let timeTexts = [
-    "8:00",
-    "8:30",
-    "9:00",
-    "9:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
-    "18:00",
-    "18:30",
-    "19:00",
-    "19:30",
-  ];
+  // let timeTexts = [
+  //   "8:00",
+  //   "8:30",
+  //   "9:00",
+  //   "9:30",
+  //   "10:00",
+  //   "10:30",
+  //   "11:00",
+  //   "11:30",
+  //   "12:00",
+  //   "12:30",
+  //   "13:00",
+  //   "13:30",
+  //   "14:00",
+  //   "14:30",
+  //   "15:00",
+  //   "15:30",
+  //   "16:00",
+  //   "16:30",
+  //   "17:00",
+  //   "17:30",
+  //   "18:00",
+  //   "18:30",
+  //   "19:00",
+  //   "19:30",
+  // ];
 
-  const times = [
-    "8:00",
-    "8:30",
-    "9:00",
-    "9:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
-    "18:00",
-    "18:30",
-    "19:00",
-    "19:30",
-  ];
+  // const times = [
+  //   "8:00",
+  //   "8:30",
+  //   "9:00",
+  //   "9:30",
+  //   "10:00",
+  //   "10:30",
+  //   "11:00",
+  //   "11:30",
+  //   "12:00",
+  //   "12:30",
+  //   "13:00",
+  //   "13:30",
+  //   "14:00",
+  //   "14:30",
+  //   "15:00",
+  //   "15:30",
+  //   "16:00",
+  //   "16:30",
+  //   "17:00",
+  //   "17:30",
+  //   "18:00",
+  //   "18:30",
+  //   "19:00",
+  //   "19:30",
+  // ];
+
+  let timeTexts = getTimeTexts();
+  const times = getTimeTexts();
 
   let dat = new Array(booking_data.length);
 
@@ -260,7 +264,10 @@ const Court = (props) => {
   const onSchedule = () => {
     const initialDate = new Date(booking_date);
     const newDate = new Date(
-      initialDate.getTime() + rownum * 30 * 60 * 1000 + 480 * 60 * 1000
+      // initialDate.getTime() + rownum * 30 * 60 * 1000 + 480 * 60 * 1000
+      initialDate.getTime() +
+        rownum * 30 * 60 * 1000 +
+        parseInt(getTimeTexts()[0].split(":")[0]) * 60 * 60 * 1000
     ); // start time : calculated by row(time is increased 30mins row by row, and the first row is 8:00)
 
     if (schedulingPlayers.length === 0) {
@@ -289,7 +296,7 @@ const Court = (props) => {
 
     const data = {
       court_name: name,
-      booker: "Admin",
+      booker: props.user.name,
       start_time: newDate,
       time_slot: timeLength, // 30 mins * time length
       reservation_type: reservation_type,
@@ -937,6 +944,7 @@ const mapStateToProps = (state) => ({
   booking_date: state.booking.booking_date,
   currentPage: state.page.currentPage,
   total_booking_data: state.booking.total_booking_data,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Court);

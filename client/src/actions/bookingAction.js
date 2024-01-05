@@ -108,10 +108,14 @@ export const addComment = (data) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/addComment", data)
     .then((res) => {
-      const { comments, updatedBooking } = res.data;
+      const { comments, updatedBooking, permanentComments } = res.data;
       dispatch({
         type: ADD_COMMENT_SUCCESS,
-        payload: { updatedComments: comments, updatedBooking },
+        payload: {
+          updatedComments: comments,
+          updatedBooking,
+          permanentComments,
+        },
       });
     })
     .catch((err) => {
@@ -123,11 +127,11 @@ export const getComment = (data) => (dispatch) => {
   axios
     .post(backendUrl + "/api/booking/getComment", data)
     .then((res) => {
-      const { comments } = res.data;
+      const { comments, permanentComments } = res.data;
 
       dispatch({
         type: GET_COMMENT,
-        payload: { comments },
+        payload: { comments, permanent_comments: permanentComments },
       });
     })
     .catch((err) => {
@@ -137,12 +141,24 @@ export const getComment = (data) => (dispatch) => {
 
 export const deleteComment = (data) => (dispatch) => {
   axios
-    .delete(backendUrl + "/api/booking/deleteComment/" + data.bookingId + "/" + data.commentId)
+    .delete(
+      backendUrl +
+        "/api/booking/deleteComment/" +
+        data.bookingId +
+        "/" +
+        data.commentId +
+        "/" +
+        (data.isPermanent ? 'true' : 'false')
+    )
     .then((res) => {
-      const { comments, updatedBooking } = res.data;
+      const { comments, updatedBooking, permanentComments } = res.data;
       dispatch({
         type: DELETE_COMMENT,
-        payload: { commentsUpdated: comments, bookingUpdated: updatedBooking },
+        payload: {
+          commentsUpdated: comments,
+          bookingUpdated: updatedBooking,
+          permanent: permanentComments,
+        },
       });
     })
     .catch((err) => {

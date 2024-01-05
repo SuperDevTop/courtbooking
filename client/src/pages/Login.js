@@ -128,7 +128,7 @@ const Login = (props) => {
                 },
               }}
             />
-            <FormHelperText error>{credential}</FormHelperText>
+            <FormHelperText error> {credential && ('* ' + credential)}</FormHelperText>
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"

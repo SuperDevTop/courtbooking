@@ -1,23 +1,29 @@
-import { REGISTER_SUCCESS, LOGIN_SUCCESS, LOGIN_FAILURE, USER_LOAD, LOG_OUT } from '../actions/types';
+import {
+  REGISTER_SUCCESS,
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
+  USER_LOAD,
+  LOG_OUT,
+} from "../actions/types";
 
 const initialState = {
   isAuthenticated: false,
   token: null,
-  credential: '',
-  loading: true, 
+  credential: "",
+  emailError: "",
+  loading: true,
   user: {},
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-
     case REGISTER_SUCCESS:
       return {
-          ...state
-      }
+        ...state,
+      };
 
     case LOGIN_SUCCESS:
-      localStorage.setItem('token', action.payload.token);
+      localStorage.setItem("token", action.payload.token);
 
       return {
         ...state,
@@ -29,27 +35,27 @@ const authReducer = (state = initialState, action) => {
     case LOGIN_FAILURE:
       return {
         ...state,
-        credential: action.payload.error
-      }
-    
+        credential: action.payload.error,
+      };
+
     case USER_LOAD:
-      const user = JSON.parse(localStorage.getItem('user'))
+      const user = JSON.parse(localStorage.getItem("user"));
 
       return {
         ...state,
         isAuthenticated: true,
-        loading : false,
-        user: user
-      }
+        loading: false,
+        user: user,
+      };
 
     case LOG_OUT:
       return {
         ...state,
         isAuthenticated: false,
-        loading : false,
+        loading: false,
         user: {},
-        courts: []
-      }
+        courts: [],
+      };
 
     default:
       return state;

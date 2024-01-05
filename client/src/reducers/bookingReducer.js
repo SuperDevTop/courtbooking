@@ -13,6 +13,7 @@ const initialState = {
   courts: [],
   total_booking_data: [],
   comments: [],
+  permanentComments: [],
 };
 
 const bookingReducer = (state = initialState, action) => {
@@ -45,7 +46,8 @@ const bookingReducer = (state = initialState, action) => {
       }
 
     case ADD_COMMENT_SUCCESS:
-      const { updatedComments, updatedBooking } = action.payload;
+      const { updatedComments, updatedBooking, permanentComments } =
+        action.payload;
       const { indexToUpdate1, indexToUpdate2 } = state.booking_data.reduce(
         (accumulator, data, ind) => {
           const innerIndex = data.findIndex(
@@ -68,16 +70,18 @@ const bookingReducer = (state = initialState, action) => {
           ...state,
           comments: updatedComments,
           booking_data: updatedBookingData,
+          permanentComments: permanentComments
         };
       } else {
         return {
           ...state,
           comments: updatedComments,
+          permanentComments: permanentComments
         };
       }
 
     case DELETE_COMMENT:
-      const { commentsUpdated, bookingUpdated } = action.payload;
+      const { commentsUpdated, bookingUpdated, permanent } = action.payload;
       const { indexToUpdate11, indexToUpdate12 } = state.booking_data.reduce(
         (accumulator, data, ind) => {
           const innerIndex = data.findIndex(
@@ -100,19 +104,22 @@ const bookingReducer = (state = initialState, action) => {
           ...state,
           comments: commentsUpdated,
           booking_data: updatedBookingData,
+          permanentComments: permanent,
         };
       } else {
         return {
           ...state,
           comments: commentsUpdated,
+          permanentComments: permanent,
         };
       }
 
     case GET_COMMENT:
-      const { comments } = action.payload;
+      const { comments, permanent_comments } = action.payload;
       return {
         ...state,
         comments: comments,
+        permanentComments: permanent_comments,
       };
 
     default:

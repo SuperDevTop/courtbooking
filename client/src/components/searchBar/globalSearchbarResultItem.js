@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Grid } from "@mui/material";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import { connect } from "react-redux";
@@ -7,6 +7,8 @@ import EditDialog from "../dialog/editDialog";
 
 const GlobalSearchbarResultItem = ({ data, index, players, clickable }) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [time, setTime] = useState("");
+  const [date, setDate] = useState("");
   const onCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -20,6 +22,18 @@ const GlobalSearchbarResultItem = ({ data, index, players, clickable }) => {
     setOpenDialog(true);
     setCourtData(data);
   };
+
+  useEffect(() => {
+    const newDate = new Date(data.start_time);
+    const hour = newDate.getHours().toString().padStart(2, "0");
+    const min = newDate.getMinutes().toString().padStart(2, "0");
+    setTime(hour + ":" + min);
+
+    const year = newDate.getFullYear().toString();
+    const month = (newDate.getMonth() + 1).toString().padStart(2, "0");
+    const date = newDate.getDate().toString().padStart(2, "0");
+    setDate(year + "-" + month + "-" + date);
+  }, [data]);
 
   return (
     <>
@@ -45,9 +59,11 @@ const GlobalSearchbarResultItem = ({ data, index, players, clickable }) => {
             {index + 1}
           </Grid>
           <Grid item xs={3}>
-            {data.start_time.substring(11, 16)} (GMT)
+            {/* {data.start_time.substring(11, 16)} (GMT) */}
+            {time}
             <br />
-            {data.start_time.substring(0, 10)}
+            {/* {data.start_time.substring(0, 10)} */}
+            {date}
           </Grid>
           <Grid item xs={4} textAlign={"start"} pl={2}>
             {data.players.map((one, index2) => (

@@ -40,6 +40,7 @@ const CommentsDialog = ({
   bookingId,
   comments,
   deleteComment,
+  permanent_comments,
 }) => {
   const [flatoptions, setFlatoptions] = useState([]);
   const [commentData, setCommentData] = useState([]);
@@ -48,27 +49,49 @@ const CommentsDialog = ({
   const [openWarningAlert, setOpenWarningAlert] = useState(false);
   const [openCommentDeleteAlert, setOpenCommentDeleteAlert] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [
+    openPlayNotSelectedWarningDialog,
+    setOpenPlayNotSelectedWarningDialog,
+  ] = useState(false);
   const [dataToBeDeleted, setDataToBeDeleted] = useState({
     commentId: "",
     bookingId: "",
   });
   const [isDeleting, setIsDeleting] = useState(false);
+  const [permanentExist, setPermanentExist] = useState(false);
   const flatOptionProps = {
     options: flatoptions,
   };
   const [selectedPlayer, setSelectedPlayer] = useState("");
-  const [type, setType] = useState("permanent");
+  const [type, setType] = useState("reservation");
 
   useEffect(() => {
     setFlatoptions(players);
-  }, [players]);
+    // Filter comments based on player belonging to players
+      const permanentComments = permanent_comments.filter((comment) =>
+        players.some((player) => player === comment.player)
+      );
 
-  useEffect(() => {
-    setCommentData(comments);
-  }, [comments]);
+      const reservationComments = comments.filter(
+        (comment) => comment.isPermanent === false
+      );
+      const totalComments = reservationComments.concat(permanentComments);
+
+      setCommentData(totalComments);
+  }, [comments, players, permanent_comments]);
 
   const onPlayerChange = (event, value) => {
     setSelectedPlayer(value);
+
+    const hasPermant = permanent_comments.some(
+      (commment) => commment.player === value
+    );
+
+    if (hasPermant) {
+      setPermanentExist(true);
+    } else {
+      setPermanentExist(false);
+    }
   };
 
   const handleTypeChange = (event, value) => {
@@ -89,6 +112,17 @@ const CommentsDialog = ({
 
       return;
     }
+
+    if (type === "permanent" && selectedPlayer === "") {
+      setOpenPlayNotSelectedWarningDialog(true);
+
+      setTimeout(() => {
+        setOpenPlayNotSelectedWarningDialog(false);
+      }, 2000);
+
+      return;
+    }
+
     const data = {
       booker: user.name,
       player: selectedPlayer,
@@ -106,7 +140,11 @@ const CommentsDialog = ({
   };
 
   const onDelete = async (row) => {
-    const data = { commentId: row._id, bookingId: bookingId };
+    const data = {
+      commentId: row._id,
+      bookingId: bookingId,
+      isPermanent: row.isPermanent,
+    };
     setDataToBeDeleted(data);
     setOpenConfirmDialog(true);
   };
@@ -155,11 +193,13 @@ const CommentsDialog = ({
                 onChange={handleTypeChange}
                 row
               >
-                <FormControlLabel
-                  value="permanent"
-                  control={<Radio />}
-                  label="Permanent"
-                />
+                {!permanentExist && (
+                  <FormControlLabel
+                    value="permanent"
+                    control={<Radio />}
+                    label="Permanent"
+                  />
+                )}
                 <FormControlLabel
                   value="reservation"
                   control={<Radio />}
@@ -265,6 +305,11 @@ const CommentsDialog = ({
         text="The comment has been removed successfully!"
         severity="success"
       />
+      <CustomAlert
+        openState={openPlayNotSelectedWarningDialog}
+        text="Please select a player!"
+        severity="warning"
+      />
       <ConfirmDialog
         open={openConfirmDialog}
         onClose={() => {
@@ -287,6 +332,7 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
   user: state.auth.user,
   comments: state.booking.comments,
+  permanent_comments: state.booking.permanentComments,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommentsDialog);

@@ -68,48 +68,6 @@ router.post("/createBook", async (req, res) => {
   }
 });
 
-router.post("/addComment", async (req, res) => {
-  try {
-    const { id, booker, player, content, type } = req.body;
-
-    const receivedCommentData = {
-      booker: booker,
-      player: player,
-      isPermanent: type, // Replace with actual value
-      content: content,
-    };
-
-    const objectId = new mongoose.Types.ObjectId(id);
-    const booking = await Booking.findById(objectId);
-    if (!booking) {
-      console.log("Booking not found");
-      res.status(500).json({ message: "Booking not found!" });
-      // Handle scenario where booking is not found
-    } else {
-      // Create a new comment instance
-      const newComment = new Comment(receivedCommentData);
-      const savedComment = await newComment.save();
-      booking.comments.push(savedComment._id);
-      const updatedBooking = await booking.save();
-
-      const commentIds = booking.comments;
-      const comments = await Promise.all(
-        commentIds.map(async (one) => {
-          const commentId = new mongoose.Types.ObjectId(one);
-          const comment = await Comment.findById(commentId);
-
-          return comment;
-        })
-      );
-
-      res.status(200).json({ comments, updatedBooking });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error });
-  }
-});
-
 router.post("/updateBook", async (req, res) => {
   try {
     const {
@@ -235,6 +193,58 @@ router.post("/deleteBooking", async (req, res) => {
   }
 });
 
+router.post("/addComment", async (req, res) => {
+  try {
+    const { id, booker, player, content, type } = req.body;
+
+    const receivedCommentData = {
+      booker: booker,
+      player: player,
+      isPermanent: type, // Replace with actual value
+      content: content,
+    };
+
+    const objectId = new mongoose.Types.ObjectId(id);
+    const booking = await Booking.findById(objectId);
+    if (!booking) {
+      console.log("Booking not found");
+      res.status(500).json({ message: "Booking not found!" });
+      // Handle scenario where booking is not found
+    } else {
+      // Create a new comment instance
+      let updatedBooking;
+      const newComment = new Comment(receivedCommentData);
+      const savedComment = await newComment.save();
+
+      if (!type) {
+        booking.comments.push(savedComment._id);
+        updatedBooking = await booking.save();
+      } else {
+        updatedBooking = await Booking.find({});
+      }
+
+      const commentIds = booking.comments;
+      const comments = await Promise.all(
+        commentIds.map(async (one) => {
+          const commentId = new mongoose.Types.ObjectId(one);
+          const comment = await Comment.findById(commentId);
+
+          return comment;
+        })
+      );
+
+      const permanentComments = await Comment.find({})
+        .where("isPermanent")
+        .equals(true);
+
+      res.status(200).json({ comments, updatedBooking, permanentComments });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
+  }
+});
+
 router.post("/getComment", async (req, res) => {
   try {
     const { commentIds } = req.body;
@@ -247,52 +257,71 @@ router.post("/getComment", async (req, res) => {
       })
     );
 
-    res.status(200).json({ comments });
+    const permanentComments = await Comment.find({})
+      .where("isPermanent")
+      .equals(true);
+
+    res.status(200).json({ comments, permanentComments });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
   }
 });
 
-router.delete("/deleteComment/:bookingId/:commentId", async (req, res) => {
-  try {
-    const booking = await Booking.findById(req.params.bookingId);
-    const comment = await Comment.findById(req.params.commentId);
+router.delete(
+  "/deleteComment/:bookingId/:commentId/:isPermanent",
+  async (req, res) => {
+    try {
+      const booking = await Booking.findById(req.params.bookingId);
+      const comment = await Comment.findById(req.params.commentId);
 
-    if (!booking || !comment) {
-      res.status(404).json({ message: "Booking or comment not found" });
+      let updatedBooking;
+
+      if (req.params.isPermanent === "true") {
+        const comment_id = new mongoose.Types.ObjectId(req.params.commentId);
+        await Comment.findByIdAndDelete(comment_id);
+        updatedBooking = await Booking.find({});
+      } else {
+        if (!booking || !comment) {
+          res.status(404).json({ message: "Booking or comment not found" });
+        }
+
+        // Check if the comment belongs to the booking
+        if (!booking.comments.includes(req.params.commentId)) {
+          res
+            .status(403)
+            .json({ message: "The booking doesn't include such bomment" });
+        }
+
+        // Remove the comment reference from the booking
+        booking.comments.pull(req.params.commentId);
+        updatedBooking = await booking.save();
+
+        // Delete the comment
+        await Comment.findByIdAndDelete(req.params.commentId);
+      }
+
+      const commentIds = booking.comments;
+      const comments = await Promise.all(
+        commentIds.map(async (one) => {
+          const commentId = new mongoose.Types.ObjectId(one);
+          const comment = await Comment.findById(commentId);
+
+          return comment;
+        })
+      );
+
+      const permanentComments = await Comment.find({})
+        .where("isPermanent")
+        .equals(true);
+
+      console.log("A comment has been removed successfully!");
+      res.status(200).json({ comments, updatedBooking, permanentComments });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
     }
-
-    // Check if the comment belongs to the booking
-    if (!booking.comments.includes(req.params.commentId)) {
-      res
-        .status(403)
-        .json({ message: "The booking doesn't include such bomment" });
-    }
-
-    // Remove the comment reference from the booking
-    booking.comments.pull(req.params.commentId);
-    const updatedBooking = await booking.save();
-
-    // Delete the comment
-    await Comment.findByIdAndDelete(req.params.commentId);
-
-    const commentIds = booking.comments;
-    const comments = await Promise.all(
-      commentIds.map(async (one) => {
-        const commentId = new mongoose.Types.ObjectId(one);
-        const comment = await Comment.findById(commentId);
-
-        return comment;
-      })
-    );
-
-    console.log('A comment has been removed successfully!');
-    res.status(200).json({ comments, updatedBooking });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
   }
-});
+);
 
 module.exports = router;

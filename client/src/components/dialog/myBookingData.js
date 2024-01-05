@@ -43,20 +43,29 @@ function MyBookingDataDialog({
     var month = today.getMonth() + 1; // Months are zero-based, so we add 1 to get the correct month
     var day = today.getDate();
 
-    const todayString =
-      year +
-      "-" +
-      (month < 10 ? "0" : "") +
-      month +
-      "-" +
-      (day < 10 ? "0" : "") +
-      day;
+    // const todayString =
+    //   year +
+    //   "-" +
+    //   (month < 10 ? "0" : "") +
+    //   month +
+    //   "-" +
+    //   (day < 10 ? "0" : "") +
+    //   day;
     var data1 = bookingDataOfSelectedPlayer.filter(
-      (data) => data.start_time.substring(0, 10) === todayString
+      // (data) => data.start_time.substring(0, 10) === todayString
+      (data) =>
+        new Date(data.start_time).getFullYear() === year &&
+        new Date(data.start_time).getMonth() + 1 === month &&
+        new Date(data.start_time).getDate() === day
     );
 
     data1 = data1.map((obj, index) => {
-      return { ...obj, id: index + 1, start_time: obj.start_time.substring(11, 19) };
+      const newDate = new Date(obj.start_time);
+      const hour = newDate.getHours().toString().padStart(2, "0");
+      const min = newDate.getMinutes().toString().padStart(2, "0");
+      const time = hour + ":" + min;
+      // return { ...obj, id: index + 1, start_time: obj.start_time.substring(11, 19) };
+      return { ...obj, id: index + 1, start_time: time };
     });
 
     var tomorrowDate = new Date(today.getTime() + 86400000);
@@ -66,21 +75,19 @@ function MyBookingDataDialog({
     month = tomorrowDate.getMonth() + 1; // Add 1 to get the correct month
     day = tomorrowDate.getDate();
 
-    // Format the date as "YYYY-MM-DD"
-    var tmrwString =
-      year +
-      "-" +
-      (month < 10 ? "0" : "") +
-      month +
-      "-" +
-      (day < 10 ? "0" : "") +
-      day;
     var data2 = bookingDataOfSelectedPlayer.filter(
-      (data) => data.start_time.substring(0, 10) === tmrwString
+      (data) =>
+        new Date(data.start_time).getFullYear() === year &&
+        new Date(data.start_time).getMonth() + 1 === month &&
+        new Date(data.start_time).getDate() === day
     );
 
     data2 = data2.map((obj, index) => {
-      return { ...obj, id: index + 1 };
+      const newDate = new Date(obj.start_time);
+      const hour = newDate.getHours().toString().padStart(2, "0");
+      const min = newDate.getMinutes().toString().padStart(2, "0");
+      const time = hour + ":" + min;
+      return { ...obj, id: index + 1, start_time: time };
     });
     setTodayData(data1);
     setTmrwData(data2);

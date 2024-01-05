@@ -2,11 +2,13 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { TimeIcon } from "@mui/x-date-pickers";
 import TimeBox from "./layout/timeBox";
-import { timeTexts } from "../utils/texts";
+// import { timeTexts } from "../utils/texts";
 import { useTheme } from "@emotion/react";
+import { getTimeTexts } from "../utils/usefulFuncs";
 
 const TimePanel = () => {
   const theme = useTheme();
+  const timeTexts = getTimeTexts();
 
   return (
     <Box>
@@ -17,8 +19,8 @@ const TimePanel = () => {
           top: 0,
           zIndex: 1,
           border: `${theme.palette.primary.light} solid 1px`,
-          borderLeft: '0px',
-          borderRight: '0px'
+          borderLeft: "0px",
+          borderRight: "0px",
         }}
         padding={2}
       >
@@ -29,7 +31,7 @@ const TimePanel = () => {
         sx={{
           color: "secondary",
           borderBottom: `1px solid ${theme.palette.primary.light}`,
-          borderLeft: '0px'
+          borderLeft: "0px",
         }}
       >
         <Box
@@ -45,9 +47,11 @@ const TimePanel = () => {
           }}
         >
           <Typography textAlign="center" variant="h5">
-            8:00 AM
+            {/* 8:00 AM */}
+            {timeTexts.shift()}
           </Typography>
         </Box>
+        {/* {timeTexts.map((text, index) => ( */}
         {timeTexts.map((text, index) => (
           <TimeBox text={text} key={index} />
         ))}

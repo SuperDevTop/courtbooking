@@ -23,6 +23,14 @@ export const registerUser = (user, history) => async (dispatch) => {
 };
 
 export const loginUser = (user, history) => (dispatch) => {
+  if (user.email === "" || user.password === "") {
+    dispatch({
+      type: LOGIN_FAILURE,
+      payload: { error: "Please fill out all fields!" },
+    });
+
+    return;
+  }
   axios
     .post(backendUrl + "/api/auth/login", user)
     .then((res) => {
