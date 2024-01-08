@@ -68,16 +68,18 @@ const CommentsDialog = ({
   useEffect(() => {
     setFlatoptions(players);
     // Filter comments based on player belonging to players
-      const permanentComments = permanent_comments.filter((comment) =>
-        players.some((player) => player === comment.player)
-      );
+    const permanentComments = permanent_comments.filter((comment) =>
+      players.some((player) => player === comment.player)
+    );
 
-      const reservationComments = comments.filter(
-        (comment) => comment.isPermanent === false
-      );
-      const totalComments = reservationComments.concat(permanentComments);
+    const reservationComments = comments.filter(
+      (comment) => comment.isPermanent === false
+    );
+    const totalComments = reservationComments.concat(permanentComments);
 
-      setCommentData(totalComments);
+    setCommentData(totalComments);
+    setContent("");
+    setSelectedPlayer("");
   }, [comments, players, permanent_comments]);
 
   const onPlayerChange = (event, value) => {
@@ -162,7 +164,16 @@ const CommentsDialog = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+    <Dialog
+      open={open}
+      onClose={() => {
+        onClose();
+        setContent("");
+        setSelectedPlayer("");
+      }}
+      fullWidth
+      maxWidth="lg"
+    >
       <DialogTitle textAlign="center">
         <CommentIcon sx={{ verticalAlign: "bottom", marginRight: 1 }} />
         Comments
@@ -282,7 +293,11 @@ const CommentsDialog = ({
           Save
         </Button>
         <Button
-          onClick={onClose}
+          onClick={() => {
+            setSelectedPlayer("");
+            setContent("");
+            onClose();
+          }}
           color="primary"
           variant="outlined"
           sx={{ textTransform: "none", margin: 1.5 }}
